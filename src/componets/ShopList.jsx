@@ -1,0 +1,491 @@
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FaRegHeart } from "react-icons/fa6";
+import { Mars, Venus, VenusAndMars } from "lucide-react";
+import { BiSearchAlt } from "react-icons/bi";
+import { toast } from "react-hot-toast";
+import {
+  MdStar,
+  MdStarOutline,
+  MdOutlineStarHalf,
+  MdLocationOn,
+  MdOutlineKeyboardArrowDown,
+  MdStoreMallDirectory,
+} from "react-icons/md";
+import { serviceIcon } from "../assets/images";
+import { useDispatch } from "react-redux";
+// import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/autoplay";
+
+import { addFavourites } from "../redux/slice/favouritesSlice";
+
+const ShopList = React.memo(({ allShopsList = [], setIsHitFavourite }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const [typeOptions, setTypeOptions] = useState({
+    unisex: false,
+    femaleOnly: false,
+    maleOnly: false,
+  });
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 700,
+    autoplay: hovered, // autoplay only on hover
+    autoplaySpeed: 3000,
+    arrows: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    pauseOnHover: false, // we control autoplay manually
+  };
+  const [localFavs, setLocalFavs] = useState({});
+
+  // 🔁 Keep local state in sync when the nearby list changes
+  useEffect(() => {
+    const map = {};
+    allShopsList.forEach((shop) => {
+      map[shop.id] = shop.is_favourite;
+    });
+    setLocalFavs(map);
+  }, [allShopsList]);
+  const { pathname } = window.location;
+
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.25 && rating - fullStars < 0.75;
+    const totalStars = 5;
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, i) => (
+          <MdStar key={`full-${i}`} style={{ fontSize: "20px" }} />
+        ))}
+        {hasHalfStar && (
+          <MdOutlineStarHalf key="half" style={{ fontSize: "20px" }} />
+        )}
+        {[...Array(totalStars - fullStars - (hasHalfStar ? 1 : 0))].map(
+          (_, i) => (
+            <MdStarOutline key={`empty-${i}`} style={{ fontSize: "20px" }} />
+          )
+        )}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsSortOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+  const reversedShops = useMemo(
+    () => allShopsList?.slice().reverse() || [],
+    [allShopsList]
+  );
+  const isTypeFilterActive =
+    typeOptions.unisex || typeOptions.femaleOnly || typeOptions.maleOnly;
+
+  // const handleFavourite = async (e, id) => {
+  //   e.stopPropagation();
+  //   try {
+  //     const result = await dispatch(addFavourites({ store_id: id })).unwrap();
+
+  //     // Dismiss any previous toast with same ID
+  //     toast.dismiss("already-fav");
+  //     toast.dismiss("added-fav");
+  //     toast.dismiss("generic-fav");
+
+  //     if (result === "Store already in Favourites") {
+  //       toast("Store is already in your favourites.", {
+  //         id: "already-fav",
+  //         icon: "⚠️",
+  //       });
+  //     } else if (result === "favourites added sucssesfully") {
+  //       toast.success("Store added to favourites successfully!", {
+  //         id: "added-fav",
+  //       });
+  //     } else {
+  //       toast.success(result, {
+  //         id: "generic-fav",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast.dismiss("error-fav");
+
+  //     toast.error(error?.message || "Failed to add favourite", {
+  //       id: "error-fav",
+  //     });
+  //   }
+  // };
+
+  const handleFavourite = async (e, storeId, currentFav) => {
+    e.stopPropagation();
+
+    // ✅ 1️⃣ Optimistic UI update — instantly toggle color
+    setLocalFavs((prev) => ({
+      ...prev,
+      [storeId]: !currentFav,
+    }));
+
+    try {
+      const result = await dispatch(
+        addFavourites({ store_id: storeId })
+      ).unwrap();
+
+      // Dismiss previous toasts of same category
+      toast.dismiss("already-fav");
+      toast.dismiss("added-fav");
+      toast.dismiss("generic-fav");
+
+      // ✅ 2️⃣ Prepare formatted message
+      const message =
+        result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
+
+      // ✅ 3️⃣ Handle toast notifications
+      if (result === "Store already in Favourites") {
+        toast(message, {
+          id: "already-fav",
+          icon: "⚠️",
+        });
+      } else if (result === "favourites added sucssesfully") {
+        toast.success(message, {
+          id: "added-fav",
+        });
+      } else {
+        toast.success(result, {
+          id: "generic-fav",
+        });
+      }
+
+      // ✅ 4️⃣ Trigger re-fetch in parent after backend updates
+      setIsHitFavourite((prev) => !prev);
+    } catch (error) {
+      toast.dismiss("error-fav");
+
+      toast.error(error?.message || "Failed to add favourite", {
+        id: "error-fav",
+      });
+
+      // ❌ Revert optimistic update if API fails
+      setLocalFavs((prev) => ({
+        ...prev,
+        [storeId]: currentFav,
+      }));
+    }
+  };
+  const swiperRefs = useRef([]);
+  return (
+    <div>
+      {pathname === "/shoplist" && (
+        <div className="page-header">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-md-8 order-md-1 order-2">
+                <div className="page-header-box">
+                  <h1 className="text-anime">Our Shops</h1>
+                </div>
+              </div>
+              <div className="col-md-4 order-md-2 order-1">
+                <div
+                  className="page-header-icon-box wow fadeInUp"
+                  data-wow-delay="0.5s"
+                >
+                  <div className="page-header-icon">
+                    <img src={serviceIcon} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="services-lists ">
+        <div className="container-fluid mb-5 px-0 px-sm-4 px-md-0 px-lg-0 px-xl-0">
+          <div class="container-fluid px-0 px-sm-4 px-md-5 px-lg-5 px-xl-5">
+            <div className="row d-flex flex-wrap" style={{ rowGap: "1.5rem" }}>
+              {/* {allShopsList?.length > 0 && ( */}
+              <div className="mb-4">
+                <h2 className="fw-bold text-dark mt-5">New to GloUp</h2>
+              </div>
+              {/* )} */}
+              {reversedShops?.length > 0 ? (
+                reversedShops.map((service, index) => (
+                  <div
+                    className="col-6 col-md-6 col-lg-3 d-flex"
+                    style={{ cursor: "pointer" }}
+                    key={index}
+                    onClick={() => {
+                      navigate(`/shopdetail/${service?.store_id}`);
+                      window.location.reload();
+                    }}
+                  >
+                    <div
+                      className="service-item-layout2 wow fadeInUp d-flex flex-column h-100 w-100 shadow-sm rounded-3 overflow-hidden bg-white"
+                      data-wow-delay={service.delay}
+                      style={{ transition: "all 0.3s ease" }}
+                    >
+                      {/* Image Section */}
+                      <div
+                        className="service-image position-relative"
+                        onMouseEnter={() =>
+                          swiperRefs.current[index]?.autoplay?.start()
+                        }
+                        onMouseLeave={() =>
+                          swiperRefs.current[index]?.autoplay?.stop()
+                        }
+                        onTouchStart={() =>
+                          swiperRefs.current[index]?.autoplay?.start()
+                        }
+                        onTouchEnd={() =>
+                          swiperRefs.current[index]?.autoplay?.stop()
+                        }
+                      >
+                        {service.images.length > 1 ? (
+                          <Swiper
+                            modules={[Autoplay]}
+                            loop
+                            speed={700}
+                            slidesPerView={1}
+                            autoplay={{
+                              delay: 1000,
+                              disableOnInteraction: false,
+                            }}
+                            onSwiper={(swiper) => {
+                              swiperRefs.current[index] = swiper;
+                              swiper.autoplay.stop(); // start paused
+                            }}
+                          >
+                            {service.images.map((img, imgIndex) => (
+                              <SwiperSlide key={imgIndex}>
+                                <div
+                                  style={{
+                                    position: "relative",
+                                    width: "100%",
+                                    aspectRatio: "18 / 9", // maintain 4:3
+                                    overflow: "hidden",
+                                  }}
+                                >
+                                  <img
+                                    src={`${
+                                      import.meta.env.VITE_API_BASE_URL
+                                    }/images/${img}`}
+                                    alt={`${service.name}-${imgIndex}`}
+                                    style={{
+                                      width: "100%",
+                                      height: "100%",
+                                      objectFit: "cover",
+                                      display: "block",
+                                    }}
+                                  />
+                                </div>
+                              </SwiperSlide>
+                            ))}
+                          </Swiper>
+                        ) : (
+                          <div
+                            style={{
+                              position: "relative",
+                              width: "100%",
+                              aspectRatio: "18 / 9",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <img
+                              src={`${
+                                import.meta.env.VITE_API_BASE_URL
+                              }/images/${service.images[0]}`}
+                              alt={service.name}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                display: "block",
+                              }}
+                            />
+                          </div>
+                        )}
+
+                        {/* Wishlist Icon */}
+                        <button
+                          onClick={(e) => handleFavourite(e, service.store_id)}
+                          className="wishlist-icon btn p-2 d-flex align-items-center justify-content-center"
+                          style={{
+                            position: "absolute",
+                            top: "12px",
+                            right: "12px",
+                            zIndex: 10,
+                            background: "rgba(54, 52, 52, 0.4)",
+                            borderRadius: "50%",
+                            color: "#fff",
+                          }}
+                        >
+                          <FaRegHeart
+                            size={18}
+                            color={service.is_favourite ? "red" : "white"}
+                            onClick={() =>
+                              handleFavourite(service.id, localFavs[service.id])
+                            }
+                          />
+                        </button>
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="service-content p-2 p-md-3 d-flex flex-column justify-content-between flex-grow-1">
+                        <div>
+                          <div className="title-type d-flex justify-content-between align-items-center mb-2">
+                            <h5 className="mb-0 fs-6 fs-md-3">
+                              {service?.name}
+                            </h5>
+                            {service?.averagerating >= 0 && (
+                              <span
+                                className="star-rating d-flex align-items-center fs-9 fs-md-4"
+                                style={{ color: "#f5c518" }}
+                              >
+                                <MdStar
+                                  className="fs-6 fs-md-4"
+                                  style={{
+                                    marginRight: "4px",
+                                  }}
+                                />
+                                {Number(service?.averagerating).toFixed(1)}
+                              </span>
+                            )}
+                          </div>
+                          <div
+                            className="text-muted small d-flex align-items-center gap-1"
+                            style={{ marginLeft: "-3px" }}
+                          >
+                            {service?.store_type?.toLowerCase() ===
+                              "male only" && (
+                              <>
+                                <Mars size={14} strokeWidth={2} /> Male Only
+                              </>
+                            )}
+
+                            {service?.store_type?.toLowerCase() ===
+                              "female only" && (
+                              <>
+                                <Venus size={14} strokeWidth={2} /> Female Only
+                              </>
+                            )}
+
+                            {(!service?.store_type ||
+                              service?.store_type?.toLowerCase() ===
+                                "unisex") && (
+                              <>
+                                <VenusAndMars size={14} strokeWidth={2} />{" "}
+                                Unisex
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        {/* <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            marginTop: "5px",
+                          }}
+                        >
+                          <p
+                            style={{
+                              width: "5px",
+                              height: "5px",
+                              background: "black",
+                              borderRadius: "50%",
+                              marginRight: "3px",
+                            }}
+                          ></p>
+                          <p style={{ fontSize: "14px", margin: 0 }}>
+                            {service?.distance_m
+                              ? `${(service.distance_m / 1000).toFixed(1)} KM`
+                              : "-"}
+                          </p>
+                        </div> */}
+
+                        <div
+                          className="d-flex align-items-start"
+                          style={{ marginTop: "5px" }}
+                        >
+                          <MdLocationOn
+                            size={18}
+                            className="text-danger flex-shrink-0"
+                            style={{
+                              marginTop: "1.5px",
+                              marginLeft: "-3px",
+                              marginRight: "2px",
+                            }}
+                          />
+                          <span
+                            className="text-truncate small"
+                            style={{ maxWidth: "calc(100% - 24px)" }}
+                          >
+                            {service?.area ||
+                            service?.city ||
+                            service?.district ? (
+                              <>
+                                {service?.area ? `${service.area}` : ""}
+                                {service?.city
+                                  ? `${service.area ? ", " : ""}${service.city}`
+                                  : ""}
+                                {service?.district
+                                  ? `${
+                                      service.area || service.city ? ", " : ""
+                                    }${service.district}`
+                                  : ""}
+                              </>
+                            ) : (
+                              "Location not available"
+                            )}
+                          </span>
+                        </div>
+
+                        <div className="mt-3 text-center">
+                          <span
+                            className="service-readmore text-decoration-none"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              navigate(`/shopdetail/${service?.store_id}`);
+                              window.location.reload();
+                            }}
+                          >
+                            Book Now
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-12 text-center mt-5">
+                  <div className="d-flex flex-column align-items-center">
+                    <MdStoreMallDirectory size={60} color="#888" />
+                    <h4 className="text-muted mt-3">No new salons found</h4>
+                    <p className="text-secondary">
+                      Please check back later or try a different location.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+export default ShopList;

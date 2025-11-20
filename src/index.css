@@ -1,0 +1,17 @@
+* {
+  font-family: "Hanken Grotesk", sans-serif;
+}
+
+@media (max-width: 576px) {
+  .notification-panel {
+    width: 95vw !important;
+    right: 50% !important;
+    transform: translateX(50%) !important;
+    left: auto !important;
+  }
+}
+.text-gradient {
+  background: linear-gradient(to right, #ec4899, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
