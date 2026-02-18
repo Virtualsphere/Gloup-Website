@@ -1,0 +1,29 @@
+/* Custom Swiper Pagination Styles for Service Cards */
+.service-image-slider {
+  padding-bottom: 0;
+}
+
+.service-image-slider .swiper-pagination {
+  bottom: 12px !important;
+  left: 12px !important;
+  right: auto !important;
+  width: auto !important;
+  text-align: left !important;
+}
+
+.service-image-slider .service-bullet {
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 1;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.service-image-slider .service-bullet-active {
+  width: 16px;
+  height: 6px;
+  border-radius: 3px;
+  background: #000000;
+}
