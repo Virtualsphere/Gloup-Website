@@ -12,7 +12,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="fixed bottom-0 z-40 left-0 right-0 bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.15)]">
+    <footer className="fixed bottom-0 z-20 left-0 right-0 bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.15)]">
       <div className="flex justify-around items-center h-16 max-w-screen-xl mx-auto px-4">
         {navItems.map((item) => {
           const Icon = item.icon;

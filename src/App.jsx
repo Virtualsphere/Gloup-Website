@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { Route, Routes } from "react-router-dom";
 import ShopDetails from "./pages/ShopDetails";
+import BookSlot from "./pages/BookSlot";
+import ReviewOrderPage from "./pages/ReviewOrderPage";
   // import { BrowserRouter as Router, } from "react-router-dom";
   // import Header from "./componets/Header";
   // import Footer from "./componets/Footer";
@@ -45,7 +47,8 @@ import ShopDetails from "./pages/ShopDetails";
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/shop-details" element={<ShopDetails />} />
-          
+          <Route path="/book-slot" element={<BookSlot />} />
+          <Route path="/review-order" element={<ReviewOrderPage />} />
         </Routes>
         </Layout>
       </div>
