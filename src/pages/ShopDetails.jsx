@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Banner from '../componets/ShopDetails/Banner'
+import DeskBanner from '../componets/ShopDetails/DeskBanner'
 import ShortDetails from '../componets/ShopDetails/ShortDetails'
 import SectionHeading from '../componets/ShopDetails/SectionHeading'
 import Services from '../componets/ShopDetails/Services'
@@ -10,184 +11,142 @@ import Reviews from '../componets/ShopDetails/Reviews'
 import OpeningHours from '../componets/ShopDetails/OpeningHours'
 import Location from '../componets/ShopDetails/Location'
 import PriceSection from '../componets/ShopDetails/PriceSection'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 
+// ─── Static Data ─────────────────────────────────────────────────────────────
+const SERVICES = [
+  { id: 1, name: "Men's Haircut",    duration: 30, price: 149,  originalPrice: 199,  discount: 20, isPopular: true  },
+  { id: 2, name: "Shave",           duration: 30, price: 200,  originalPrice: null, discount: null, isPopular: false },
+  { id: 3, name: "Premium Haircolor", duration: 45, price: 1200, originalPrice: 1500, discount: 30, isPopular: true  },
+]
+
+// ─── Component ────────────────────────────────────────────────────────────────
 const ShopDetails = () => {
-  const [headerHeight, setHeaderHeight] = useState(0)
+  const isMobile = useMediaQuery(1024)
+
+  // Sticky header height tracking
   const shortDetailsRef = useRef(null)
-  
-  const [activeTab, setActiveTab] = useState('Services')
-  const servicesRef = useRef(null)
-  const aboutRef = useRef(null)
+  const [headerHeight, setHeaderHeight] = useState(0)
+
+  // Section nav refs
+  const servicesRef  = useRef(null)
+  const aboutRef     = useRef(null)
   const amenitiesRef = useRef(null)
-  const teamRef = useRef(null)
-  const reviewsRef = useRef(null)
-  
-  // Lifted state for Services
-  const [addedServices, setAddedServices] = useState(new Set());
+  const teamRef      = useRef(null)
+  const reviewsRef   = useRef(null)
+  const [activeTab, setActiveTab] = useState('Services')
 
-  const services = [
-    {
-      id: 1,
-      name: "Men's Haircut",
-      duration: 30,
-      price: 149,
-      originalPrice: 199,
-      discount: 20,
-      isPopular: true,
-    },
-    {
-      id: 2,
-      name: "Shave",
-      duration: 30,
-      price:200,
-      originalPrice: null,
-      discount: null,
-      isPopular: false,
-    },
-
-    {
-      id: 3,
-      name: "Premium Haircolor",
-      duration: 45,
-      price: 1200,
-      originalPrice: 1500,
-      discount: 30,
-      isPopular: true,
-    },
-  ];
-
-  const toggleService = (id) => {
-    const newAdded = new Set(addedServices);
-    if (newAdded.has(id)) {
-      newAdded.delete(id);
-    } else {
-      newAdded.add(id);
-    }
-    setAddedServices(newAdded);
-  };
-
-  // Map tab labels to refs
   const sectionRefs = {
-    'Services': servicesRef,
-    'About': aboutRef,
-    'Amenities': amenitiesRef,
-    'Team': teamRef,
-    'Reviews': reviewsRef
+    Services:  servicesRef,
+    About:     aboutRef,
+    Amenities: amenitiesRef,
+    Team:      teamRef,
+    Reviews:   reviewsRef,
   }
 
+  // Services cart state
+  const [addedServices, setAddedServices] = useState(new Set())
+
+  const toggleService = (id) => {
+    setAddedServices(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  // On mount: scroll to top + measure sticky header
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
     if (shortDetailsRef.current) {
       setHeaderHeight(shortDetailsRef.current.offsetHeight)
     }
   }, [])
 
-  // Scroll to section when tab is clicked
+  // Scroll to section on tab click
   const scrollToSection = (label) => {
     setActiveTab(label)
     const ref = sectionRefs[label]
-    if (ref && ref.current) {
-      // Calculate offset based on sticky headers
-      // Banner is not sticky. ShortDetails is sticky top-20 (80px). SectionHeading is sticky below that.
-      // We need to account for ShortDetails height + SectionHeading height + top offset (80px)
-      const shortDetailsHeight = shortDetailsRef.current ? shortDetailsRef.current.offsetHeight : 0
-      const stickyOffset = 80 + shortDetailsHeight + 60 // 60px approx for SectionHeading height
-      
-      const elementPosition = ref.current.getBoundingClientRect().top + window.scrollY
-      const offsetPosition = elementPosition - stickyOffset
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      })
-    }
+    if (!ref?.current) return
+    const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
+    const offset = 80 + shortDetailsHeight + 60 // navbar + shortDetails + sectionHeading
+    const top = ref.current.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top, behavior: 'smooth' })
   }
 
-  // Scroll Spy using scroll event listener
+  // Scroll spy
   useEffect(() => {
-    const handleScroll = () => {
-      // Calculate total sticky header height offset
-      // top-20 (80px) + ShortDetails height + SectionHeading height (~60px)
-      const shortDetailsHeight = shortDetailsRef.current ? shortDetailsRef.current.offsetHeight : 0;
-      const stickyOffset = 80 + shortDetailsHeight + 60; 
-      
-      // Look for the section currently under the sticky header
-      // We add a small buffer (e.g., 10px) to switch just as content arrives
-      const checkPosition = window.scrollY + stickyOffset + 10;
+    const sections = ['Reviews', 'Team', 'Amenities', 'About', 'Services']
 
-      // Check sections in reverse order to find the first one that is "above" the check line
-      const sections = ['Reviews', 'Team', 'Amenities', 'About', 'Services'];
+    const handleScroll = () => {
+      const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
+      const checkPosition = window.scrollY + 80 + shortDetailsHeight + 60 + 10
 
       for (const section of sections) {
-        const ref = sectionRefs[section];
-        if (ref.current) {
-          const elementTop = ref.current.offsetTop; // ShopDetails wrapper is relative
-          // Or safer: absolute position
-          const rect = ref.current.getBoundingClientRect();
-          const absoluteTop = rect.top + window.scrollY;
-
-          if (checkPosition >= absoluteTop) {
-            setActiveTab(section);
-            break;
-          }
+        const el = sectionRefs[section]?.current
+        if (!el) continue
+        const absoluteTop = el.getBoundingClientRect().top + window.scrollY
+        if (checkPosition >= absoluteTop) {
+          setActiveTab(section)
+          break
         }
       }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check on mount
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
     }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-
   return (
-    <>
-      <div className='mb-20'>
-        <Banner />
-        
-        {/* Sticky Short Details */}
-        <div ref={shortDetailsRef} className="sticky top-20 z-20 bg-white">
+    <div className="mb-20">
+      {/* Banner */}
+      {isMobile ? <Banner /> : <DeskBanner />}
+
+      <div className="lg:px-10 xl:px-32">
+        {/* Sticky: Shop Info */}
+        <div ref={shortDetailsRef} className="sticky top-16 z-20">
           <ShortDetails />
         </div>
 
-        {/* Sticky Section Heading */}
-        <div 
-          className="sticky z-10"
-          style={{ top: `${headerHeight + 80}px` }}
-        >
+        {/* Sticky: Section Tabs (mobile only) */}
+        <div className="sticky z-10" style={{ top: `${headerHeight + 80}px` }}>
           <SectionHeading activeTab={activeTab} onTabClick={scrollToSection} />
         </div>
 
-        <div ref={servicesRef}>
-            <Services 
-              services={services} 
-              addedServices={addedServices} 
-              toggleService={toggleService} 
-            />
+        {/* Main 2-column grid on desktop */}
+        <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-8">
+
+          {/* Left: Content Sections */}
+          <div>
+            <div ref={servicesRef}>
+              <Services
+                services={SERVICES}
+                addedServices={addedServices}
+                toggleService={toggleService}
+              />
+            </div>
+            <div ref={aboutRef}><About /></div>
+            <div ref={amenitiesRef}><Amenities /></div>
+            <div ref={teamRef}><Team /></div>
+            <div ref={reviewsRef}><Reviews /></div>
+            <OpeningHours />
+            <Location />
+          </div>
+
+          {/* Right: Booking Sidebar (desktop only) */}
+          <div className="hidden lg:block">
+            <PriceSection services={SERVICES} addedServices={addedServices} />
+          </div>
+
         </div>
-        <div ref={aboutRef}>
-            <About />
-        </div>
-        <div ref={amenitiesRef}>
-            <Amenities />
-        </div>
-        <div ref={teamRef}>
-            <Team />
-        </div>
-        <div ref={reviewsRef}>
-            <Reviews />
-        </div>
-        
-        <OpeningHours />
-        <Location />
-        
-        {/* Price Section */}
-        <PriceSection services={services} addedServices={addedServices} />
       </div>
-    </>
+
+      {/* Mobile: Fixed bottom price bar */}
+      <div className="lg:hidden">
+        <PriceSection services={SERVICES} addedServices={addedServices} />
+      </div>
+    </div>
   )
 }
 

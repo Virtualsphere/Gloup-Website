@@ -7,7 +7,7 @@ const Services = ({ services, addedServices, toggleService }) => {
   const filters = ['Featured', 'Combo Offers', "Men's Packages"];
 
   return (
-    <div className="md:hidden bg-white px-5 py-6">
+    <div className="bg-white lg:bg-gray-100 px-5 lg:px-0 py-6">
       {/* Services Heading */}
       <h2 className="text-2xl font-normal text-gray-900 mb-5">Services</h2>
 

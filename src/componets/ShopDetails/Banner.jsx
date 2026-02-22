@@ -75,7 +75,7 @@ const Banner = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="w-full h-[400px] md:h-[500px] bg-gray-200 flex items-center justify-center">
+            <div className="w-full h-[400px] lg:h-[500px] bg-gray-200 flex items-center justify-center">
               <img 
                 src={slide.image} 
                 alt={slide.alt}
@@ -94,7 +94,7 @@ const Banner = () => {
         {/* Share Button */}
         <button
           onClick={handleShare}
-          className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
+          className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
           aria-label="Share"
         >
           <Share2 size={20} className="text-gray-700" strokeWidth={2} />
@@ -103,7 +103,7 @@ const Banner = () => {
         {/* Heart/Favorite Button */}
         <button
           onClick={handleFavorite}
-          className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
+          className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
           aria-label="Add to favorites"
         >
           <Heart 

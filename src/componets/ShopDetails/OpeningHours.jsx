@@ -12,14 +12,14 @@ const OpeningHours = () => {
   ];
 
   return (
-    <div className="md:hidden bg-white py-6 px-5">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Opening Hours</h2>
+    <div className="bg-white lg:bg-gray-100 py-6 px-5">
+      <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-6">Opening Hours</h2>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         {hours.map((item, index) => (
           <div 
             key={index} 
-            className={`flex items-center justify-between py-2 ${item.isToday ? 'bg-blue-50 -mx-3 px-3 rounded-lg' : ''}`}
+            className={`flex items-center justify-between lg:grid lg:grid-cols-[200px_1fr] py-2 ${item.isToday ? 'bg-blue-50 -mx-3 px-3 rounded-lg' : ''}`}
           >
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_0_2px_rgba(34,197,94,0.2)]"></div>

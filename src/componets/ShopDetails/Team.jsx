@@ -18,28 +18,28 @@ const Team = () => {
   ];
 
   return (
-    <div className="md:hidden bg-white py-2">
-      <div className="px-5 mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">Team</h2>
+    <div className="bg-white lg:bg-gray-100 px-5 lg:px-0 py-2">
+      <div className="px-5 lg:px-0 mb-4 flex items-center justify-between">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-medium text-gray-900">Team</h2>
         <button className="text-gray-900 text-sm font-medium hover:text-gray-700">
           See All
         </button>
       </div>
 
-      <div className="flex overflow-x-auto scrollbar-hide px-5 gap-6 pb-2">
+      <div className="flex overflow-x-auto scrollbar-hide px-5 lg:px-0 gap-6 md:gap-8 lg:gap-10 pb-2">
         {teamMembers.map((member) => (
           <div key={member.id} className="flex flex-col items-center flex-shrink-0 w-24">
-            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow-sm mb-2 relative">
+            <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border-2 border-white shadow-sm mb-2 relative">
                <img 
                  src={member.image} 
                  alt={member.name}
                  className="w-full h-full object-cover"
                />
             </div>
-            <h3 className="text-base font-medium text-gray-900 text-center leading-tight">
+            <h3 className="text-base md:text-lg lg:text-xl font-medium text-gray-900 text-center leading-tight">
               {member.name}
             </h3>
-            <p className="text-sm text-gray-500 text-center leading-tight mt-0.5">
+            <p className="text-sm md:text-base text-gray-500 text-center leading-tight mt-0.5">
               {member.role}
             </p>
           </div>

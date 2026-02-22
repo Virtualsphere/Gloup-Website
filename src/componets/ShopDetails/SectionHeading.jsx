@@ -10,7 +10,7 @@ const SectionHeading = ({ activeTab, onTabClick }) => {
   ];
 
   return (
-    <div className="md:hidden bg-white border-b border-gray-200">
+    <div className="lg:hidden bg-white border-b border-gray-200">
       <div className="flex overflow-x-auto scrollbar-hide px-5">
         {tabs.map((tab) => (
           <button
@@ -33,3 +33,4 @@ const SectionHeading = ({ activeTab, onTabClick }) => {
 };
 
 export default SectionHeading;
+

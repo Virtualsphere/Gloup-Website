@@ -40,7 +40,7 @@ import ReviewOrderPage from "./pages/ReviewOrderPage";
       // </Router>
 
      <>
-      <div className="bg-gray-200">
+      <div className="bg-gray-100">
          <Layout>
         <Routes>
          

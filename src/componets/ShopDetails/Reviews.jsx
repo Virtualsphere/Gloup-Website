@@ -81,13 +81,13 @@ const Reviews = () => {
   };
 
   return (
-    <div className="md:hidden bg-white py-6 px-5">
+    <div className="bg-white lg:bg-gray-100 py-6 px-5 lg:px-0">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-semibold text-gray-900">Reviews</h2>
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-medium text-gray-900">Reviews</h2>
         <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-xs">300 reviews</span>
-            <button className="text-gray-900 text-sm font-medium">See All</button>
+            <span className="text-gray-500 text-xs md:text-sm lg:text-base">300 reviews</span>
+            <button className="text-gray-900 text-sm font-medium lg:hidden">See All</button>
         </div>
       </div>
 
@@ -102,33 +102,33 @@ const Reviews = () => {
               // Simple full stars for now, actual half star logic implies specific icon or svg
             ))}
           </div>
-          <span className="text-xs text-gray-500">300 ratings</span>
+          <span className="text-xs md:text-sm text-gray-500">300 ratings</span>
         </div>
 
         {/* Rating Bars */}
-        <div className="flex-1 space-y-1.5 pt-1">
+        <div className="flex-1 space-y-1.5 md:space-y-2 lg:space-y-3  pt-1">
           {ratingStats.map((stat) => (
-            <div key={stat.stars} className="flex items-center gap-2 text-xs">
+            <div key={stat.stars} className="flex items-center gap-2 text-xs md:text-sm lg:text-base">
               <span className="w-2 font-medium text-gray-500">{stat.stars}</span>
               <Star size={10} className="text-yellow-400 fill-yellow-400" />
-              <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-1.5 md:h-2 lg:h-2.5 bg-gray-100 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-yellow-400 rounded-full"
                   style={{ width: `${stat.percentage}%` }}
                 />
               </div>
-              <span className="w-6 text-right text-gray-500">{stat.count}</span>
+              <span className="w-6 text-right text-xs md:text-sm lg:text-base text-gray-500">{stat.count}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 mb-6">
+      <div className="flex gap-2 md:gap-4 overflow-x-auto scrollbar-hide pb-2 mb-6">
         {filters.map((filter, index) => (
           <button
             key={index}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+            className={`px-4 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors ${
               filter.active
                 ? 'bg-gray-900 text-white'
                 : 'bg-gray-100 text-gray-600'
@@ -171,7 +171,7 @@ const Reviews = () => {
       </div>
 
       {/* See All Button */}
-      <button className="w-full py-3 border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-gray-700 active:bg-gray-50 transition-colors">
+      <button className="w-full py-3 border border-gray-200 md:border-0 outline-none md:text-base lg:text-lg rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-gray-700 active:bg-gray-50 transition-colors">
         See All (300 reviews)
         <ChevronRight size={16} />
       </button>
