@@ -1,74 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import { addMonths, subMonths } from 'date-fns';
-import SalonCard from './SalonCard';
+import { Link } from 'react-router-dom';
 import CalendarHeader from './CalendarHeader';
 import DateSelector from './DateSelector';
 import TimeSlotGrid from './TimeSlotGrid';
-
 import SlotLegend from './SlotLegend';
 import OfferBanner from './OfferBanner';
+import DeskBookingCard from './DeskBookingCard';
 
 const SlotBookingSection = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const handlePrevMonth = () => {
-    setCurrentMonth(prev => subMonths(prev, 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentMonth(prev => addMonths(prev, 1));
-  };
+  const handlePrevMonth = () => setCurrentMonth(prev => subMonths(prev, 1));
+  const handleNextMonth = () => setCurrentMonth(prev => addMonths(prev, 1));
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
-    setSelectedSlot(null); // Reset slot selection on date change
-    // If selecting a date from a different month (edge case if we show adjacent days), update currentMonth
-    if (date.getMonth() !== currentMonth.getMonth()) {
-        setCurrentMonth(date);
-    }
+    setSelectedSlot(null);
+    if (date.getMonth() !== currentMonth.getMonth()) setCurrentMonth(date);
   };
 
-  const handleSlotSelect = (slot) => {
-    setSelectedSlot(slot);
-  };
+  const handleSlotSelect = (slot) => setSelectedSlot(slot);
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-32">
-      <div className="max-w-md mx-auto bg-white min-h-screen shadow-sm">
-        <OfferBanner />
-        <SalonCard />
-        
-        <div className="mt-2">
-            <CalendarHeader 
-                currentMonth={currentMonth}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
+    <div className="bg-white lg:bg-gray-100 min-h-screen pb-32 lg:pb-8">
+      <div className="lg:px-10 xl:px-32 lg:pt-6">
+
+        {/* Breadcrumb + Title (desktop only) */}
+        <div className="hidden lg:block mb-6">
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+            <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
+            <span>/</span>
+            <Link to="/shop-details" className="hover:text-gray-600 transition-colors">Mohan Men&apos;s Park Salon</Link>
+            <span>/</span>
+            <span className="text-gray-900 font-semibold">Book Slot</span>
+          </nav>
+          <h1 className="text-3xl font-bold text-gray-900">Book Slot</h1>
+        </div>
+
+        {/* Single column on mobile → 2-column grid on desktop */}
+        <div className="lg:grid lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_320px] lg:gap-8 lg:items-start">
+
+          {/* Main content */}
+          <div className="w-full bg-white lg:bg-gray-100 lg:overflow-hidden min-h-screen lg:min-h-0">
+            <OfferBanner />
+            <CalendarHeader
+              currentMonth={currentMonth}
+              onPrevMonth={handlePrevMonth}
+              onNextMonth={handleNextMonth}
             />
-            <DateSelector 
-                currentMonth={currentMonth}
+            <DateSelector
+              currentMonth={currentMonth}
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+            />
+            <div className="mt-6 px-4 lg:px-0 pb-6">
+              <TimeSlotGrid
                 selectedDate={selectedDate}
-                onDateSelect={handleDateSelect}
-            />
-            <div className="mt-6 px-4">
-              <TimeSlotGrid 
-                selectedDate={selectedDate} 
                 selectedSlot={selectedSlot}
                 onSelect={handleSlotSelect}
               />
             </div>
-            <div className="fixed bottom-0 w-full max-w-md bg-white border-t border-gray-100 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50">
-                <SlotLegend 
-                  selectedSlot={selectedSlot} 
-                  selectedDate={selectedDate}
-                />
-            </div>
+          </div>
+
+          {/* Desktop sidebar */}
+          <div className="hidden lg:block">
+            <DeskBookingCard selectedSlot={selectedSlot} selectedDate={selectedDate} />
+          </div>
+
         </div>
+      </div>
+
+      {/* Mobile: fixed bottom slot legend */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50">
+        <SlotLegend selectedSlot={selectedSlot} selectedDate={selectedDate} />
       </div>
     </div>
   );

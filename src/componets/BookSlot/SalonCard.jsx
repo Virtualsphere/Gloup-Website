@@ -11,7 +11,7 @@ const SalonCard = ({ showTime, bookingDate, bookingTime, rounded = true }) => {
           {/* Image + Info Row */}
           <div className="flex gap-4 p-4">
             {/* Salon Image */}
-            <div className="w-28 h-20 md:w-32 md:h-32 flex-shrink-0 rounded-2xl overflow-hidden bg-stone-200 relative">
+            <div className="w-28 h-20 lg:w-32 lg:h-32 flex-shrink-0 rounded-2xl overflow-hidden bg-stone-200 relative">
               <img
                 src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&q=80"
                 alt="Luxury Hair & Spa Studio"

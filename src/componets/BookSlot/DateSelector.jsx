@@ -39,7 +39,7 @@ const DateSelector = ({ currentMonth, selectedDate, onDateSelect }) => {
               flex-shrink-0 w-[4.5rem] h-20 rounded-2xl flex flex-col items-center justify-center cursor-pointer snap-center border transition-all duration-200
               ${isSelected 
                 ? 'bg-black text-white border-black shadow-lg transform scale-105' 
-                : 'bg-stone-100 text-stone-400 border-transparent hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-400 lg:bg-white lg:border-gray-200 border-transparent hover:bg-stone-200'
               }
             `}
           >
