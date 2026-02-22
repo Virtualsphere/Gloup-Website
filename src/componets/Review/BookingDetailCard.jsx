@@ -1,44 +1,76 @@
 import React from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const BookingDetailCard = ({ services }) => {
+const BookingDetailCard = ({ services, onRemove }) => {
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-100 mt-4">
-      {services.map((service, index) => (
-        <div 
-          key={service.id || index}
-          className="flex justify-between items-start mb-4 border-b border-gray-100 pb-4"
-        >
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-gray-900 text-sm">{service.name}</h3>
-              {service.isPopular && (
-                <span className="bg-gray-100 text-gray-600 text-[10px] font-medium px-2 py-0.5 rounded-full">
-                  Popular
-                </span>
+    <div>
+      {/* Desktop-only section heading */}
+      <h2 className="hidden lg:block text-2xl font-bold text-gray-900 mt-6 mb-3">Added Services</h2>
+
+      <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-100 mt-4 lg:mt-0">
+        {services.map((service, index) => (
+          <div
+            key={service.id || index}
+            className="flex justify-between items-start mb-4 border-b border-gray-100 pb-4"
+          >
+            {/* Left: name + duration */}
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900 text-sm lg:text-lg">{service.name}</h3>
+                {service.isPopular && (
+                  <span className="bg-blue-50 text-blue-500 text-[10px] font-semibold px-2 py-0.5 rounded-full tracking-wide">
+                    POPULAR
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 text-gray-500 text-xs lg:text-base">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{service.duration || '30 min'}</span>
+              </div>
+            </div>
+
+            {/* Right: price + discount + remove */}
+            <div className="flex items-start gap-3 ml-3">
+              <div className="flex flex-col items-end gap-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-gray-900 text-sm lg:text-lg">₹{service.price}</span>
+                  {service.originalPrice && (
+                    <span className="text-gray-400 line-through text-xs lg:text-base">₹{service.originalPrice}</span>
+                  )}
+                </div>
+                {service.discount && (
+                  <span className="flex items-center gap-1 bg-green-50 text-green-600 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                    ✦ {service.discount}% off
+                  </span>
+                )}
+              </div>
+
+              {/* Remove button */}
+              {onRemove && (
+                <button
+                  onClick={() => onRemove(service.id)}
+                  className="text-gray-400 hover:text-gray-700 transition-colors mt-0.5"
+                  aria-label={`Remove ${service.name}`}
+                >
+                  <X className="w-4 h-4" />
+                </button>
               )}
             </div>
-            <div className="flex items-center gap-1.5 text-gray-500 text-xs">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{service.duration || '30 min'}</span>
-            </div>
           </div>
-          <div className="font-semibold text-gray-900 text-sm">
-            ₹{service.price}
-          </div>
-        </div>
-      ))}
+        ))}
 
-      {/* Add More Service Link */}
-      <div className="flex items-center justify-center gap-1 text-sm mt-2">
-        <span className="text-gray-500">Forget Something?</span>
-        <Link to="/" className="font-semibold text-black underline decoration-1 underline-offset-2">
-          Add more service
-        </Link>
+        {/* Forgot something — left on desktop */}
+        <div className="flex items-center justify-start gap-1 text-sm lg:text-base mt-2">
+          <span className="text-gray-500">Forgot something?</span>
+          <Link to="/" className="font-semibold text-black underline decoration-1 underline-offset-2">
+            Add more services
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
 export default BookingDetailCard;
+

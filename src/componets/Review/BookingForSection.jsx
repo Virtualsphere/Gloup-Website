@@ -48,13 +48,13 @@ const BookingForSection = () => {
 
     return (
         <div className="mt-8 px-1">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Who is this booking for?</h2>
+            <h2 className="text-lg lg:text-2xl font-bold text-gray-900 mb-4">Who is this booking for?</h2>
             
             {/* Toggle Buttons */}
             <div className="flex gap-4 mb-6">
                 <button 
                     onClick={() => setBookingFor('self')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-colors border ${
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm lg:text-base font-semibold transition-colors border ${
                         bookingFor === 'self' 
                         ? 'bg-black text-white border-black' 
                         : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
@@ -65,7 +65,7 @@ const BookingForSection = () => {
                 </button>
                 <button 
                     onClick={() => setBookingFor('other')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-colors border ${
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm lg:text-base font-semibold transition-colors border ${
                         bookingFor === 'other' 
                         ? 'bg-black text-white border-black' 
                         : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
@@ -77,7 +77,7 @@ const BookingForSection = () => {
             </div>
 
             {/* Content Area */}
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 {bookingFor === 'self' ? (
                     <UserProfileCard 
                         name="John Doe" 

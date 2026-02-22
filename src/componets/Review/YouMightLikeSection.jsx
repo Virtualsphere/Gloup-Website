@@ -28,10 +28,10 @@ const recommendedServices = [
 const YouMightLikeSection = ({ onAddService, addedServiceIds }) => {
   return (
     <div className="py-10 mb-4">
-      <h2 className="text-lg font-bold text-gray-900 mb-4">You might also like</h2>
+      <h2 className="text-lg lg:text-2xl font-bold text-gray-900 mb-4">You might also like</h2>
       
       {/* Horizontal Scroll Container */}
-      <div className="flex overflow-x-auto gap-4 px-4 pb-4 snap-x hide-scrollbar">
+      <div className="flex overflow-x-auto gap-4 px-4 lg:px-0 pb-4 snap-x hide-scrollbar">
         {recommendedServices.map((service) => {
           const isAdded = addedServiceIds.includes(service.id);
 

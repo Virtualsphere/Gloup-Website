@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import SalonCard from '../BookSlot/SalonCard';
 import BookingDetailCard from './BookingDetailCard';
 import BookingForSection from './BookingForSection';
@@ -8,23 +10,23 @@ import WalletToggle from './WalletToggle';
 import PayButtonBar from './PayButtonBar';
 import YouMightLikeSection from './YouMightLikeSection';
 import ToastNotification from './ToastNotification';
-import { useLocation } from 'react-router-dom';
+import DeskPaymentCard from './DeskPaymentCard';
 
+// ─── Static Data ──────────────────────────────────────────────────────────────
 const initialServices = [
   { id: 's1', name: "Men's Haircut", duration: '30 min', price: 299, isPopular: true },
-  { id: 's2', name: "Beard Trim", duration: '15 min', price: 150, isPopular: false }
+  { id: 's2', name: "Beard Trim",    duration: '15 min', price: 150, isPopular: false },
 ];
 
 const ReviewConfirmPage = () => {
-
-      
   const location = useLocation();
 
-  useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const { bookingDate, bookingTime } = location.state || { bookingDate: '27-02-2026', bookingTime: '10:00 AM - 11:00 AM' };
+  const { bookingDate, bookingTime } = location.state || {
+    bookingDate: '27-02-2026',
+    bookingTime: '10:00 AM - 11:00 AM',
+  };
 
   // State
   const [services, setServices] = useState(initialServices);
@@ -34,112 +36,140 @@ const ReviewConfirmPage = () => {
   const [toastMessage, setToastMessage] = useState('');
   const [isToastVisible, setIsToastVisible] = useState(false);
 
-  // Constants / Mock Data
-  const platformFee = 7;
+  // Constants
+  const platformFee   = 7;
   const isPlatformFree = true;
-  const walletBalance = 70;
+  const walletBalance  = 70;
 
   // Calculations
-  const baseAmount = services.reduce((total, service) => total + service.price, 0);
-  const couponDiscount = appliedCoupon?.savings || 0;
-  const subtotal = Math.max(0, baseAmount - couponDiscount);
-  const gstAmount = Math.round(subtotal * 0.05); // 5% GST
-  
+  const baseAmount        = services.reduce((total, s) => total + s.price, 0);
+  const couponDiscount    = appliedCoupon?.savings || 0;
+  const subtotal          = Math.max(0, baseAmount - couponDiscount);
+  const gstAmount         = Math.round(subtotal * 0.05);
   const totalBeforeWallet = subtotal + gstAmount + (isPlatformFree ? 0 : platformFee);
-  
-  // Wallet logic: can't use more than total or balance
-  const walletUsed = useWallet ? Math.min(walletBalance, totalBeforeWallet) : 0;
-  
-  const finalAmount = totalBeforeWallet - walletUsed;
+  const walletUsed        = useWallet ? Math.min(walletBalance, totalBeforeWallet) : 0;
+  const finalAmount       = totalBeforeWallet - walletUsed;
+
+  // Shared billing props
+  const billingProps = {
+    amount: baseAmount,
+    couponDiscount,
+    couponCode: appliedCoupon?.code,
+    subtotal,
+    gstAmount,
+    isPlatformFree,
+    platformFee,
+    walletUsed,
+    finalAmount,
+    totalBeforeWallet,
+  };
 
   const handleAddService = (service) => {
     const isAlreadyAdded = addedServiceIds.includes(service.id);
-
     if (isAlreadyAdded) {
-      // Remove from lists
-      setServices((prev) => prev.filter(s => s.id !== service.id));
-      setAddedServiceIds((prev) => prev.filter(id => id !== service.id));
+      setServices(prev => prev.filter(s => s.id !== service.id));
+      setAddedServiceIds(prev => prev.filter(id => id !== service.id));
       setToastMessage(`Removed "${service.name}"`);
     } else {
-      // Add to lists
-      setServices((prev) => [...prev, service]);
-      setAddedServiceIds((prev) => [...prev, service.id]);
+      setServices(prev => [...prev, service]);
+      setAddedServiceIds(prev => [...prev, service.id]);
       setToastMessage(`Added "${service.name}"`);
     }
-    
-    // Show Toast
     setIsToastVisible(true);
   };
 
   const handlePay = () => {
     console.log('Processing payment for ₹', finalAmount, 'with services:', services);
-    // Add payment logic here
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-40">
-        <div className="">
-            <div className="">
-                <SalonCard 
-                    showTime={true} 
-                    bookingDate={bookingDate}
-                    bookingTime={bookingTime}
-                    rounded={false}
-                />
-                
-                <div className='px-3'>
-                    <BookingDetailCard services={services} />
-                    <BookingForSection />
-                    
-                    
+    <div className="bg-gray-100 min-h-screen pb-40 lg:pb-8">
 
-                    <CouponSection 
-                        appliedCoupon={appliedCoupon}
-                        onApplyCoupon={setAppliedCoupon}
-                    />
+      {/* Desktop wrapper */}
+      <div className="lg:px-10 xl:px-32 lg:pt-6">
 
-                    <BillingSummary 
-                        amount={baseAmount}
-                        couponDiscount={couponDiscount}
-                        couponCode={appliedCoupon?.code}
-                        subtotal={subtotal}
-                        gstAmount={gstAmount}
-                        isPlatformFree={isPlatformFree}
-                        platformFee={platformFee}
-                        walletUsed={walletUsed}
-                        finalAmount={finalAmount}
-                        totalBeforeWallet={totalBeforeWallet}
-                    />
-
-                    <YouMightLikeSection 
-                        onAddService={handleAddService}
-                        addedServiceIds={addedServiceIds}
-                    />
-                </div>
-            </div>
+        {/* Breadcrumb + Title (desktop only) */}
+        <div className="hidden lg:block mb-6">
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+            <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
+            <span>/</span>
+            <Link to="/shop-details" className="hover:text-gray-600 transition-colors">Mohan Men&apos;s Park Salon</Link>
+            <span>/</span>
+            <Link to="/book-slot" className="hover:text-gray-600 transition-colors">Book Slot</Link>
+            <span>/</span>
+            <span className="text-gray-900 font-semibold">Checkout</span>
+          </nav>
+          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
         </div>
 
-        {/* Fixed Elements */}
-        <ToastNotification 
-            message={toastMessage}
-            isVisible={isToastVisible}
-            onClose={() => setIsToastVisible(false)}
-        />
+        {/* 2-column grid on desktop */}
+        <div className="lg:grid lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px] lg:gap-8 lg:items-start">
 
-        <div className="fixed bottom-0 left-0 right-0 z-30 max-w-md mx-auto">
-
-            <div className="bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] pt-4 pb-2 px-6">
-                <WalletToggle 
-                    balance={walletBalance}
-                    useWallet={useWallet}
-                    onToggle={() => setUseWallet(!useWallet)}
-                />
-            </div>
-            <PayButtonBar 
-                amount={finalAmount}
-                onPay={handlePay}
+          {/* ── Left: Main content ── */}
+          <div className="lg:bg-gray lg:overflow-hidden lg:shadow-sm">
+            <SalonCard
+              showTime={true}
+              bookingDate={bookingDate}
+              bookingTime={bookingTime}
+              rounded={false}
             />
+            <div className="px-3 lg:px-0">
+              <BookingDetailCard services={services} onRemove={(id) => {
+                setServices(prev => prev.filter(s => s.id !== id));
+                setAddedServiceIds(prev => prev.filter(sid => sid !== id));
+              }} />
+              <BookingForSection />
+
+              {/* Coupon + Billing visible on mobile only (shown in sidebar on desktop) */}
+              <div className="lg:hidden">
+                <CouponSection
+                  appliedCoupon={appliedCoupon}
+                  onApplyCoupon={setAppliedCoupon}
+                />
+                <BillingSummary {...billingProps} />
+              </div>
+
+              <YouMightLikeSection
+                onAddService={handleAddService}
+                addedServiceIds={addedServiceIds}
+              />
+            </div>
+          </div>
+
+          {/* ── Right: Sticky payment sidebar (desktop only) ── */}
+          <div className="hidden lg:block">
+            <DeskPaymentCard
+              {...billingProps}
+              appliedCoupon={appliedCoupon}
+              onApplyCoupon={setAppliedCoupon}
+              walletBalance={walletBalance}
+              useWallet={useWallet}
+              onToggleWallet={() => setUseWallet(w => !w)}
+              onPay={handlePay}
+            />
+          </div>
+
         </div>
+      </div>
+
+      {/* Toast */}
+      <ToastNotification
+        message={toastMessage}
+        isVisible={isToastVisible}
+        onClose={() => setIsToastVisible(false)}
+      />
+
+      {/* Mobile: fixed bottom wallet + pay bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30">
+        <div className="bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] pt-4 pb-2 px-6">
+          <WalletToggle
+            balance={walletBalance}
+            useWallet={useWallet}
+            onToggle={() => setUseWallet(w => !w)}
+          />
+        </div>
+        <PayButtonBar amount={finalAmount} onPay={handlePay} />
+      </div>
     </div>
   );
 };

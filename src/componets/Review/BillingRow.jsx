@@ -13,7 +13,7 @@ const BillingRow = ({ label, value, variant = 'normal', crossedValue }) => {
   if (isTotal) labelColor = 'text-gray-900 font-bold';
 
   return (
-    <div className={`flex justify-between items-center py-2.5 ${isTotal ? 'text-lg mt-2 pt-4 border-t border-gray-100' : 'text-sm'}`}>
+    <div className={`flex justify-between items-center py-2.5 ${isTotal ? 'text-lg lg:text-xl mt-2 pt-4 border-t border-gray-100' : 'text-sm lg:text-base'}`}>
       <span className={labelColor}>{label}</span>
       <div className="flex items-center gap-2">
         {crossedValue && (
