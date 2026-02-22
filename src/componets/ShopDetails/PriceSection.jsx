@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 const PriceSection = ({ services, addedServices }) => {
   if (addedServices.size === 0) return null;
@@ -44,9 +45,9 @@ const PriceSection = ({ services, addedServices }) => {
           </span>
         </div>
         
-        <button className="bg-white text-black px-8 py-3 rounded-xl font-bold text-base hover:bg-gray-100 transition-colors">
+        <Link to='/book-slot' className="bg-white text-black px-8 py-3 rounded-xl font-bold text-base hover:bg-gray-100 transition-colors">
           Book Now
-        </button>
+        </Link>
       </div>
     </div>
   )

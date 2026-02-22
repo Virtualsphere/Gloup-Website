@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addMonths, subMonths } from 'date-fns';
 import SalonCard from './SalonCard';
 import CalendarHeader from './CalendarHeader';
@@ -12,6 +12,10 @@ const SlotBookingSection = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
+
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
 
   const handlePrevMonth = () => {
     setCurrentMonth(prev => subMonths(prev, 1));

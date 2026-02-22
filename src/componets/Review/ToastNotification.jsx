@@ -5,7 +5,7 @@ const ToastNotification = ({ message, isVisible, onClose }) => {
     if (isVisible) {
       const timer = setTimeout(() => {
         onClose();
-      }, 3000); // Auto close after 3 seconds
+      }, 2000); // Auto close after 3 seconds
       return () => clearTimeout(timer);
     }
   }, [isVisible, onClose]);

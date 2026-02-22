@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SalonCard from '../BookSlot/SalonCard';
 import BookingDetailCard from './BookingDetailCard';
 import BookingForSection from './BookingForSection';
@@ -16,7 +16,14 @@ const initialServices = [
 ];
 
 const ReviewConfirmPage = () => {
+
+      
   const location = useLocation();
+
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
   const { bookingDate, bookingTime } = location.state || { bookingDate: '27-02-2026', bookingTime: '10:00 AM - 11:00 AM' };
 
   // State
