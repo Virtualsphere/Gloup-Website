@@ -40,15 +40,17 @@ const ServiceCard = ({ service }) => {
           className="absolute top-3 left-3 right-3 flex justify-between items-center z-50 pointer-events-none"
           style={{ transform: 'translateZ(10px)' }}
         >
-          {/* Crown Badge */}
-          <div className="bg-yellow-400 p-2 rounded-full shadow-md pointer-events-auto">
+          {/* premium */}
+          {service.isPremium && (
+            <div className="bg-yellow-400 p-2 rounded-full shadow-md pointer-events-auto">
              <Crown size={20} className="text-white" fill="white" />
           </div>
+          )}
 
-          {/* Heart Icon */}
+          {/* isFavourite */}
           <button 
             onClick={() => setIsFavorite(!isFavorite)}
-            className="bg-white p-2 rounded-full shadow-md hover:scale-110 transition-transform pointer-events-auto"
+            className="ml-auto bg-white p-2 rounded-full shadow-md hover:scale-110 transition-transform pointer-events-auto"
           >
             <Heart 
               size={20} 

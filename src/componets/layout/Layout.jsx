@@ -7,7 +7,7 @@ import DeskFooter from './DeskFooter';
 
 const Layout = ({ children }) => {
 
-  const isMobile = useMediaQuery(768);
+  const isMobile = useMediaQuery(1024);
 
   return (
     <div className="flex flex-col min-h-screen">

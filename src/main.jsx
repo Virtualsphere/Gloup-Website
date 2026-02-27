@@ -4,6 +4,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css"; // Tailwind must be imported here
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+
+const queryClient = new QueryClient();
+
 
 // Optional providers (kept commented as requested)
 // import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -14,6 +19,7 @@ import { BrowserRouter } from "react-router-dom";
 const root = createRoot(document.getElementById("root"));
 
 root.render(
+  <QueryClientProvider client={queryClient}>
   <BrowserRouter>
   <StrictMode>
     {/* Uncomment below when needed */}
@@ -32,4 +38,5 @@ root.render(
     <App />
   </StrictMode>
   </BrowserRouter>
+  </QueryClientProvider>
 );

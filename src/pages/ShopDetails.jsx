@@ -110,7 +110,7 @@ const ShopDetails = () => {
         </div>
 
         {/* Sticky: Section Tabs (mobile only) */}
-        <div className="sticky z-10" style={{ top: `${headerHeight + 80}px` }}>
+        <div className="sticky z-10" style={{ top: `${headerHeight + 60}px` }}>
           <SectionHeading activeTab={activeTab} onTabClick={scrollToSection} />
         </div>
 
