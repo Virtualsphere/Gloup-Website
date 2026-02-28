@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useHomeFilterStore } from '../../store/homeFilterStore'
 
 const Filter = () => {
-  const [activeCategory, setActiveCategory] = useState('')
+  const { filters, setGender } = useHomeFilterStore()
+  const activeCategory = filters.gender
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const categories = ['Men', 'Female', 'Unisex', 'Baby']
@@ -40,7 +42,7 @@ const Filter = () => {
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => setGender(category)}
               className={`px-4 py-2 rounded-3xl text-sm font-medium border border-gray-200 whitespace-nowrap transition-colors ${
                 activeCategory === category
                   ? 'bg-black text-white'

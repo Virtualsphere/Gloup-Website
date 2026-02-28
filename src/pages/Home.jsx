@@ -63,7 +63,6 @@ const Home = () => {
 
       {/* Service cards — component handles mobile/desktop internally */}
       <PopularServices />
-      <PopularServices />
     </>
   )
 }

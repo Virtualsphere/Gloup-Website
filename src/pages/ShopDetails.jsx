@@ -13,16 +13,27 @@ import Location from '../componets/ShopDetails/Location'
 import PriceSection from '../componets/ShopDetails/PriceSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 
-// ─── Static Data ─────────────────────────────────────────────────────────────
-const SERVICES = [
-  { id: 1, name: "Men's Haircut",    duration: 30, price: 149,  originalPrice: 199,  discount: 20, isPopular: true  },
-  { id: 2, name: "Shave",           duration: 30, price: 200,  originalPrice: null, discount: null, isPopular: false },
-  { id: 3, name: "Premium Haircolor", duration: 45, price: 1200, originalPrice: 1500, discount: 30, isPopular: true  },
-]
+import { useParams } from 'react-router-dom'
+import { useGetSalonDetails } from '../hooks/services/useSalonDetails'
+
+
+
+
+
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const ShopDetails = () => {
   const isMobile = useMediaQuery(1024)
+
+  const {id} = useParams()
+  const {data, isLoading, isError} = useGetSalonDetails(id)
+  
+  const apiData = data?.data || {}
+  const apiServices = apiData?.services || []
+
+  console.log(apiData)
+
+  console.log(apiServices)
 
   // Sticky header height tracking
   const shortDetailsRef = useRef(null)
@@ -101,12 +112,12 @@ const ShopDetails = () => {
   return (
     <div className="mb-20">
       {/* Banner */}
-      {isMobile ? <Banner /> : <DeskBanner />}
+      {isMobile ? <Banner images={apiData?.images} /> : <DeskBanner images={apiData?.images} />}
 
       <div className="lg:px-10 xl:px-32">
         {/* Sticky: Shop Info */}
         <div ref={shortDetailsRef} className="sticky top-16 z-20">
-          <ShortDetails />
+          <ShortDetails shopData={apiData} />
         </div>
 
         {/* Sticky: Section Tabs (mobile only) */}
@@ -121,22 +132,22 @@ const ShopDetails = () => {
           <div>
             <div ref={servicesRef}>
               <Services
-                services={SERVICES}
+                services={apiServices}
                 addedServices={addedServices}
                 toggleService={toggleService}
               />
             </div>
-            <div ref={aboutRef}><About /></div>
-            <div ref={amenitiesRef}><Amenities /></div>
-            <div ref={teamRef}><Team /></div>
-            <div ref={reviewsRef}><Reviews /></div>
-            <OpeningHours />
-            <Location />
+            <div ref={aboutRef}><About aboutText={apiData?.about} /></div>
+            <div ref={amenitiesRef}><Amenities amenities={apiData?.ambients} /></div>
+            <div ref={teamRef}><Team teamMembers={apiData?.teamMembers} /></div>
+            <div ref={reviewsRef}><Reviews reviews={apiData?.reviews} /></div>
+            <OpeningHours openingHours={apiData?.openingHours} />
+            <Location locationData={apiData?.location} shopName={apiData?.name} />
           </div>
 
           {/* Right: Booking Sidebar (desktop only) */}
           <div className="hidden lg:block">
-            <PriceSection services={SERVICES} addedServices={addedServices} />
+            <PriceSection services={apiServices} addedServices={addedServices} />
           </div>
 
         </div>
@@ -144,7 +155,7 @@ const ShopDetails = () => {
 
       {/* Mobile: Fixed bottom price bar */}
       <div className="lg:hidden">
-        <PriceSection services={SERVICES} addedServices={addedServices} />
+        <PriceSection services={apiServices} addedServices={addedServices} />
       </div>
     </div>
   )

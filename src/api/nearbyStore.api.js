@@ -1,16 +1,12 @@
+// api/nearbyStore.api.js
+
 import axiosInstance from "./axiosInstance";
 
+export const getNearbySalons = async (filters) => {
+  const response = await axiosInstance.post(
+    "/app/v2/store/nearby/",
+    filters
+  );
 
-// Get Nearby salons
-
-export const getNearbySalons = async ({lat, lng}) => {
-    console.log("Sending:", { lat, lng });
-    const response = await axiosInstance.post("/store/nearby/", {
-        lat,
-        lng
-    });
-
-    return response.data;
+  return response.data;
 };
-
-

@@ -11,8 +11,11 @@ const PriceSection = ({ services, addedServices }) => {
   services.forEach(service => {
     if (addedServices.has(service.id)) {
       totalPrice += service.price;
-      if (service.discount && service.discount > maxDiscount) {
-        maxDiscount = service.discount;
+      if (service.discountPercentage) {
+        const discountVal = parseInt(service.discountPercentage);
+        if (!isNaN(discountVal) && discountVal > maxDiscount) {
+          maxDiscount = discountVal;
+        }
       }
     }
   });

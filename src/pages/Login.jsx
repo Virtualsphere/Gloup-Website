@@ -12,7 +12,7 @@ const Login = () => {
   };
 
   return (
-    <div className="fixed inset-0 mt-[72px] mb-16 flex items-center justify-center bg-white px-3 md:px-4 overflow-y-auto">
+    <div className="h-screen flex items-center justify-center bg-white px-3 md:px-4 overflow-y-auto">
       <LoginForm onLoginSubmit={handleLoginSubmit} />
       <OTPModal 
         isOpen={showOTPModal} 

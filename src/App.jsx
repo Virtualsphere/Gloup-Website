@@ -7,6 +7,7 @@ import ShopDetails from "./pages/ShopDetails";
 import BookSlot from "./pages/BookSlot";
 import ReviewOrderPage from "./pages/ReviewOrderPage";
   // import { BrowserRouter as Router, } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
   // import Header from "./componets/Header";
   // import Footer from "./componets/Footer";
   // import AppRoutes from "./routes";
@@ -40,13 +41,14 @@ import ReviewOrderPage from "./pages/ReviewOrderPage";
       // </Router>
 
      <>
+      <Toaster position="top-right" />
       <div className="bg-gray-100">
          <Layout>
         <Routes>
          
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/shop-details" element={<ShopDetails />} />
+          <Route path="/salon-details/:id" element={<ShopDetails />} />
           <Route path="/book-slot" element={<BookSlot />} />
           <Route path="/review-order" element={<ReviewOrderPage />} />
         </Routes>

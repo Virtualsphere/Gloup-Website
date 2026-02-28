@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
+import { useSendOtp } from '../../hooks/services/auth/useSendOtp';
+import toast from 'react-hot-toast';
 
 const LoginForm = ({ onLoginSubmit }) => {
   const [mobileNumber, setMobileNumber] = useState('');
 
+  const { mutate, isPending, isSuccess, isError, data, error } = useSendOtp();
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (mobileNumber.length === 10) {
-      onLoginSubmit(mobileNumber);
+      mutate(mobileNumber, {
+        onSuccess: (response) => {
+          toast.success(response?.message || 'OTP sent successfully!');
+          onLoginSubmit(mobileNumber);
+        },
+        onError: (err) => {
+          toast.error(err?.response?.data?.message || 'Failed to send OTP. Please try again.');
+        }
+      });
+    } else {
+      toast.error('Please enter a valid 10-digit mobile number.');
     }
   };
 
@@ -51,9 +67,10 @@ const LoginForm = ({ onLoginSubmit }) => {
         {/* Login Button */}
         <button
           type="submit"
+          disabled={isPending}
           className="w-full bg-black text-white font-semibold py-4 rounded-xl hover:bg-gray-800 transition-colors"
         >
-          Login
+          {isPending ? "Sending..." : "Send OTP"}
         </button>
 
         {/* Divider */}

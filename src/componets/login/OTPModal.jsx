@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 
+import { useVerifyOtp } from '../../hooks/services/auth/useVerifyOtp';
+import { useSendOtp } from '../../hooks/services/auth/useSendOtp';
+import toast from 'react-hot-toast';
+
 const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(56);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+
+  const { mutate: verifyOtpMutate, isPending } = useVerifyOtp();
+  const { mutate: sendOtpMutate, isPending: isResending } = useSendOtp();
+
 
   useEffect(() => {
     if (isOpen) {
@@ -52,16 +60,33 @@ const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
   const handleVerify = () => {
     const otpValue = otp.join('');
     if (otpValue.length === 4) {
-      console.log('OTP:', otpValue);
-      // Handle OTP verification
-      onClose();
+      verifyOtpMutate({ phone: mobileNumber, otp: otpValue }, {
+        onSuccess: (response) => {
+          toast.success(response?.message || 'OTP verified successfully!');
+          onClose();
+        },
+        onError: (err) => {
+          toast.error(err?.response?.data?.message || 'Invalid OTP. Please try again.');
+          // Clear inputs on error
+          setOtp(['', '', '', '']);
+          inputRefs[0].current?.focus();
+        }
+      });
     }
   };
 
   const handleResend = () => {
-    setOtp(['', '', '', '']);
-    setTimer(56);
-    inputRefs[0].current?.focus();
+    sendOtpMutate(mobileNumber, {
+      onSuccess: (response) => {
+        toast.success(response?.message || 'OTP resent successfully!');
+        setOtp(['', '', '', '']);
+        setTimer(56);
+        inputRefs[0].current?.focus();
+      },
+      onError: (err) => {
+        toast.error(err?.response?.data?.message || 'Failed to resend OTP. Please try again.');
+      }
+    });
   };
 
   if (!isOpen) return null;
@@ -118,22 +143,27 @@ const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
         {/* Verify Button */}
         <button
           onClick={handleVerify}
-          disabled={otp.join('').length !== 4}
+          disabled={isPending}
           className={`w-full font-semibold py-4 rounded-xl transition-colors mb-6 ${
             otp.join('').length === 4 
               ? 'bg-black text-white hover:bg-gray-800' 
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
-          Verify OTP
+          {isPending ? "Verifying..." : "Verify OTP"}
         </button>
 
         {/* Resend OTP */}
         <button
           onClick={handleResend}
-          className="w-full text-gray-600 font-medium hover:text-gray-900 transition-colors"
+          disabled={timer > 0 || isResending}
+          className={`w-full font-medium transition-colors ${
+            timer > 0 || isResending 
+              ? 'text-gray-400 cursor-not-allowed' 
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
         >
-          Resend OTP
+          {isResending ? "Sending..." : "Resend OTP"}
         </button>
       </div>
     </div>

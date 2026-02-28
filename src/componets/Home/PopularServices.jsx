@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 
 import { useUserLocation } from '../../hooks/useUserLocation'
 import { useNearbySalons } from '../../hooks/services/useNearbySalons'
+import { useHomeFilterStore } from '../../store/homeFilterStore'
 
 const BASE_IMAGE_URL = 'https://v1.gloup.in/images'
 
@@ -45,7 +46,10 @@ const normalizeService = (salon) => {
 
 const PopularServices = () => {
   const { getLocation } = useUserLocation()
-  const { data, isLoading, isError } = useNearbySalons()
+  const { filters } = useHomeFilterStore()
+  
+  // Pass dynamic filters directly down to the query hook
+  const { data, isLoading, isError } = useNearbySalons(filters)
 
   useEffect(() => {
     getLocation()
@@ -120,7 +124,7 @@ const PopularServices = () => {
         >
           {services.map((service, idx) => (
             <SwiperSlide key={`${service.id}-${idx}`} className="h-auto pb-2">
-              <Link to={`/shop-details/${service.id}`} className="block h-full">
+              <Link to={`/salon-details/${service.id}`} className="block h-full">
                 <ServiceCard service={service} />
               </Link>
             </SwiperSlide>

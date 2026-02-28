@@ -10,31 +10,22 @@ import 'swiper/css/pagination';
 // Import custom styles
 import './Banner.css';
 
-const Banner = () => {
+const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
+
+const Banner = ({ images = [] }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Sample slide data - replace with actual salon/shop images
-  const slides = [
+  // Map API images or provide a fallback slide
+  const slides = images?.length > 0 ? images.map((img, index) => ({
+    id: index + 1,
+    image: `${BASE_IMAGE_URL}/${img}`,
+    alt: `Salon Image ${index + 1}`
+  })) : [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&h=500&fit=crop',
-      alt: 'Salon Image 1'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1622287162716-f311baa16c2d?w=800&h=500&fit=crop',
-      alt: 'Salon Image 2'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&h=500&fit=crop',
-      alt: 'Salon Image 3'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=500&fit=crop',
-      alt: 'Salon Image 4'
-    },
+      alt: 'Salon Image 1 fallback'
+    }
   ];
 
   const handleShare = () => {
