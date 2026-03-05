@@ -20,10 +20,19 @@ const Location = ({ locationData = {}, shopName = "" }) => {
     lng: hasCoordinates ? lng : 80.2340045,
   };
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   });
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Google Maps API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing');
+    console.log('Map isLoaded:', isLoaded);
+    console.log('Map loadError:', loadError);
+    console.log('Has coordinates:', hasCoordinates);
+    console.log('Coordinates:', { lat, lng });
+  }, [isLoaded, loadError, hasCoordinates, lat, lng]);
 
   const handleDirectionsClick = () => {
     if (hasCoordinates) {
@@ -41,7 +50,14 @@ const Location = ({ locationData = {}, shopName = "" }) => {
       <div className="lg:bg-white lg:rounded-2xl lg:border lg:border-gray-200 lg:overflow-hidden">
         {/* Map Placeholder */}
         <div className="w-full h-48 lg:h-56 bg-gray-200 rounded-2xl lg:rounded-none flex flex-col items-center justify-center relative overflow-hidden">
-          {isLoaded && hasCoordinates ? (
+          {loadError ? (
+            <div className="flex flex-col items-center gap-2 z-10">
+              <MapPin size={40} className="text-red-500" fill="#fecaca" strokeWidth={1.5} />
+              <span className="text-sm text-red-600 font-medium text-center px-4">
+                Failed to load map. Please check your internet connection.
+              </span>
+            </div>
+          ) : isLoaded && hasCoordinates ? (
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={center}
@@ -53,12 +69,15 @@ const Location = ({ locationData = {}, shopName = "" }) => {
             >
               <Marker position={center} />
             </GoogleMap>
-          ) : (
+          ) : !hasCoordinates ? (
             <>
               <div className="flex flex-col items-center gap-2 z-10">
                 <MapPin size={40} className="text-orange-500" fill="#fed7aa" strokeWidth={1.5} />
                 <span className="text-sm text-gray-500 font-medium text-center px-4">
                   {shopName || "Salon Location"}
+                </span>
+                <span className="text-xs text-gray-400 text-center px-4">
+                  No coordinates available
                 </span>
               </div>
               {/* Subtle dot-grid to hint at a map */}
@@ -70,6 +89,13 @@ const Location = ({ locationData = {}, shopName = "" }) => {
                 }}
               />
             </>
+          ) : (
+            <div className="flex flex-col items-center gap-2 z-10">
+              <div className="animate-pulse">
+                <MapPin size={40} className="text-gray-400" fill="#e5e7eb" strokeWidth={1.5} />
+              </div>
+              <span className="text-sm text-gray-500 font-medium">Loading map...</span>
+            </div>
           )}
         </div>
 
