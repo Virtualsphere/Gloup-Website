@@ -5,6 +5,7 @@ import Filter from '../componets/Home/Filter'
 import HeroSlider from '../componets/Home/HeroSlider'
 import ServiceSlider from '../componets/Home/ServiceSlider'
 import PopularServices from '../componets/Home/PopularServices'
+import TopSalons from '../componets/Home/TopSalons'
 import DeskHero from '../componets/Home/DeskHero'
 import {useMediaQuery} from '../hooks/useMediaQuery'
 
@@ -28,12 +29,12 @@ const Home = () => {
 
   return (
     <>
-      {/* Mobile-only: location + profile */}
-      {isMobile && <ShortProfile />}
-
       {/* Hero: mobile slider vs desktop full hero */}
       {isMobile ? (
         <div className="relative" ref={heroRef}>
+          <div className="absolute top-0 left-0 right-0 z-10">
+            <ShortProfile />
+          </div>
           <HeroSlider />
           <div
             className={`z-40 transition-all duration-0 ${
@@ -49,20 +50,19 @@ const Home = () => {
         <DeskHero />
       )}
 
-      {/* Categories — component handles mobile/desktop internally */}
-      {isMobile ? (
-        <div className="sticky top-[130px] py-2 z-30 bg-white">
-          <ServiceSlider />
-        </div>
-      ) : (
+      {/* Categories */}
+      <div className="sticky lg:static top-[130px] py-2 lg:py-0 z-30 lg:z-auto bg-white lg:bg-transparent">
         <ServiceSlider />
-      )}
+      </div>
 
       {/* Filters — mobile only */}
       {isMobile && <Filter />}
 
       {/* Service cards — component handles mobile/desktop internally */}
       <PopularServices />
+      <TopSalons />
+
+
     </>
   )
 }

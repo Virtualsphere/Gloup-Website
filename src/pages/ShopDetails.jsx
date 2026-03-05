@@ -147,7 +147,7 @@ const ShopDetails = () => {
 
           {/* Right: Booking Sidebar (desktop only) */}
           <div className="hidden lg:block">
-            <PriceSection services={apiServices} addedServices={addedServices} />
+            <PriceSection services={apiServices} addedServices={addedServices} id={apiData?.id} />
           </div>
 
         </div>

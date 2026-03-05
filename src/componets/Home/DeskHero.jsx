@@ -4,32 +4,26 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
-
-const slides = [
-  {
-    id: 1,
-    image: '/slider-1.jpg',
-    alt: 'Luxury Salon',
-  },
-  {
-    id: 2,
-    image: '/slider-1.jpg',
-    alt: 'Spa & Wellness',
-  },
-  {
-    id: 3,
-    image: '/slider-1.jpg',
-    alt: 'Beauty Studio',
-  },
-]
+import { useGetBanner } from '../../hooks/services/useGetBanner'
 
 const DeskHero = () => {
   const [service, setService] = useState('')
   const [location] = useState('Bengaluru')
   const [gender, setGender] = useState('Unisex')
 
+  const { data, isLoading, isError } = useGetBanner()
+  const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  if (isLoading) {
+    return <div className="w-full h-[680px] bg-gray-200 animate-pulse hidden lg:block"></div>
+  }
+
+  if (isError || !data?.success || !data?.data?.length) {
+    return null;
+  }
+
   return (
-    <div className="relative bg-gray-100 overflow-hidden">
+    <div className="relative bg-gray-100 overflow-hidden hidden lg:block">
       {/* Background swiper */}
       <Swiper
         modules={[Pagination, Autoplay]}
@@ -38,12 +32,12 @@ const DeskHero = () => {
         loop
         className="w-full h-[680px]"
       >
-        {slides.map(slide => (
+        {data.data.map(slide => (
           <SwiperSlide key={slide.id}>
-            <div className="w-full h-[full] relative">
+            <div className="w-full h-full relative">
               <img
-                src={slide.image}
-                alt={slide.alt}
+                src={`${imageBaseUrl}/${slide.imageUrl}`}
+                alt={`Slide ${slide.id}`}
                 className="w-full h-full object-cover"
                 onError={e => { e.target.style.display = 'none' }}
               />

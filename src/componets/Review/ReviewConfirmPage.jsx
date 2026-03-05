@@ -121,7 +121,8 @@ const ReviewConfirmPage = () => {
               <BookingForSection />
 
               {/* Coupon + Billing visible on mobile only (shown in sidebar on desktop) */}
-              <div className="lg:hidden">
+              <div className="lg:hidden mt-8 px-1">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">Coupons & Offers</h2>
                 <CouponSection
                   appliedCoupon={appliedCoupon}
                   onApplyCoupon={setAppliedCoupon}

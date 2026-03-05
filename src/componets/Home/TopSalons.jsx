@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react'
-import { ChevronRight } from 'lucide-react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import ServiceCard from '../shared/ui/ServiceCard'
-import 'swiper/css'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { ChevronRight } from 'lucide-react';
+import 'swiper/css';
+import ServiceCard from "../shared/ui/ServiceCard";
+import { useTopSalons } from "../../hooks/services/useTopSalons";
+import { useHomeFilterStore } from "../../store/homeFilterStore";
+import { Link } from "react-router-dom";
 
-import { useUserLocation } from '../../hooks/useUserLocation'
-import { useNearbySalons } from '../../hooks/services/useNearbySalons'
-import { useHomeFilterStore } from '../../store/homeFilterStore'
-
-const BASE_IMAGE_URL = 'https://v1.gloup.in/images'
+const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
 
 // Normalize the API response shape to what ServiceCard expects
 const normalizeService = (salon) => {
@@ -32,31 +31,25 @@ const normalizeService = (salon) => {
     mainService: salon.serviceName || 'Service',
     price: salon.servicePrice || 0,
     rating: salon.rating ?? 0,
-    isPremium:salon.isPremium,
-    isFavourite:salon.isFavourite,
-    reviews: 0,
-    location: salon.address || 'Nearby',
+    isPremium: salon.isPremium,
+    isFavourite: salon.isFavorite, // Note the spelling difference from popular services API mapping if applicable
+    reviews: salon.reviewCount || 0,
+    location: salon.address || 'Nearby', // TopSalons addresses tend to be less populated based on the payload provided
     distance: salon.distance ? `${salon.distance.toFixed(1)} km` : '',
     services: salon.categories?.length > 0 ? salon.categories : ['Service'],
     images,
   };
 };
 
-
-
-const PopularServices = () => {
-  const { getLocation } = useUserLocation()
-  const { filters } = useHomeFilterStore()
+function TopSalons() {
+  const navigate = useNavigate();
+  const { filters } = useHomeFilterStore();
   
   // Pass dynamic filters directly down to the query hook
-  const { data, isLoading, isError } = useNearbySalons(filters)
+  const { data, isLoading, isError } = useTopSalons(filters);
 
-  useEffect(() => {
-    getLocation()
-  }, [])
-
-  const rawSalons = data?.data?.data || []
-  const services = rawSalons.map(normalizeService)
+  const rawSalons = data?.data || []; // Note: TopSalons returns data directly, whereas nearby returns data.data according to previous setups
+  const services = rawSalons.map(normalizeService);
 
   // Loading skeleton
   if (isLoading) {
@@ -64,8 +57,8 @@ const PopularServices = () => {
       <div className="bg-gray-100 px-4 lg:px-10 xl:px-32 py-10">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
-            <p className="text-sm text-gray-500 mt-1">Based on your location</p>
+            <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Top Salons</h2>
+            <p className="text-sm text-gray-500 mt-1">Handpicked best salons for you</p>
           </div>
         </div>
         <div className="flex gap-4 overflow-hidden">
@@ -80,12 +73,12 @@ const PopularServices = () => {
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   // Error or empty state
   if (isError || services.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -93,8 +86,8 @@ const PopularServices = () => {
       {/* Header */}
       <div className="px-4 lg:px-10 xl:px-32 flex items-start justify-between mb-4 lg:mb-6">
         <div>
-          <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
-          <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">Based on your location</p>
+          <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Top Salons</h2>
+          <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">Handpicked best salons for you</p>
         </div>
         <button className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-pink-500 transition-colors">
           See All <ChevronRight size={16} />
@@ -132,7 +125,7 @@ const PopularServices = () => {
         </Swiper>
       </div>
     </div>
-  )
+  );
 }
 
-export default PopularServices
+export default TopSalons;

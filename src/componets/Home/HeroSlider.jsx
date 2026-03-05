@@ -9,34 +9,33 @@ import 'swiper/css/pagination'
 // Import custom styles
 import './HeroSlider.css'
 
+import { useGetBanner } from '../../hooks/services/useGetBanner'
+
+
+
+
 const HeroSlider = () => {
-  // Sample slide data - you can replace with your actual images
-  const slides = [
-    {
-      id: 1,
-      image: '/slider-1.jpg',
-      alt: 'Slide 1'
-    },
-    {
-      id: 2,
-      image: '/slider-2.jpg',
-      alt: 'Slide 2'
-    },
-    {
-      id: 3,
-      image: '/slider-3.jpg',
-      alt: 'Slide 3'
-    },
-    {
-      id: 4,
-      image: '/slider-4.jpg',
-      alt: 'Slide 4'
-    },
-  ]
+
+
+  const { data, isLoading, isError } = useGetBanner()
+  const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  if (isLoading) {
+    return (
+      <div className="lg:hidden">
+        <div className="w-full h-48 bg-gray-200 animate-pulse flex items-center justify-center">
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !data?.success || !data?.data?.length) {
+    return null;
+  }
 
   return (
-    <div className="md:hidden px-3 py-2">
-      <div className="relative rounded-2xl overflow-hidden">
+    <div className="lg:hidden">
+      <div className="relative overflow-hidden">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={0}
@@ -53,13 +52,15 @@ const HeroSlider = () => {
           loop={true}
           className="hero-swiper"
         >
-          {slides.map((slide) => (
+          {data.data.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+              <div className="w-full relative bg-gray-200 flex items-center justify-center">
+                {/* Top black shadow gradient for profile text visibility */}
+                <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none"></div>
                 <img 
-                  src={slide.image} 
-                  alt={slide.alt}
-                  className="w-full h-full object-cover"
+                  src={`${imageBaseUrl}/${slide.imageUrl}`} 
+                  alt={`Slide ${slide.id}`}
+                  className="w-full h-auto block object-cover"
                   onError={(e) => {
                     e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200"%3E%3Crect fill="%23E5E7EB" width="400" height="200"/%3E%3Ctext fill="%239CA3AF" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ESlide ' + slide.id + '%3C/text%3E%3C/svg%3E'
                   }}

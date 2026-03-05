@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { addMonths, subMonths } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import CalendarHeader from './CalendarHeader';
 import DateSelector from './DateSelector';
 import TimeSlotGrid from './TimeSlotGrid';
@@ -9,6 +9,7 @@ import OfferBanner from './OfferBanner';
 import DeskBookingCard from './DeskBookingCard';
 
 const SlotBookingSection = () => {
+  const { id } = useParams();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -60,6 +61,7 @@ const SlotBookingSection = () => {
             />
             <div className="mt-6 px-4 lg:px-0 pb-6">
               <TimeSlotGrid
+                saloonId={id}
                 selectedDate={selectedDate}
                 selectedSlot={selectedSlot}
                 onSelect={handleSlotSelect}
@@ -69,7 +71,7 @@ const SlotBookingSection = () => {
 
           {/* Desktop sidebar */}
           <div className="hidden lg:block">
-            <DeskBookingCard selectedSlot={selectedSlot} selectedDate={selectedDate} />
+            <DeskBookingCard selectedSlot={selectedSlot} selectedDate={selectedDate} id={id} />
           </div>
 
         </div>

@@ -23,19 +23,15 @@ root.render(
   <BrowserRouter>
   <StrictMode>
     {/* Uncomment below when needed */}
+    {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}> */}
 
-    {/*
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+      {/* <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}> */}
           <App />
-        </PersistGate>
-      </Provider>
-    </GoogleOAuthProvider>
-    */}
+        {/* </PersistGate>
+      </Provider> */}
 
-    {/* Direct render */}
-    <App />
+    {/* </GoogleOAuthProvider> */}
   </StrictMode>
   </BrowserRouter>
   </QueryClientProvider>

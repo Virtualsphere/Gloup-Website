@@ -8,7 +8,10 @@ export default {
     extend: {
       colors:{
         light:"#EEEEEE",
-      }
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],

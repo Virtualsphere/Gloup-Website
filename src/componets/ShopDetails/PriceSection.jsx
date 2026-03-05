@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import DiscountBanner from './DiscountBanner';
 
-const PriceSection = ({ services, addedServices }) => {
+const PriceSection = ({ services, addedServices, id }) => {
   if (addedServices.size === 0) return null;
 
   let totalPrice = 0;
@@ -39,7 +39,7 @@ const PriceSection = ({ services, addedServices }) => {
           </span>
         </div>
         <Link
-          to='/book-slot'
+          to={`/${id}/book-slot`}
           className="bg-white lg:bg-black text-black lg:text-white px-8 lg:px-0 py-3 lg:py-3.5 w-auto lg:w-full lg:text-center rounded-xl font-bold lg:font-semibold text-base hover:bg-gray-100 lg:hover:bg-gray-900 transition-colors lg:mt-4"
         >
           Book Now

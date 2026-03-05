@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
-const DeskBookingCard = ({ selectedSlot, selectedDate }) => {
+const DeskBookingCard = ({ selectedSlot, selectedDate, id }) => {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden sticky top-28">
       {/* Slot Time */}
@@ -43,7 +43,7 @@ const DeskBookingCard = ({ selectedSlot, selectedDate }) => {
       <div className="px-5 pb-5">
         {selectedSlot ? (
           <Link
-            to="/review-order"
+            to={`/${id}/review-order`}
             state={{
               bookingDate: selectedDate.toLocaleDateString('en-US', {
                 weekday: 'short', day: '2-digit', month: 'short', year: 'numeric',

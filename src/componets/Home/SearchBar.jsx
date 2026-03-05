@@ -3,7 +3,7 @@ import { Search, SlidersHorizontal } from 'lucide-react'
 
 const SearchBar = ({ isSticky }) => {
   return (
-    <div className="md:hidden w-full">
+    <div className="lg:hidden w-full">
       <div 
         className={`bg-white flex items-center gap-3 transition-all duration-300 ${
           isSticky 

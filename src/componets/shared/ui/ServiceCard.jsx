@@ -85,41 +85,65 @@ const ServiceCard = ({ service }) => {
             </h3>
           </div>
           
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <span className="text-yellow-400">★</span>
-            <span className="text-sm font-medium text-gray-900">
-              {service.rating}
-            </span>
-            <span className="text-sm text-gray-400">
-              ({service.reviews})
-            </span>
-          </div>
+          {(service.rating || service.rating === 0) && (
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <span className="text-yellow-400">★</span>
+              <span className="text-sm font-medium text-gray-900">
+                {service.rating}
+              </span>
+              {service.reviews && (
+                <span className="text-sm text-gray-400">
+                  ({service.reviews})
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
-          <MapPin size={16} className="text-gray-400" />
-          <span>{service.location} • {service.distance}</span>
+        <div className="flex items-center gap-1 text-sm text-gray-600 mb-3 w-full overflow-hidden">
+          <MapPin size={16} className="text-gray-400 flex-shrink-0" />
+          <span className="truncate">
+            {service.location?.split(' ').length > 6 
+              ? `${service.location.split(' ').slice(0, 6).join(' ')}..` 
+              : service.location || "Location not available"}
+            {service.distance ? ` • ${service.distance}` : ''}
+          </span>
         </div>
 
-        {/* Service Tags */}
+        {/* Dynamic Footer (Services, Languages, Book Button) */}
         <div className='flex items-center justify-between mt-auto'>
-          <div>
-            <p className="text-xs font-medium text-gray-500">Lang</p>
-            <p className="text-xs font-semibold text-gray-900">Eng, Hin</p>
-          </div>
+          {service.languages ? (
+            <div>
+              <p className="text-xs font-medium text-gray-500">Lang</p>
+              <p className="text-xs font-semibold text-gray-900">{service.languages}</p>
+            </div>
+          ) : (
+            <div>
+              {service.type && <span className="text-xs text-gray-500">{service.type}</span>}
+            </div>
+          )}
+          
           <div className="flex items-center gap-2 flex-wrap justify-end">
-            {service.services.slice(0, 2).map((tag, index) => (
-              <span 
-                key={index}
-                className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-            {service.services.length > 2 && (
-              <span className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full">
-                +{service.services.length - 2}
+            {service.services && service.services.length > 0 ? (
+              <>
+                {service.services.slice(0, 2).map((tag, index) => (
+                  <span 
+                    key={index}
+                    className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {service.services.length > 2 && (
+                  <span className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full">
+                    +{service.services.length - 2}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-sm font-medium text-pink-600 hover:opacity-80 transition-opacity">
+                Book Now
               </span>
             )}
           </div>

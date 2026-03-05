@@ -6,6 +6,8 @@ import { Route, Routes } from "react-router-dom";
 import ShopDetails from "./pages/ShopDetails";
 import BookSlot from "./pages/BookSlot";
 import ReviewOrderPage from "./pages/ReviewOrderPage";
+import FavouritesPage from "./pages/FavouritePage";
+
   // import { BrowserRouter as Router, } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
   // import Header from "./componets/Header";
@@ -49,8 +51,10 @@ import { Toaster } from "react-hot-toast";
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/salon-details/:id" element={<ShopDetails />} />
-          <Route path="/book-slot" element={<BookSlot />} />
-          <Route path="/review-order" element={<ReviewOrderPage />} />
+          <Route path="/:id/book-slot" element={<BookSlot />} />
+          <Route path="/:id/review-order" element={<ReviewOrderPage />} />
+          <Route path="/favourite" element={<FavouritesPage />} />
+
         </Routes>
         </Layout>
       </div>

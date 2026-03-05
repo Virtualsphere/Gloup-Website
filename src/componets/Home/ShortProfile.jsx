@@ -4,16 +4,16 @@ import profile from '../../assets/images/author-1.jpg'
 
 const ShortProfile = () => {
   return (
-    <div className="md:hidden rounded-3xl mt-2 pt-2 px-3 pb-2 flex items-center justify-between">
+    <div className="lg:hidden rounded-3xl mt-2 pt-2 px-3 pb-2 flex items-center justify-between">
       {/* Location Info */}
       <div className="flex items-start gap-3">
         {/* Location Icon */}
-        <MapPin size={32} className="text-black mt-1" strokeWidth={2} />
+        <MapPin size={32} className="text-white mt-1" strokeWidth={2} />
         
         {/* Location Text */}
         <div className="flex flex-col">
-          <h2 className="text-xl font-normal text-black">Bagalur</h2>
-          <p className="text-xs text-gray-600">Bengaluru</p>
+          <h2 className="text-xl font-normal text-white">Bagalur</h2>
+          <p className="text-xs text-gray-200">Bengaluru</p>
         </div>
       </div>
 

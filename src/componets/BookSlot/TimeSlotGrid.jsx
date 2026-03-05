@@ -1,60 +1,108 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TimeSlotCard from './TimeSlotCard';
-import { isBefore, startOfToday } from 'date-fns';
+import { isBefore, startOfToday, format, parse, isToday } from 'date-fns';
+import { useGetSlots } from '../../hooks/services/useGetSlots';
 
-const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect }) => {
-  // Dummy data for demonstration/initial implementation
-  const initialSlots = [
-    { id: 1, time: '10:00 AM - 10:30 AM', available: true },
-    { id: 2, time: '10:30 AM - 11:00 AM', available: true },
-    { id: 3, time: '11:00 AM - 11:30 AM', available: true },
-    { id: 4, time: '11:30 AM - 12:00 PM', available: true },
-    { id: 5, time: '12:00 PM - 12:30 PM', available: true },
-    { id: 6, time: '12:30 PM - 01:00 PM', available: true },
-    { id: 7, time: '01:00 PM - 01:30 PM', available: true },
-    { id: 8, time: '01:30 PM - 02:00 PM', available: true },
-    { id: 9, time: '02:00 PM - 02:30 PM', available: false }, // Example disabled slot
-    { id: 10, time: '02:30 PM - 03:00 PM', available: true },
-    { id: 11, time: '03:00 PM - 03:30 PM', available: true },
-    { id: 12, time: '03:30 PM - 04:00 PM', available: true },
-    { id: 13, time: '04:00 PM - 04:30 PM', available: true },
-    { id: 14, time: '04:30 PM - 05:00 PM', available: true },
-    { id: 15, time: '05:00 PM - 05:30 PM', available: true },
-    { id: 16, time: '05:30 PM - 06:00 PM', available: true },
-  ];
+const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect, saloonId }) => {
+  // Format selected date as YYYY-MM-DD for the API
+  const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+  
+  // Fetch available slots from API
+  const { data, isLoading, isError } = useGetSlots(saloonId, formattedDate);
 
   // Check if the selected date is strictly before today
-  // startOfToday() returns 00:00:00 of today.
-  // If selectedDate (even with time) is before startOfToday, it's a past date.
-  // However, selectedDate usually has some time component or is just the date. 
-  // Let's assume selectedDate is a Date object.
-  // If we want to disable *past dates*, we check if start of selected day < start of today.
-  
   const isPastDate = isBefore(selectedDate, startOfToday());
+  const isCurrentDay = isToday(selectedDate);
+  const now = new Date();
+
+  // Helper to determine if a slot's time has already passed today
+  const isSlotPastTime = (timeString) => {
+    if (!isCurrentDay) return false; // Future days don't have past times
+    
+    try {
+      // Parse the slot time into a Date object on the current day
+      const slotTime = parse(timeString, 'HH:mm:ss', new Date());
+      return isBefore(slotTime, now);
+    } catch {
+      return false; // Safely fall back if parsing fails
+    }
+  };
 
   const handleSlotClick = (slot) => {
-    if (slot.available && !isPastDate) {
+    if (slot.available && !isPastDate && !slot.isPastTime) {
       onSelect(slot);
     }
   };
 
+  // Convert "09:30:00" to "09:30 AM" format
+  const formatTimeSlot = (timeString) => {
+    try {
+      const parsedTime = parse(timeString, 'HH:mm:ss', new Date());
+      return format(parsedTime, 'hh:mm a');
+    } catch {
+      return timeString; // Fallback to raw string if parsing fails
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <h3 className="text-lg md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-4">Available Slots</h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="h-14 bg-gray-200 animate-pulse rounded-full w-full"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full text-center py-6 text-red-500">
+        Failed to load slots for this date.
+      </div>
+    );
+  }
+
+  const slots = data?.data || [];
+
   return (
     <div className="w-full">
       <h3 className="text-lg md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-4">Available Slots</h3>
-      <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
-        {initialSlots.map((slot) => (
-          <TimeSlotCard
-            key={slot.id}
-            slot={slot}
-            isSelected={selectedSlot?.id === slot.id}
-            isDisabled={!slot.available || isPastDate}
-            onClick={handleSlotClick}
-          />
-        ))}
-      </div>
+      
+      {slots.length === 0 ? (
+        <p className="text-gray-500 text-center py-6">No slots available for this date.</p>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
+          {slots.map((apiSlot, index) => {
+            const isPastTime = isSlotPastTime(apiSlot.time);
+            
+            // Map the API structure to the structure expected by TimeSlotCard
+            const slot = {
+              id: index,
+              // Formatted presentation: e.g. "09:30 AM"
+              time: formatTimeSlot(apiSlot.time), 
+              // Convert "available" status string to boolean
+              available: apiSlot.status?.toLowerCase() === 'available', 
+              isPastTime: isPastTime,
+              raw: apiSlot // Store raw for booking request later
+            };
+
+            return (
+              <TimeSlotCard
+                key={index}
+                slot={slot}
+                isSelected={selectedSlot?.id === slot.id}
+                isDisabled={!slot.available || isPastDate || isPastTime}
+                onClick={handleSlotClick}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
-
 
 export default TimeSlotGrid;

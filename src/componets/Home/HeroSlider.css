@@ -1,16 +1,14 @@
 /* Custom Swiper Pagination Styles */
-.hero-swiper {
-  padding-bottom: 128px;
-}
 
 .hero-swiper .swiper-pagination {
-  bottom: 12px !important;
+  bottom: 20px !important;
+  z-index: 10;
 }
 
 .hero-swiper .custom-bullet {
   width: 8px;
   height: 8px;
-  background: #D1D5DB;
+  background: #d1d5db;
   opacity: 1;
   margin: 0 4px;
   transition: all 0.3s ease;
