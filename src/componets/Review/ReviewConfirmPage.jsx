@@ -29,6 +29,7 @@ const ReviewConfirmPage = () => {
   const slot            = useBookingStore((s) => s.slot);
   const removeService   = useBookingStore((s) => s.removeService);
   const removeAddOn     = useBookingStore((s) => s.removeAddOn);
+  const resetBooking    = useBookingStore((s) => s.resetBooking);
 
   // Merge selected + add-on services for billing
   const allServices = [...selectedServices, ...addOnServices];
@@ -113,6 +114,7 @@ const ReviewConfirmPage = () => {
             },
             {
               onSuccess: () => {
+                resetBooking();
                 toast.success('Booking confirmed! 🎉');
                 navigate('/my-bookings');
               },

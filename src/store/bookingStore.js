@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL ?? '';
 
@@ -33,7 +34,9 @@ const resolveImageUrl = (rawPath) => {
  *   bookingFor: { type, guest }
  * }
  */
-export const useBookingStore = create((set, get) => ({
+export const useBookingStore = create(
+  persist(
+    (set, get) => ({
   // ─── Salon ────────────────────────────────────────────────────────────────
   salon: {
     id: null,
@@ -158,4 +161,9 @@ export const useBookingStore = create((set, get) => ({
       bookingFor: { type: "self", guest: null },
       addOnServices: [],
     }),
-}));
+  }),
+  {
+    name: "booking-store", 
+    storage: createJSONStorage(() => localStorage), 
+  }
+));

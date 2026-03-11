@@ -7,6 +7,7 @@ import ShopDetails from "./pages/ShopDetails";
 import BookSlot from "./pages/BookSlot";
 import ReviewOrderPage from "./pages/ReviewOrderPage";
 import FavouritesPage from "./pages/FavouritePage";
+import ExploreSalonsPage from "./pages/ExploreSalonsPage";
 import { Toaster } from "react-hot-toast";
 import MyBooking from "./pages/MyBooking";
 import LoginModal from "./componets/login/LoginModal";
@@ -63,6 +64,7 @@ import TopSalonsPage from "./pages/TopSalonsPage";
             <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
             <Route path="/terms-conditions" element={<TermsAndConditions />} />
             <Route path="/about" element={<About />} />
+            <Route path="/explore" element={<ExploreSalonsPage />} />
             <Route path="/popular-services" element={<PopularServicesPage />} />
             <Route path="/top-salons" element={<TopSalonsPage />} />
             <Route path="/login" element={<Login />} />

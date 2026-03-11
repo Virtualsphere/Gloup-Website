@@ -1,21 +1,40 @@
 import React, { useState } from 'react';
 import { Menu, MapPin, Search, Gift, Tag, User, X, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLocationStore } from '../../store/locationStore';
+import LocationSearchModal from '../shared/ui/LocationSearchModal';
+
+
+
+
+
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+  const locationData = useLocationStore((state) => state.location);
+  
+  // Format the display address: take the first part before a comma, or "Bengaluru"
+  const displayAddress = locationData?.address 
+    ? locationData.address.split(',')[0]
+    : 'Bengaluru';
 
   return (
     <>
-      <nav className="sticky top-0 left-0 right-0 w-full bg-white z-50 border-b border-gray-100 flex items-center justify-between px-6 xl:px-32 lg:px-10 py-4 h-[80px] md:h-auto">
-        {/* Left Section: Logo & Location */}
+      <div className="sticky top-0 left-0 right-0 w-full bg-white z-50 border-b border-gray-100">
+        <nav className="w-full max-w-[1536px] mx-auto flex items-center justify-between px-6 xl:px-32 lg:px-10 py-4 h-[80px] md:h-auto">
+          {/* Left Section: Logo & Location */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center">
             <img src="/main-logo.png" alt="Gloup" className="w-20 invert" />
           </Link>
-          <button className="hidden lg:flex items-center gap-2 text-gray-500 font-medium hover:text-gray-800 transition-colors">
+          <button 
+            onClick={() => setIsLocationModalOpen(true)}
+            className="hidden lg:flex items-center gap-2 text-gray-500 font-medium hover:text-gray-800 transition-colors"
+          >
             <MapPin size={20} />
-            <span>Bengaluru</span>
+            <span className="max-w-[120px] truncate">{displayAddress}</span>
           </button>
         </div>
 
@@ -61,6 +80,7 @@ const Navbar = () => {
           </button>
         </div>
       </nav>
+      </div>
 
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
@@ -113,12 +133,18 @@ const Navbar = () => {
           {/* Location (Mobile) */}
           <div className="mt-2">
             <p className="text-xs text-gray-400 mb-2 uppercase tracking-wider font-semibold">Location</p>
-            <button className="flex items-center justify-between text-gray-800 font-medium bg-gray-50 w-full p-4 rounded-xl border border-gray-100 active:bg-gray-100 transition-colors">
-              <div className="flex items-center gap-3">
-                <MapPin size={20} className="text-gray-500" />
-                <span>Bengaluru</span>
+            <button 
+              onClick={() => {
+                setIsSidebarOpen(false);
+                setIsLocationModalOpen(true);
+              }}
+              className="flex items-center justify-between text-gray-800 font-medium bg-gray-50 w-full p-4 rounded-xl border border-gray-100 active:bg-gray-100 transition-colors"
+            >
+              <div className="flex items-center gap-3 overflow-hidden">
+                <MapPin size={20} className="text-gray-500 flex-shrink-0" />
+                <span className="truncate">{displayAddress}</span>
               </div>
-              <span className="text-xs text-[#114F44] font-semibold bg-[#114F44]/10 px-2 py-1 rounded-md">Change</span>
+              <span className="text-xs text-[#114F44] font-semibold bg-[#114F44]/10 px-2 py-1 rounded-md flex-shrink-0">Change</span>
             </button>
           </div>
         </div>
@@ -131,6 +157,11 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
+      <LocationSearchModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)} 
+      />
     </>
   );
 };

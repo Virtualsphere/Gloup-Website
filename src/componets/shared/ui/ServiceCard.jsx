@@ -1,5 +1,18 @@
 import React, { useState } from 'react'
-import { Crown, Heart, MapPin } from 'lucide-react'
+import { Crown, Heart, MapPin, Store } from 'lucide-react'
+import HeartOutline from "../../../assets/icons/ic_heart.svg?react";
+import HeartFill from "../../../assets/icons/ic_heart_fill.svg?react";
+import EnglishLang from "../../../assets/icons/ic_en.svg?react";
+import HindiLang from "../../../assets/icons/ic_hi.svg?react";
+import TamilLang from "../../../assets/icons/ic_ta.svg?react";
+import TeluguLang from "../../../assets/icons/ic_te.svg?react";
+import KannadaLang from "../../../assets/icons/ic_kn.svg?react";
+import MalayalamLang from "../../../assets/icons/ic_ml.svg?react";
+import CrownIcon from "../../../assets/icons/ic_crown.svg?react";
+
+
+
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import 'swiper/css'
@@ -8,15 +21,32 @@ import './ServiceCard.css'
 import { useAuthStore } from '../../../store/authStore'
 import { useUiStore } from '../../../store/uiStore'
 import { useToggleFavourite } from '../../../hooks/services/useToggleFavourite'
+import { useGetFavourites } from '../../../hooks/services/useGetFavourites'
 import toast from 'react-hot-toast'
 
 const ServiceCard = ({ service }) => {
-  // Optimistic local state — seeded from the prop
-  const [isFavorite, setIsFavorite] = useState(service?.isFavourite ?? false)
+  const { data: favData } = useGetFavourites();
+  const favouritesList = favData?.data ?? [];
+  const isGloballyFavorited = favouritesList.some((fav) => {
+    const favId = fav?.store?.id ?? fav?.store?._id ?? fav?.id;
+    return String(favId) === String(service?.id);
+  });
+
+  const exactFavoriteState = favData 
+    ? isGloballyFavorited 
+    : (service?.isFavourite || service?.isFavorite || false);
+  
+  const [isFavorite, setIsFavorite] = useState(exactFavoriteState);
+
+  React.useEffect(() => {
+    setIsFavorite(exactFavoriteState);
+  }, [exactFavoriteState]);
 
   const isAuthenticated  = useAuthStore((s) => s.isAuthenticated)
   const openLoginModal   = useUiStore((s) => s.openLoginModal)
   const { mutate: toggle, isPending } = useToggleFavourite()
+
+  const HeartIcon = isFavorite ? HeartFill : HeartOutline;
 
   const handleHeartClick = (e) => {
     e.preventDefault()   // prevent card Link navigation
@@ -32,12 +62,12 @@ const ServiceCard = ({ service }) => {
 
     toggle(service.id, {
       onSuccess: (res) => {
-        toast.success(res?.message || (isFavorite ? 'Removed from favourites' : 'Added to favourites'))
+        // toast.success(res?.message || (isFavorite ? 'Removed from favourites' : 'Added to favourites'))
       },
       onError: () => {
         // Revert on failure
         setIsFavorite((prev) => !prev)
-        toast.error('Something went wrong. Please try again.')
+        // toast.error('Something went wrong. Please try again.')
       },
     })
   }
@@ -74,8 +104,8 @@ const ServiceCard = ({ service }) => {
         >
           {/* premium */}
           {service.isPremium && (
-            <div className="bg-yellow-400 p-2 rounded-full shadow-md pointer-events-auto">
-             <Crown size={20} className="text-white" fill="white" />
+            <div className="bg-yellow-400 w-9 h-9 flex items-center justify-center p-2 rounded-full shadow-md pointer-events-auto">
+             <CrownIcon widht={15} height={15} className="text-white" fill="white" />
           </div>
           )}
 
@@ -85,9 +115,10 @@ const ServiceCard = ({ service }) => {
             disabled={isPending}
             className="ml-auto bg-white p-2 rounded-full shadow-md hover:scale-110 transition-transform pointer-events-auto"
           >
-            <Heart 
-              size={20} 
-              className={isFavorite ? 'text-pink-500 fill-pink-500' : 'text-gray-700'}
+            <HeartIcon
+              width={20}
+              height={20}
+              className={isFavorite ? "text-red-500" : "text-gray-500"}
             />
           </button>
         </div>
@@ -107,12 +138,12 @@ const ServiceCard = ({ service }) => {
         {/* Business Name & Rating */}
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
-            {service.logo && (
-              <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-xs font-bold">{service.logo}</span>
-              </div>
-            )}
-            <h3 className="text-base font-semibold text-gray-900 line-clamp-2">
+           
+                <div className="w-10 h-10 rounded-full border-2 border-zinc-700 bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <Store size={20} className="text-zinc-700" />
+                </div>
+            
+            <h3 className="text-base font-semibold text-gray-900">
               {service.name}
             </h3>
           </div>
@@ -123,7 +154,7 @@ const ServiceCard = ({ service }) => {
               <span className="text-sm font-medium text-gray-900">
                 {service.rating}
               </span>
-              {service.reviews && (
+              {service.reviews > 0 && (
                 <span className="text-sm text-gray-400">
                   ({service.reviews})
                 </span>
@@ -134,10 +165,16 @@ const ServiceCard = ({ service }) => {
 
         {/* Location */}
         <div className="flex items-center gap-1 text-sm text-gray-600 mb-3 w-full overflow-hidden">
-          <MapPin size={16} className="text-gray-400 flex-shrink-0" />
-          <span className="truncate">
+          <MapPin
+            size={16}
+            fill="black"
+            stroke="white"
+            strokeWidth={2}
+            className='flex-shrink-0'
+          />
+          <span className="truncate line-clamp-1">
             {service.location?.split(' ').length > 6 
-              ? `${service.location.split(' ').slice(0, 6).join(' ')}..` 
+              ? `${service.location.split(' ').slice(0, 4).join(' ')}...` 
               : service.location || "Location not available"}
             {service.distance ? ` • ${service.distance}` : ''}
           </span>
@@ -145,14 +182,24 @@ const ServiceCard = ({ service }) => {
 
         {/* Dynamic Footer (Services, Languages, Book Button) */}
         <div className='flex items-center justify-between mt-auto'>
-          <div className="flex items-center gap-1.5 text-gray-500 font-medium">
-            <span className="text-xl leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>ह</span>
-            <span className="text-sm leading-none">•</span>
-            <span className="text-lg leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>த</span>
-            <span className="text-sm leading-none">•</span>
-            <span className="text-xl leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>ಕ</span>
-            <span className="text-sm leading-none">•</span>
-            <span className="text-lg leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>മ</span>
+          <div className="flex items-center gap-1.5 text-gray-500 font-medium h-5">
+            {service.languageCodes &&
+              service.languageCodes
+                .map((code) => {
+                  const map = { en: EnglishLang, hi: HindiLang, ta: TamilLang, te: TeluguLang, kn: KannadaLang, ml: MalayalamLang };
+                  return map[code?.toLowerCase()];
+                })
+                .filter(Boolean)
+                .map((LangIcon, index, arr) => (
+                  <React.Fragment key={index}>
+                    <span className="flex items-center justify-center w-3 h-3 rounded-full overflow-hidden">
+                      <LangIcon width={15} height={10} className="font" />
+                    </span>
+                    {index < arr.length - 1 && (
+                      <span className="text-sm leading-none"></span>
+                    )}
+                  </React.Fragment>
+                ))}
           </div>
           
           <div className="flex items-center gap-2 flex-wrap justify-end">

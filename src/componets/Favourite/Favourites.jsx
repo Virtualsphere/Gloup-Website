@@ -29,6 +29,7 @@ const normalizeFav = (item) => {
     mainService: salon.serviceName ?? "Service",
     price: salon.servicePrice ?? 0,
     isPremium: salon.isPremium ?? false,
+    isFavorite: true,
     languages: [],
     services: salon.categories ?? [],
   };

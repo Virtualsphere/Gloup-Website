@@ -10,7 +10,7 @@ export default {
         light:"#EEEEEE",
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Outfit', 'sans-serif'],
       },
       keyframes: {
         slideUp: {

@@ -7,7 +7,7 @@ const Filter = () => {
   const activeCategory = filters.gender
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  const categories = ['Men', 'Female', 'Unisex', 'Baby']
+  const categories = ['All', 'Male', 'Female', 'Unisex', 'Kids']
 
   return (
     <div className="md:hidden bg-white px-3 py-3">
@@ -42,9 +42,15 @@ const Filter = () => {
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setGender(category)}
+              onClick={() => {
+                if (category === 'All') {
+                  setGender('') // Clear filter if "All" is clicked
+                } else {
+                  setGender(category)
+                }
+              }}
               className={`px-4 py-2 rounded-3xl text-sm font-medium border border-gray-200 whitespace-nowrap transition-colors ${
-                activeCategory === category
+                (activeCategory === category) || (category === 'All' && !activeCategory)
                   ? 'bg-black text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}

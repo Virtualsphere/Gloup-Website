@@ -5,11 +5,18 @@ import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { useGetBanner } from '../../hooks/services/useGetBanner'
+import { useLocationStore } from '../../store/locationStore'
+import LocationSearchModal from '../shared/ui/LocationSearchModal'
 
 const DeskHero = () => {
   const [service, setService] = useState('')
-  const [location] = useState('Bengaluru')
   const [gender, setGender] = useState('Unisex')
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
+
+  const locationData = useLocationStore((state) => state.location);
+  const displayAddress = locationData?.address 
+    ? locationData.address.split(',')[0]
+    : 'Bengaluru';
 
   const { data, isLoading, isError } = useGetBanner()
   const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
@@ -49,7 +56,7 @@ const DeskHero = () => {
       </Swiper>
 
       {/* Content overlay — z-10 to sit above the Swiper */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 xl:px-32 pb-8">
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 xl:px-32 pb-8 max-w-[1536px] mx-auto w-full">
         {/* Headline */}
         <h1 className="text-4xl xl:text-5xl font-bold text-gray-900 mb-3 leading-tight">
           Book local selfcare services
@@ -82,10 +89,13 @@ const DeskHero = () => {
             </div>
 
             {/* Section 2: Location */}
-            <div className="flex-1 flex items-center gap-2 px-4 py-4">
+            <button 
+              onClick={() => setIsLocationModalOpen(true)}
+              className="flex-1 flex items-center justify-start gap-2 px-4 py-4 hover:bg-gray-50 transition-colors focus:outline-none h-full"
+            >
               <MapPin className="w-4 h-4 text-black flex-shrink-0" />
-              <span className="text-sm text-black whitespace-nowrap">{location}</span>
-            </div>
+              <span className="text-sm text-black truncate text-left max-w-[150px]">{displayAddress}</span>
+            </button>
 
             {/* Section 3: Gender + Search button */}
             <div className="flex-1 flex items-center justify-between gap-2 px-4 py-4">
@@ -97,8 +107,8 @@ const DeskHero = () => {
                   className="text-sm text-black outline-none bg-transparent cursor-pointer"
                 >
                   <option value="Unisex">Unisex</option>
-                  <option value="Men">Men</option>
-                  <option value="Women">Women</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
               <button className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-900 transition-colors flex-shrink-0">
@@ -114,6 +124,11 @@ const DeskHero = () => {
           <QrCode className="w-4 h-4 text-gray-500" />
         </button>
       </div>
+
+      <LocationSearchModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)} 
+      />
     </div>
   )
 }
