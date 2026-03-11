@@ -7,12 +7,26 @@ import TimeSlotGrid from './TimeSlotGrid';
 import SlotLegend from './SlotLegend';
 import OfferBanner from './OfferBanner';
 import DeskBookingCard from './DeskBookingCard';
+import { useBookingStore } from '../../store/bookingStore';
 
 const SlotBookingSection = () => {
   const { id } = useParams();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
+
+  // ─── Booking Store ───────────────────────────────────────────────────────
+  const setSlot     = useBookingStore((s) => s.setSlot);
+  const storedSlot  = useBookingStore((s) => s.slot);
+
+  // Re-hydrate local state from the store so the user's previous selection
+  // is still shown when they navigate back to this page.
+  const [currentMonth, setCurrentMonth] = useState(
+    storedSlot.selectedDate ? new Date(storedSlot.selectedDate) : new Date()
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    storedSlot.selectedDate ? new Date(storedSlot.selectedDate) : new Date()
+  );
+  const [selectedSlot, setSelectedSlot] = useState(
+    storedSlot.selectedSlot ?? null
+  );
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -23,9 +37,15 @@ const SlotBookingSection = () => {
     setSelectedDate(date);
     setSelectedSlot(null);
     if (date.getMonth() !== currentMonth.getMonth()) setCurrentMonth(date);
+    // Mirror to store — clear the previously selected slot when date changes
+    setSlot({ selectedDate: date, selectedSlot: null });
   };
 
-  const handleSlotSelect = (slot) => setSelectedSlot(slot);
+  const handleSlotSelect = (slot) => {
+    setSelectedSlot(slot);
+    // Mirror to store
+    setSlot({ selectedSlot: slot });
+  };
 
   return (
     <div className="bg-white lg:bg-gray-100 min-h-screen pb-32 lg:pb-8">

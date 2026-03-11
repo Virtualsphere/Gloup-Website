@@ -7,6 +7,7 @@ import ServiceSlider from '../componets/Home/ServiceSlider'
 import PopularServices from '../componets/Home/PopularServices'
 import TopSalons from '../componets/Home/TopSalons'
 import DeskHero from '../componets/Home/DeskHero'
+import RecommendedSalons from '../componets/Home/RecommendedSalons'
 import {useMediaQuery} from '../hooks/useMediaQuery'
 
 const Home = () => {
@@ -61,8 +62,7 @@ const Home = () => {
       {/* Service cards — component handles mobile/desktop internally */}
       <PopularServices />
       <TopSalons />
-
-
+      <RecommendedSalons />
     </>
   )
 }

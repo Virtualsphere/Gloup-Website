@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
+import { toast } from 'react-hot-toast';
 import SalonCard from '../BookSlot/SalonCard';
 import BookingDetailCard from './BookingDetailCard';
 import BookingForSection from './BookingForSection';
@@ -11,76 +12,131 @@ import PayButtonBar from './PayButtonBar';
 import YouMightLikeSection from './YouMightLikeSection';
 import ToastNotification from './ToastNotification';
 import DeskPaymentCard from './DeskPaymentCard';
-
-// ─── Static Data ──────────────────────────────────────────────────────────────
-const initialServices = [
-  { id: 's1', name: "Men's Haircut", duration: '30 min', price: 299, isPopular: true },
-  { id: 's2', name: "Beard Trim",    duration: '15 min', price: 150, isPopular: false },
-];
+import { useBookingStore } from '../../store/bookingStore';
+import { useCreateOrder } from '../../hooks/services/useCreateOrder';
+import { usePaymentSuccess } from '../../hooks/services/usePaymentSuccess';
+import { calculateBilling } from '../../utils/calculateBilling';
+import { buildBookingPayload } from '../../services/bookingPayloadBuilder';
+import { useRazorpayCheckout } from '../../hooks/payment/useRazorpayCheckout';
 
 const ReviewConfirmPage = () => {
-  const location = useLocation();
-
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const { bookingDate, bookingTime } = location.state || {
-    bookingDate: '27-02-2026',
-    bookingTime: '10:00 AM - 11:00 AM',
-  };
+  // ─── Read from Store ────────────────────────────────────────────────────────
+  const salon           = useBookingStore((s) => s.salon);
+  const selectedServices = useBookingStore((s) => s.selectedServices);
+  const addOnServices   = useBookingStore((s) => s.addOnServices);
+  const slot            = useBookingStore((s) => s.slot);
+  const removeService   = useBookingStore((s) => s.removeService);
+  const removeAddOn     = useBookingStore((s) => s.removeAddOn);
 
-  // State
-  const [services, setServices] = useState(initialServices);
-  const [addedServiceIds, setAddedServiceIds] = useState([]);
+  // Merge selected + add-on services for billing
+  const allServices = [...selectedServices, ...addOnServices];
+
+  // Format the stored Date + slot into display strings
+  const bookingDate = slot.selectedDate
+    ? format(slot.selectedDate, 'dd-MM-yyyy')
+    : '—';
+  const bookingTime = slot.selectedSlot?.time ?? '—';
+
+  // ─── Local UI State ─────────────────────────────────────────────────────────
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [useWallet, setUseWallet] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [useWallet, setUseWallet]         = useState(false);
+  const [toastMessage, setToastMessage]   = useState('');
   const [isToastVisible, setIsToastVisible] = useState(false);
 
-  // Constants
-  const platformFee   = 7;
+  // ─── Billing ────────────────────────────────────────────────────────────────
+  const platformFee    = 7;
   const isPlatformFree = true;
   const walletBalance  = 70;
 
-  // Calculations
-  const baseAmount        = services.reduce((total, s) => total + s.price, 0);
-  const couponDiscount    = appliedCoupon?.savings || 0;
-  const subtotal          = Math.max(0, baseAmount - couponDiscount);
-  const gstAmount         = Math.round(subtotal * 0.05);
-  const totalBeforeWallet = subtotal + gstAmount + (isPlatformFree ? 0 : platformFee);
-  const walletUsed        = useWallet ? Math.min(walletBalance, totalBeforeWallet) : 0;
-  const finalAmount       = totalBeforeWallet - walletUsed;
-
-  // Shared billing props
-  const billingProps = {
-    amount: baseAmount,
-    couponDiscount,
-    couponCode: appliedCoupon?.code,
-    subtotal,
-    gstAmount,
-    isPlatformFree,
+  const billingProps = calculateBilling({
+    allServices,
+    appliedCoupon,
+    useWallet,
+    walletBalance,
     platformFee,
-    walletUsed,
-    finalAmount,
-    totalBeforeWallet,
-  };
+    isPlatformFree,
+  });
 
-  const handleAddService = (service) => {
-    const isAlreadyAdded = addedServiceIds.includes(service.id);
-    if (isAlreadyAdded) {
-      setServices(prev => prev.filter(s => s.id !== service.id));
-      setAddedServiceIds(prev => prev.filter(id => id !== service.id));
-      setToastMessage(`Removed "${service.name}"`);
+  const { finalAmount, walletUsed, gstAmount } = billingProps;
+
+  // ─── API Mutations & Hooks ──────────────────────────────────────────────────
+  const createOrderMutation  = useCreateOrder();
+  const paymentSuccessMutation = usePaymentSuccess();
+  const isPaying = createOrderMutation.isPending;
+  const { openRazorpay } = useRazorpayCheckout();
+
+  // ─── Handlers ───────────────────────────────────────────────────────────────
+  const handleRemoveService = (id) => {
+    const isSelected = selectedServices.some((s) => s.id === id);
+    const serviceName = allServices.find((s) => s.id === id)?.name ?? '';
+    if (isSelected) {
+      removeService(id);
     } else {
-      setServices(prev => [...prev, service]);
-      setAddedServiceIds(prev => [...prev, service.id]);
-      setToastMessage(`Added "${service.name}"`);
+      removeAddOn(id);
     }
+    setToastMessage(`Removed "${serviceName}"`);
     setIsToastVisible(true);
   };
 
+  const navigate = useNavigate();
+
   const handlePay = () => {
-    console.log('Processing payment for ₹', finalAmount, 'with services:', services);
+    const { bookingFor, slot: storeSlot } = useBookingStore.getState();
+
+    const payload = buildBookingPayload({
+      salon,
+      storeSlot,
+      selectedServices,
+      bookingFor,
+      finalAmount,
+      useWallet,
+      walletUsed,
+      appliedCoupon,
+      gstAmount,
+      isPlatformFree,
+      platformFee,
+    });
+
+    console.log('📦 Create Order Payload:', payload);
+
+    createOrderMutation.mutate(payload, {
+      onSuccess: (data) => {
+        console.log('✅ Order Created:', data);
+        openRazorpay(data.data, (response) => {
+          paymentSuccessMutation.mutate(
+            {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            },
+            {
+              onSuccess: () => {
+                toast.success('Booking confirmed! 🎉');
+                navigate('/my-bookings');
+              },
+              onError: (err) => {
+                console.error('❌ paymentSuccess API failed:', err);
+                toast.error(
+                  err?.response?.data?.message ?? 'Payment verification failed. Please contact support.'
+                );
+              },
+            }
+          );
+        });
+      },
+      onError: (error) => {
+        console.error('❌ Order Creation Failed:', error);
+        toast.error(
+          error?.response?.data?.message ?? 'Failed to create order. Please try again.'
+        );
+      },
+    });
   };
+
+  // ─── Salon name for breadcrumb ───────────────────────────────────────────────
+  const salonName = salon.name || 'Salon';
 
   return (
     <div className="bg-gray-100 min-h-screen pb-40 lg:pb-8">
@@ -93,7 +149,7 @@ const ReviewConfirmPage = () => {
           <nav className="flex items-center gap-2 text-sm text-gray-400 mb-4">
             <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
             <span>/</span>
-            <Link to="/shop-details" className="hover:text-gray-600 transition-colors">Mohan Men&apos;s Park Salon</Link>
+            <Link to={`/shop-details/${salon.id}`} className="hover:text-gray-600 transition-colors">{salonName}</Link>
             <span>/</span>
             <Link to="/book-slot" className="hover:text-gray-600 transition-colors">Book Slot</Link>
             <span>/</span>
@@ -114,15 +170,15 @@ const ReviewConfirmPage = () => {
               rounded={false}
             />
             <div className="px-3 lg:px-0">
-              <BookingDetailCard services={services} onRemove={(id) => {
-                setServices(prev => prev.filter(s => s.id !== id));
-                setAddedServiceIds(prev => prev.filter(sid => sid !== id));
-              }} />
+              <BookingDetailCard
+                services={allServices}
+                onRemove={handleRemoveService}
+              />
               <BookingForSection />
 
-              {/* Coupon + Billing visible on mobile only (shown in sidebar on desktop) */}
+              {/* Coupon + Billing visible on mobile only */}
               <div className="lg:hidden mt-8 px-1">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">Coupons & Offers</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-4">Coupons &amp; Offers</h2>
                 <CouponSection
                   appliedCoupon={appliedCoupon}
                   onApplyCoupon={setAppliedCoupon}
@@ -130,10 +186,8 @@ const ReviewConfirmPage = () => {
                 <BillingSummary {...billingProps} />
               </div>
 
-              <YouMightLikeSection
-                onAddService={handleAddService}
-                addedServiceIds={addedServiceIds}
-              />
+              {/* You might also like – self-contained, reads from store */}
+              <YouMightLikeSection />
             </div>
           </div>
 
@@ -147,6 +201,7 @@ const ReviewConfirmPage = () => {
               useWallet={useWallet}
               onToggleWallet={() => setUseWallet(w => !w)}
               onPay={handlePay}
+              isLoading={isPaying}
             />
           </div>
 
@@ -169,7 +224,7 @@ const ReviewConfirmPage = () => {
             onToggle={() => setUseWallet(w => !w)}
           />
         </div>
-        <PayButtonBar amount={finalAmount} onPay={handlePay} />
+        <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} />
       </div>
     </div>
   );

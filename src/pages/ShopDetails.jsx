@@ -12,9 +12,11 @@ import OpeningHours from '../componets/ShopDetails/OpeningHours'
 import Location from '../componets/ShopDetails/Location'
 import PriceSection from '../componets/ShopDetails/PriceSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-
 import { useParams } from 'react-router-dom'
 import { useGetSalonDetails } from '../hooks/services/useSalonDetails'
+import { useBookingStore } from '../store/bookingStore'
+import { useAuthStore } from '../store/authStore'
+import { useUiStore } from '../store/uiStore'
 
 
 
@@ -31,9 +33,31 @@ const ShopDetails = () => {
   const apiData = data?.data || {}
   const apiServices = apiData?.services || []
 
+  console.log(apiServices);
   console.log(apiData)
 
-  console.log(apiServices)
+  // ─── Booking Store ──────────────────────────────────────────────────────
+  const setSalon          = useBookingStore((s) => s.setSalon)
+  const resetBooking      = useBookingStore((s) => s.resetBooking)
+  const currentSalonId    = useBookingStore((s) => s.salon.id)
+  const toggleService     = useBookingStore((s) => s.toggleService)
+  const storedServices    = useBookingStore((s) => s.selectedServices)
+  // Derive a Set of selected IDs directly — no extra function call, stays reactive
+  const addedServices     = new Set(storedServices.map((s) => s.id))
+
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const openLoginModal  = useUiStore((s) => s.openLoginModal)
+
+  // Push salon info into the store — reset first if it's a different salon
+  useEffect(() => {
+    const incomingId = apiData?.id ?? apiData?._id
+    if (!incomingId) return
+    // If the user opened a different shop, wipe the previous booking data
+    if (currentSalonId && currentSalonId !== incomingId) {
+      resetBooking()
+    }
+    setSalon(apiData)
+  }, [apiData?.id, apiData?._id])
 
   // Sticky header height tracking
   const shortDetailsRef = useRef(null)
@@ -55,15 +79,29 @@ const ShopDetails = () => {
     Reviews:   reviewsRef,
   }
 
-  // Services cart state
-  const [addedServices, setAddedServices] = useState(new Set())
-
-  const toggleService = (id) => {
-    setAddedServices(prev => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+  /**
+   * toggleService from the store expects the full service object so it can
+   * store price/discount info for billing. Map the id to the full object here.
+   */
+  const handleToggleService = (serviceId) => {
+    // Require login before adding any service
+    if (!isAuthenticated) {
+      openLoginModal()
+      return
+    }
+    const service = apiServices.find((s) => s.id === serviceId || s._id === serviceId)
+    if (service) {
+      toggleService({
+        id: service.id ?? service._id,
+        name: service.name,
+        duration: service.duration,
+        price: service.price,
+        originalPrice: service.originalPrice ?? null,
+        discountPercentage: service.discountPercentage ?? null,
+        discount: service.discount ?? null,
+        isPopular: service.isPopular ?? false,
+      })
+    }
   }
 
   // On mount: scroll to top + measure sticky header
@@ -121,7 +159,7 @@ const ShopDetails = () => {
         </div>
 
         {/* Sticky: Section Tabs (mobile only) */}
-        <div className="sticky z-10" style={{ top: `${headerHeight + 60}px` }}>
+        <div className="sticky z-10" style={{ top: `${headerHeight + (window.innerWidth >= 768 ? 60 : 70)}px` }}>
           <SectionHeading activeTab={activeTab} onTabClick={scrollToSection} />
         </div>
 
@@ -134,7 +172,7 @@ const ShopDetails = () => {
               <Services
                 services={apiServices}
                 addedServices={addedServices}
-                toggleService={toggleService}
+                toggleService={handleToggleService}
               />
             </div>
             <div ref={aboutRef}><About aboutText={apiData?.about} /></div>

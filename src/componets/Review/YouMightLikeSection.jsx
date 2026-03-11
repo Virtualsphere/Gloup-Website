@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus, Check } from 'lucide-react';
+import { useBookingStore } from '../../store/bookingStore';
 
 const recommendedServices = [
   {
@@ -25,7 +26,12 @@ const recommendedServices = [
   }
 ];
 
-const YouMightLikeSection = ({ onAddService, addedServiceIds }) => {
+const YouMightLikeSection = () => {
+  // Read directly from store — no props needed
+  const toggleAddOn  = useBookingStore((s) => s.toggleAddOn);
+  const addOnServices = useBookingStore((s) => s.addOnServices);
+  const addedIds     = new Set(addOnServices.map((s) => s.id));
+
   return (
     <div className="py-10 mb-4">
       <h2 className="text-lg lg:text-2xl font-bold text-gray-900 mb-4">You might also like</h2>
@@ -33,7 +39,7 @@ const YouMightLikeSection = ({ onAddService, addedServiceIds }) => {
       {/* Horizontal Scroll Container */}
       <div className="flex overflow-x-auto gap-4 px-4 lg:px-0 pb-4 snap-x hide-scrollbar">
         {recommendedServices.map((service) => {
-          const isAdded = addedServiceIds.includes(service.id);
+          const isAdded = addedIds.has(service.id);
 
           return (
             <div 
@@ -66,7 +72,7 @@ const YouMightLikeSection = ({ onAddService, addedServiceIds }) => {
                 </div>
 
                 <button
-                  onClick={() => onAddService(service)}
+                  onClick={() => toggleAddOn(service)}
                   className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors shrink-0 ${
                     isAdded 
                     ? 'bg-green-500 text-white' 

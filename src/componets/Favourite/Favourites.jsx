@@ -1,82 +1,68 @@
 import React from "react";
 import FavoriteCard from "../../componets/shared/ui/FavoriteCard";
 import { ListFilter } from "lucide-react";
+import { useGetFavourites } from "../../hooks/services/useGetFavourites";
+import { Link } from "react-router-dom";
 
-// Dummy data mirroring the screenshot exactly
-const STATIC_FAVORITES = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
-    name: "Elite Hair Studio",
-    rating: "4.8",
-    reviews: 234,
-    location: "Koramangala, Bangalo...",
-    distance: "2.5 KM",
-    mainService: "Haircut",
-    price: "299",
-    isPremium: true,
-    languages: ["A", "अ", "అ"],
-    services: ["Hair", "Beard", "More", "Extra"]
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1521590838703-d6cbfec461f3?w=800&q=80",
-    name: "Beauty Lounge",
-    rating: "4.6",
-    reviews: 189,
-    location: "Indiranagar, Bangalo...",
-    distance: "3.2 KM",
-    mainService: "Facial",
-    price: "499",
-    isPremium: false,
-    languages: ["A", "अ"],
-    services: ["Facial", "Makeup"]
-  },
-  {
-    id: 3,
-    name: "Chic Cuts",
-    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80",
-    rating: "4.7",
-    reviews: 278,
-    location: "HSR Layout, Bangalo...",
-    distance: "2.9 KM",
-    mainService: "Styling",
-    price: "399",
-    isPremium: true,
-    languages: ["A", "అ", "ల"], // Dummy representation
-    services: ["Hair", "Color"]
-  },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80",
-    name: "Glow Spa",
-    rating: "4.9",
-    reviews: 287,
-    location: "Rajajinagar, Bangalo...",
-    distance: "1.5 KM",
-    mainService: "Facial",
-    price: "699",
-    isPremium: true,
-    languages: ["A", "अ", "అ"],
-    services: ["Facial", "Spa"]
-  }
-];
+const BASE_IMAGE_URL = "https://v1.gloup.in/images";
+
+const normalizeFav = (item) => {
+  const salon = item?.store ?? item;
+
+  const rawImages = Array.isArray(salon.images) ? salon.images : [];
+  const validImages = rawImages.filter((img) => img && img.trim() !== "");
+  const image =
+    validImages.length > 0
+      ? `${BASE_IMAGE_URL}/${validImages[0]}`
+      : salon.salonImage
+      ? `${BASE_IMAGE_URL}/${salon.salonImage}`
+      : "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80";
+
+  return {
+    id: salon.id ?? salon._id,
+    image,
+    name: salon.salonName ?? salon.name,
+    rating: salon.rating ?? "0.0",
+    reviews: salon.reviewCount ?? 0,
+    location: salon.address ?? "Nearby",
+    distance: salon.distance ? `${salon.distance.toFixed?.(1) ?? salon.distance} km` : "",
+    mainService: salon.serviceName ?? "Service",
+    price: salon.servicePrice ?? 0,
+    isPremium: salon.isPremium ?? false,
+    languages: [],
+    services: salon.categories ?? [],
+  };
+};
+
+// Skeleton card
+const SkeletonFavCard = () => (
+  <div className="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex gap-3 animate-pulse">
+    <div className="w-[110px] h-[110px] bg-gray-200 rounded-xl flex-shrink-0" />
+    <div className="flex-1 flex flex-col gap-2 py-1">
+      <div className="h-4 bg-gray-200 rounded w-3/4" />
+      <div className="h-3 bg-gray-200 rounded w-1/2" />
+      <div className="h-3 bg-gray-200 rounded w-1/3" />
+    </div>
+  </div>
+);
 
 const Favourites = () => {
-  const favourites = STATIC_FAVORITES;
+  const { data, isLoading, isError, refetch } = useGetFavourites();
+
+  const favourites = (data?.data ?? []).map(normalizeFav);
 
   return (
     <div className="page-favourites min-h-screen bg-gray-50 pb-20">
-      
-      {/* Mobile Top App Bar (Screenshot styling) */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 sticky top-0 z-50">
+
+      {/* Mobile Top App Bar */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 sticky top-0 z-30">
         <div className="flex items-center gap-2 bg-gray-50 flex-1 rounded-lg px-3 py-2 mr-3 border border-gray-100 shadow-sm">
           <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <input 
-            type="text" 
-            placeholder="Search favorites..." 
+          <input
+            type="text"
+            placeholder="Search favorites..."
             className="bg-transparent border-none outline-none text-sm w-full placeholder-gray-400 text-gray-700"
           />
         </div>
@@ -86,22 +72,50 @@ const Favourites = () => {
       </div>
 
       <div className="px-4 py-4 lg:py-8 lg:px-32 mx-auto">
-        {/* Header Section */}
+        {/* Header */}
         <div className="mb-4 lg:mb-8">
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">My Favorites</h2>
-          <p className="text-sm text-gray-500 mt-1">{favourites.length} saved salons</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {isLoading ? "Loading..." : `${favourites.length} saved salon${favourites.length !== 1 ? "s" : ""}`}
+          </p>
         </div>
 
-        {favourites?.length > 0 ? (
+        {/* Loading skeletons */}
+        {isLoading && (
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
+            {Array.from({ length: 4 }).map((_, i) => <SkeletonFavCard key={i} />)}
+          </div>
+        )}
+
+        {/* Error state */}
+        {isError && !isLoading && (
+          <div className="text-center py-10">
+            <p className="text-gray-500">Failed to load favourites.</p>
+            <button
+              onClick={() => refetch()}
+              className="mt-3 text-sm font-medium text-pink-500 hover:underline"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {/* Favourite cards */}
+        {!isLoading && !isError && favourites.length > 0 && (
           <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
             {favourites.map((fav) => (
-              <FavoriteCard key={fav.id} salon={fav} />
+              <Link key={fav.id} to={`/salon-details/${fav.id}`} className="block">
+                <FavoriteCard salon={fav} onRemoved={refetch} />
+              </Link>
             ))}
           </div>
-        ) : (
+        )}
+
+        {/* Empty state */}
+        {!isLoading && !isError && favourites.length === 0 && (
           <div className="text-center py-10 lg:py-20">
             <h5 className="font-semibold text-gray-900 lg:text-xl">No favourites added</h5>
-            <p className="text-gray-500 mt-2">You haven’t saved any stores yet.</p>
+            <p className="text-gray-500 mt-2">You haven't saved any salons yet.</p>
           </div>
         )}
       </div>
@@ -110,3 +124,4 @@ const Favourites = () => {
 };
 
 export default Favourites;
+

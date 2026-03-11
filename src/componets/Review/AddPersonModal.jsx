@@ -5,7 +5,7 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     age: '',
-    gender: 'Female',
+    gender: 'Male',
     phone: ''
   });
 
@@ -23,7 +23,7 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
             setFormData({
                 fullName: '',
                 age: '',
-                gender: 'Female',
+                gender: 'Male',
                 phone: ''
             });
         }
@@ -39,7 +39,7 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 transition-opacity"
@@ -47,15 +47,12 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-xl animate-slide-up sm:animate-none">
+      <div className="relative w-full md:max-w-md bg-white rounded-t-3xl md:rounded-3xl p-6 shadow-xl animate-slide-up md:animate-none">
         {/* Drag handle for mobile */}
-        <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-6 sm:hidden" />
+        <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-6 md:hidden" />
 
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">{initialData ? 'Edit profile' : 'Add new person'}</h2>
-          <button onClick={onClose} className="p-2 -mr-2 text-gray-400 hover:text-gray-600">
-            <X className="w-6 h-6" />
-          </button>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900">{initialData ? 'Edit profile' : 'Add a new person'}</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -68,8 +65,8 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
               type="text"
               value={formData.fullName}
               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
-              placeholder="Priya Sharma"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors placeholder:text-gray-400 font-medium text-gray-900"
+              placeholder="Enter full name"
               required
             />
           </div>
@@ -83,8 +80,8 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
               type="number"
               value={formData.age}
               onChange={(e) => setFormData({...formData, age: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
-              placeholder="26"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors placeholder:text-gray-400 font-medium text-gray-900"
+              placeholder="Enter age"
               required
             />
           </div>
@@ -103,7 +100,7 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
                   className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-colors ${
                     formData.gender === gender
                       ? 'border-black bg-white text-black ring-1 ring-black'
-                      : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                      : 'border-gray-200 text-gray-400 hover:border-gray-300 bg-white'
                   }`}
                 >
                   {gender}
@@ -118,14 +115,14 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
               Phone number (optional)
             </label>
             <div className="flex gap-3">
-              <div className="px-4 py-3 rounded-xl bg-gray-50 text-gray-900 font-medium">
+              <div className="px-4 py-3 rounded-xl bg-gray-100/50 flex items-center justify-center text-gray-900 font-bold border border-gray-200">
                 +91
               </div>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors placeholder:text-gray-400 font-medium text-gray-900"
                 placeholder="Phone number"
               />
             </div>
@@ -136,7 +133,7 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
             type="submit"
             className="w-full bg-black text-white font-semibold py-4 rounded-xl mt-4 hover:bg-gray-900 transition-colors"
           >
-            Save changes
+            {initialData ? 'Save changes' : 'Add a person'}
           </button>
         </form>
       </div>

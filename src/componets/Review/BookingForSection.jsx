@@ -5,13 +5,17 @@ import AddPersonModal from './AddPersonModal';
 import { useGetAllGuest } from '../../hooks/services/useGetAllGuest';
 import { useAddGuest } from '../../hooks/services/useAddGuest';
 import { toast } from 'react-hot-toast';
+import { useBookingStore } from '../../store/bookingStore';
 
 const BookingForSection = () => {
     // --- State ---
-    const [bookingFor, setBookingFor] = useState('self');
+    const [bookingFor, setBookingForLocal] = useState('self');
     const [isAddPersonModalOpen, setIsAddPersonModalOpen] = useState(false);
     const [selectedProfileId, setSelectedProfileId] = useState(null);
     const [editingPerson, setEditingPerson] = useState(null);
+
+    // --- Store ---
+    const setBookingFor = useBookingStore((s) => s.setBookingFor);
 
     // --- API Hooks ---
     const { data: guestsResponse, isLoading, refetch } = useGetAllGuest();
@@ -20,6 +24,29 @@ const BookingForSection = () => {
     const otherProfiles = guestsResponse?.data || [];
 
     // --- Handlers ---
+    /** Toggle between 'self' and 'other', reset guest selection */
+    const handleBookingForToggle = (type) => {
+        setBookingForLocal(type);
+        setSelectedProfileId(null);
+        // Immediately commit to store with no guest
+        setBookingFor({ type, guest: null });
+    };
+
+    const handleGuestSelect = (index, profile) => {
+        setSelectedProfileId(index);
+        // Commit selected guest to store
+        setBookingFor({
+            type: 'other',
+            guest: {
+                id: profile._id ?? profile.id ?? null,
+                name: profile.name,
+                age: profile.age ?? null,
+                gender: profile.gender ?? null,
+                phone: profile.phone ?? null,
+            },
+        });
+    };
+
     const handleSavePerson = (personData) => {
         const payload = {
             name: personData.fullName,
@@ -66,7 +93,7 @@ const BookingForSection = () => {
         const isActive = bookingFor === type;
         return (
             <button 
-                onClick={() => setBookingFor(type)}
+                onClick={() => handleBookingForToggle(type)}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm lg:text-base font-semibold transition-colors border ${
                     isActive 
                     ? 'bg-black text-white border-black' 
@@ -107,7 +134,7 @@ const BookingForSection = () => {
                         details={`${profile.age || ''} Yrs • ${profile.gender || 'Not specified'}`}
                         isSelected={selectedProfileId === index}
                         onEdit={() => handleEditProfile(profile)}
-                        onSelect={() => setSelectedProfileId(index)}
+                        onSelect={() => handleGuestSelect(index, profile)}
                     />
                 ))}
                 <UserProfileCard type="add-new" onSelect={openAddNewModal} />

@@ -96,13 +96,16 @@ const PopularServices = () => {
           <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
           <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">Based on your location</p>
         </div>
-        <button className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-pink-500 transition-colors">
+        <Link 
+          to="/popular-services"
+          className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-pink-500 transition-colors"
+        >
           See All <ChevronRight size={16} />
-        </button>
+        </Link>
       </div>
 
       {/* Single Swiper — mobile shows 1.2 cards, desktop shows 3+ */}
-      <div className="pl-4 lg:pl-10 xl:pl-32">
+      <div className="px-4 lg:px-10 xl:px-32">
         <Swiper
           slidesPerView={1.2}
           spaceBetween={12}
@@ -120,7 +123,7 @@ const PopularServices = () => {
               spaceBetween: 24,
             },
           }}
-          className="popular-services-slider !overflow-visible"
+          className="popular-services-slider"
         >
           {services.map((service, idx) => (
             <SwiperSlide key={`${service.id}-${idx}`} className="h-auto pb-2">

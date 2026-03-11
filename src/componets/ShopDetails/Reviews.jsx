@@ -41,7 +41,7 @@ const Reviews = ({ reviews = [] }) => {
       </div>
 
       {!reviews || reviews.length === 0 ? (
-        <div className="py-8 text-center text-gray-500 text-sm md:text-base">
+        <div className="py-8 text-start text-gray-500 text-sm md:text-base">
           No reviews available yet.
         </div>
       ) : (

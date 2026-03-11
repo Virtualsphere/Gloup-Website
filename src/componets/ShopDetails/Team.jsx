@@ -5,7 +5,7 @@ const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
 const Team = ({ teamMembers = [] }) => {
 
   return (
-    <div className="bg-white lg:bg-gray-100 px-5 lg:px-0 py-2">
+    <div className="bg-white lg:bg-gray-100 lg:px-0 py-2">
       <div className="px-5 lg:px-0 mb-4 flex items-center justify-between">
         <h2 className="text-xl md:text-2xl lg:text-3xl font-medium text-gray-900">Team</h2>
         <button className="text-gray-900 text-sm font-medium hover:text-gray-700">

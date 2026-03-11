@@ -5,7 +5,7 @@ import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 const DeskFooter = () => {
   return (
     <footer className="w-full bg-white border-t border-gray-100 pt-16 pb-8 px-6 md:px-16 lg:px-32">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8 mb-16">
+      <div className="px-2 grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8 mb-16">
         {/* Brand & Social Column */}
         <div className="col-span-1 md:col-span-1 flex flex-col gap-6">
           <Link to="/" className="inline-block">

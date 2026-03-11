@@ -5,9 +5,42 @@ import { Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './ServiceCard.css'
+import { useAuthStore } from '../../../store/authStore'
+import { useUiStore } from '../../../store/uiStore'
+import { useToggleFavourite } from '../../../hooks/services/useToggleFavourite'
+import toast from 'react-hot-toast'
 
 const ServiceCard = ({ service }) => {
-  const [isFavorite, setIsFavorite] = useState(false)
+  // Optimistic local state — seeded from the prop
+  const [isFavorite, setIsFavorite] = useState(service?.isFavourite ?? false)
+
+  const isAuthenticated  = useAuthStore((s) => s.isAuthenticated)
+  const openLoginModal   = useUiStore((s) => s.openLoginModal)
+  const { mutate: toggle, isPending } = useToggleFavourite()
+
+  const handleHeartClick = (e) => {
+    e.preventDefault()   // prevent card Link navigation
+    e.stopPropagation()
+
+    if (!isAuthenticated) {
+      openLoginModal()
+      return
+    }
+
+    // Optimistic update
+    setIsFavorite((prev) => !prev)
+
+    toggle(service.id, {
+      onSuccess: (res) => {
+        toast.success(res?.message || (isFavorite ? 'Removed from favourites' : 'Added to favourites'))
+      },
+      onError: () => {
+        // Revert on failure
+        setIsFavorite((prev) => !prev)
+        toast.error('Something went wrong. Please try again.')
+      },
+    })
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden h-full flex flex-col">
@@ -37,8 +70,7 @@ const ServiceCard = ({ service }) => {
 
         {/* Top Badges - Outside Swiper */}
         <div 
-          className="absolute top-3 left-3 right-3 flex justify-between items-center z-50 pointer-events-none"
-          style={{ transform: 'translateZ(10px)' }}
+          className="absolute top-3 left-3 right-3 flex justify-between items-center z-10 pointer-events-none"
         >
           {/* premium */}
           {service.isPremium && (
@@ -49,7 +81,8 @@ const ServiceCard = ({ service }) => {
 
           {/* isFavourite */}
           <button 
-            onClick={() => setIsFavorite(!isFavorite)}
+            onClick={handleHeartClick}
+            disabled={isPending}
             className="ml-auto bg-white p-2 rounded-full shadow-md hover:scale-110 transition-transform pointer-events-auto"
           >
             <Heart 
@@ -61,8 +94,7 @@ const ServiceCard = ({ service }) => {
 
         {/* Price Tag - Outside Swiper */}
         <div 
-          className="absolute bottom-3 right-3 bg-white px-1.5 py-1.5 rounded-lg shadow-md z-50"
-          style={{ transform: 'translateZ(10px)' }}
+          className="absolute bottom-3 right-3 bg-white px-1.5 py-1.5 rounded-lg shadow-md z-10"
         >
           <span className="text-xs font-normal text-gray-800">
             {service.mainService} • ₹{service.price}
@@ -113,21 +145,20 @@ const ServiceCard = ({ service }) => {
 
         {/* Dynamic Footer (Services, Languages, Book Button) */}
         <div className='flex items-center justify-between mt-auto'>
-          {service.languages ? (
-            <div>
-              <p className="text-xs font-medium text-gray-500">Lang</p>
-              <p className="text-xs font-semibold text-gray-900">{service.languages}</p>
-            </div>
-          ) : (
-            <div>
-              {service.type && <span className="text-xs text-gray-500">{service.type}</span>}
-            </div>
-          )}
+          <div className="flex items-center gap-1.5 text-gray-500 font-medium">
+            <span className="text-xl leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>ह</span>
+            <span className="text-sm leading-none">•</span>
+            <span className="text-lg leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>த</span>
+            <span className="text-sm leading-none">•</span>
+            <span className="text-xl leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>ಕ</span>
+            <span className="text-sm leading-none">•</span>
+            <span className="text-lg leading-none" style={{ fontFamily: 'system-ui, sans-serif' }}>മ</span>
+          </div>
           
           <div className="flex items-center gap-2 flex-wrap justify-end">
             {service.services && service.services.length > 0 ? (
               <>
-                {service.services.slice(0, 2).map((tag, index) => (
+                {service.services.slice(0, 1).map((tag, index) => (
                   <span 
                     key={index}
                     className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full"
@@ -135,9 +166,9 @@ const ServiceCard = ({ service }) => {
                     {tag}
                   </span>
                 ))}
-                {service.services.length > 2 && (
+                {service.services.length > 1 && (
                   <span className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full">
-                    +{service.services.length - 2}
+                    +{service.services.length - 1}
                   </span>
                 )}
               </>
