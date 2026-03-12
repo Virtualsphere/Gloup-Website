@@ -18,8 +18,9 @@ const TimeSlotCard = ({ slot, isSelected, isDisabled, onClick }) => {
         }
       `}
     >
-      {/* Ripple effect or other interactions could be added here if needed */}
-      <span>{slot.time}</span>
+      <span className="tracking-wide">
+        {slot.time}{slot.endTime ? ` - ${slot.endTime}` : ''}
+      </span>
     </div>
   );
 };

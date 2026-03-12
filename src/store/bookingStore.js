@@ -137,7 +137,15 @@ export const useBookingStore = create(
       addOnServices: state.addOnServices.filter((s) => s.id !== serviceId),
     })),
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
+  // ─── Applied Coupon ───────────────────────────────────────────────────────
+  /** { code: string, savings: number } or null */
+  appliedCoupon: null,
+
+  /** Save an applied coupon (persisted to localStorage). */
+  setAppliedCoupon: (coupon) => set({ appliedCoupon: coupon }),
+
+  /** Remove the currently applied coupon. */
+  clearCoupon: () => set({ appliedCoupon: null }),
 
   /** All services in the billing: selected + add-ons merged. */
   getAllServices: () => {
@@ -160,6 +168,7 @@ export const useBookingStore = create(
       slot: { selectedDate: null, selectedSlot: null },
       bookingFor: { type: "self", guest: null },
       addOnServices: [],
+      appliedCoupon: null,
     }),
   }),
   {

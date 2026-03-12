@@ -2,30 +2,39 @@ import React from 'react';
 import { Star, ChevronRight } from 'lucide-react';
 
 const Reviews = ({ reviews = [] }) => {
-  const ratingStats = [
-    { stars: 5, count: 200, percentage: 80 },
-    { stars: 4, count: 60, percentage: 20 },
-    { stars: 3, count: 30, percentage: 10 },
-    { stars: 2, count: 10, percentage: 5 },
-    { stars: 1, count: 0, percentage: 0 },
-  ];
+  const totalReviews = reviews.length;
+  
+  // Calculate average rating
+  const averageRating = totalReviews > 0 
+    ? (reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / totalReviews).toFixed(1)
+    : "0.0";
+
+  // Calculate counts for each star (1-5)
+  const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  reviews.forEach(review => {
+    const r = Math.round(review.rating || 0);
+    if (r >= 1 && r <= 5) {
+      starCounts[r]++;
+    }
+  });
+
+  // Build rating stats array dynamically
+  const ratingStats = [5, 4, 3, 2, 1].map(stars => ({
+    stars,
+    count: starCounts[stars],
+    percentage: totalReviews > 0 ? Math.round((starCounts[stars] / totalReviews) * 100) : 0,
+  }));
 
   const filters = [
-    { label: 'All (300)', active: true },
-    { label: '5 ★ (200)', active: false },
-    { label: '4 ★ (60)', active: false },
-    { label: '3 ★ (30)', active: false },
+    { label: `All (${totalReviews})`, active: true },
+    { label: `5 ★ (${starCounts[5]})`, active: false },
+    { label: `4 ★ (${starCounts[4]})`, active: false },
+    { label: `3 ★ (${starCounts[3]})`, active: false },
+    { label: `2 ★ (${starCounts[2]})`, active: false },
+    { label: `1 ★ (${starCounts[1]})`, active: false },
   ];
 
-  const renderStars = (rating) => {
-    return [...Array(5)].map((_, index) => (
-      <Star
-        key={index}
-        size={14}
-        className={`${index < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-300'}`}
-      />
-    ));
-  };
+ 
 
   return (
     <div className="bg-white lg:bg-gray-100 py-6 px-5 lg:px-0">
@@ -33,14 +42,14 @@ const Reviews = ({ reviews = [] }) => {
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl md:text-2xl lg:text-3xl font-medium text-gray-900">Reviews</h2>
         <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-xs md:text-sm lg:text-base">{reviews?.length || 0} reviews</span>
-            {reviews?.length > 0 && (
+            <span className="text-gray-500 text-xs md:text-sm lg:text-base">{totalReviews} reviews</span>
+            {totalReviews > 0 && (
               <button className="text-gray-900 text-sm font-medium lg:hidden">See All</button>
             )}
         </div>
       </div>
 
-      {!reviews || reviews.length === 0 ? (
+      {!reviews || totalReviews === 0 ? (
         <div className="py-8 text-start text-gray-500 text-sm md:text-base">
           No reviews available yet.
         </div>
@@ -50,14 +59,21 @@ const Reviews = ({ reviews = [] }) => {
           <div className="flex items-start gap-6 mb-6">
             {/* Overall Rating */}
             <div className="flex flex-col items-start gap-1">
-              <span className="text-5xl font-bold text-gray-900">4.5</span>
+              <span className="text-5xl font-bold text-gray-900">{averageRating}</span>
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className={i < 4 ? "text-yellow-400 fill-yellow-400" : (i === 4 ? "text-yellow-400 fill-yellow-400 half" : "text-gray-300")} /> 
-                  // Simple full stars for now, actual half star logic implies specific icon or svg
+                  <Star 
+                    key={i} 
+                    size={16} 
+                    className={
+                      i + 1 <= Math.round(Number(averageRating))
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300 fill-gray-300"
+                    } 
+                  /> 
                 ))}
               </div>
-              <span className="text-xs md:text-sm text-gray-500">300 ratings</span>
+              <span className="text-xs md:text-sm text-gray-500">{totalReviews} ratings</span>
             </div>
 
             {/* Rating Bars */}
@@ -68,7 +84,7 @@ const Reviews = ({ reviews = [] }) => {
                   <Star size={10} className="text-yellow-400 fill-yellow-400" />
                   <div className="flex-1 h-1.5 md:h-2 lg:h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-yellow-400 rounded-full"
+                      className="h-full bg-yellow-400 rounded-full transition-all duration-500"
                       style={{ width: `${stat.percentage}%` }}
                     />
                   </div>
@@ -80,7 +96,7 @@ const Reviews = ({ reviews = [] }) => {
 
           {/* Filters */}
           <div className="flex gap-2 md:gap-4 overflow-x-auto scrollbar-hide pb-2 mb-6">
-            {filters.map((filter, index) => (
+            {filters.filter(f => !f.label.includes('(0)') || f.label.startsWith('All')).map((filter, index) => (
               <button
                 key={index}
                 className={`px-4 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors ${

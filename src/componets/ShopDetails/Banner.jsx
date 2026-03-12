@@ -2,18 +2,41 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Share2, Heart } from 'lucide-react';
-
+import HeartOutline from "../../assets/icons/ic_heart.svg?react";
+import HeartFill from "../../assets/icons/ic_heart_fill.svg?react";
+import ShareIcon from "../../assets/icons/ic_share.svg?react";
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 // Import custom styles
 import './Banner.css';
+import { useAuthStore } from '../../store/authStore';
+import { useUiStore } from '../../store/uiStore';
+import { useToggleFavourite } from '../../hooks/services/useToggleFavourite';
+import { useGetFavourites } from '../../hooks/services/useGetFavourites';
+import toast from 'react-hot-toast';
 
-const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
+const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
-const Banner = ({ images = [] }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const Banner = ({ images = [], salonId = null }) => {
+  const { data: favData } = useGetFavourites();
+  const favouritesList = favData?.data ?? [];
+  const isGloballyFavorited = favouritesList.some((fav) => {
+    const favId = fav?.store?.id ?? fav?.store?._id ?? fav?.id;
+    return String(favId) === String(salonId);
+  });
+
+  const exactFavoriteState = favData ? isGloballyFavorited : false;
+  const [isFavorite, setIsFavorite] = useState(exactFavoriteState);
+
+  React.useEffect(() => {
+    setIsFavorite(exactFavoriteState);
+  }, [exactFavoriteState]);
+
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const openLoginModal = useUiStore((s) => s.openLoginModal);
+  const { mutate: toggle, isPending } = useToggleFavourite();
 
   // Map API images or provide a fallback slide
   const slides = images?.length > 0 ? images.map((img, index) => ({
@@ -43,8 +66,30 @@ const Banner = ({ images = [] }) => {
   };
 
   const handleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
+
+    if (!salonId) {
+      toast.error("Salon ID missing, cannot favorite.");
+      return;
+    }
+
+    setIsFavorite((prev) => !prev);
+    
+    toggle(salonId, {
+      // onSuccess: (res) => {
+      //   toast.success(res?.message || (isFavorite ? "Removed from favourites" : "Added to favourites"));
+      // },
+      // onError: () => {
+      //   setIsFavorite((prev) => !prev);
+      //   toast.error("Something went wrong. Please try again.");
+      // },
+    });
   };
+
+  const HeartIcon = isFavorite ? HeartFill : HeartOutline;
 
   return (
     <div className="relative w-full">
@@ -88,19 +133,20 @@ const Banner = ({ images = [] }) => {
           className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
           aria-label="Share"
         >
-          <Share2 size={20} className="text-gray-700" strokeWidth={2} />
+          <ShareIcon width={20} height={20} />
         </button>
 
         {/* Heart/Favorite Button */}
         <button
           onClick={handleFavorite}
-          className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105"
+          disabled={isPending}
+          className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105 disabled:opacity-50"
           aria-label="Add to favorites"
         >
-          <Heart 
-            size={20} 
-            className={isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-700'} 
-            strokeWidth={2} 
+          <HeartIcon 
+            width={24} 
+            height={24} 
+            className={isFavorite ? 'text-red-500' : 'text-gray-500'} 
           />
         </button>
       </div>

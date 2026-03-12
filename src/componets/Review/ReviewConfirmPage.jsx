@@ -12,6 +12,7 @@ import PayButtonBar from './PayButtonBar';
 import YouMightLikeSection from './YouMightLikeSection';
 import ToastNotification from './ToastNotification';
 import DeskPaymentCard from './DeskPaymentCard';
+import OfferBanner from '../BookSlot/OfferBanner';
 import { useBookingStore } from '../../store/bookingStore';
 import { useCreateOrder } from '../../hooks/services/useCreateOrder';
 import { usePaymentSuccess } from '../../hooks/services/usePaymentSuccess';
@@ -23,16 +24,19 @@ const ReviewConfirmPage = () => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   // ─── Read from Store ────────────────────────────────────────────────────────
-  const salon           = useBookingStore((s) => s.salon);
+  const salon = useBookingStore((s) => s.salon);
   const selectedServices = useBookingStore((s) => s.selectedServices);
-  const addOnServices   = useBookingStore((s) => s.addOnServices);
-  const slot            = useBookingStore((s) => s.slot);
-  const removeService   = useBookingStore((s) => s.removeService);
-  const removeAddOn     = useBookingStore((s) => s.removeAddOn);
-  const resetBooking    = useBookingStore((s) => s.resetBooking);
+  const addOnServices = useBookingStore((s) => s.addOnServices);
+  const slot = useBookingStore((s) => s.slot);
+  const removeService = useBookingStore((s) => s.removeService);
+  const removeAddOn = useBookingStore((s) => s.removeAddOn);
+  const resetBooking = useBookingStore((s) => s.resetBooking);
+  const appliedCoupon = useBookingStore((s) => s.appliedCoupon);
+  const setAppliedCoupon = useBookingStore((s) => s.setAppliedCoupon);
 
   // Merge selected + add-on services for billing
   const allServices = [...selectedServices, ...addOnServices];
+  const hasNoServices = allServices.length === 0;
 
   // Format the stored Date + slot into display strings
   const bookingDate = slot.selectedDate
@@ -41,15 +45,15 @@ const ReviewConfirmPage = () => {
   const bookingTime = slot.selectedSlot?.time ?? '—';
 
   // ─── Local UI State ─────────────────────────────────────────────────────────
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [useWallet, setUseWallet]         = useState(false);
-  const [toastMessage, setToastMessage]   = useState('');
+  // appliedCoupon is persisted via Zustand store (see bookingStore.js)
+  const [useWallet, setUseWallet] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const [isToastVisible, setIsToastVisible] = useState(false);
 
   // ─── Billing ────────────────────────────────────────────────────────────────
-  const platformFee    = 7;
+  const platformFee = 7;
   const isPlatformFree = true;
-  const walletBalance  = 70;
+  const walletBalance = 70;
 
   const billingProps = calculateBilling({
     allServices,
@@ -63,7 +67,7 @@ const ReviewConfirmPage = () => {
   const { finalAmount, walletUsed, gstAmount } = billingProps;
 
   // ─── API Mutations & Hooks ──────────────────────────────────────────────────
-  const createOrderMutation  = useCreateOrder();
+  const createOrderMutation = useCreateOrder();
   const paymentSuccessMutation = usePaymentSuccess();
   const isPaying = createOrderMutation.isPending;
   const { openRazorpay } = useRazorpayCheckout();
@@ -143,7 +147,11 @@ const ReviewConfirmPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen pb-40 lg:pb-8">
 
-      {/* Desktop wrapper */}
+      {/* Mobile: sticky offer banner at top — same as book-slot page */}
+      <div className="lg:hidden sticky top-[80px] z-40">
+        <OfferBanner />
+      </div>
+
       <div className="lg:px-10 xl:px-32 lg:pt-6">
 
         {/* Breadcrumb + Title (desktop only) */}
@@ -182,6 +190,7 @@ const ReviewConfirmPage = () => {
               <div className="lg:hidden mt-8 px-1">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Coupons &amp; Offers</h2>
                 <CouponSection
+                  amount={billingProps.discountedAmount}
                   appliedCoupon={appliedCoupon}
                   onApplyCoupon={setAppliedCoupon}
                 />
@@ -204,6 +213,7 @@ const ReviewConfirmPage = () => {
               onToggleWallet={() => setUseWallet(w => !w)}
               onPay={handlePay}
               isLoading={isPaying}
+              disabled={hasNoServices}
             />
           </div>
 
@@ -226,7 +236,7 @@ const ReviewConfirmPage = () => {
             onToggle={() => setUseWallet(w => !w)}
           />
         </div>
-        <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} />
+        <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} disabled={hasNoServices} />
       </div>
     </div>
   );

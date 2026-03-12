@@ -19,7 +19,7 @@ const ShortDetails = ({ shopData = {} }) => {
   const hours = openingTime && closingTime ? `${openingTime} – ${closingTime}` : "Hours not available";
 
   return (
-    <div className="bg-white lg:bg-gray-100 rounded-t-3xl lg:rounded-none -mt-8 lg:mt-0 relative z-10 px-5 pt-6 pb-4 lg:py-8 lg:px-0">
+    <div className="bg-white lg:bg-gray-100 rounded-t-3xl lg:rounded-none -mt-8 lg:mt-0 relative z-10 px-5 pt-6 pb-2 lg:py-8 lg:px-0">
       <div className="flex justify-between items-start">
         <div className="flex flex-col lg:gap-4 w-full lg:w-auto">
           {/* Header with Title and New Badge */}
@@ -69,7 +69,7 @@ const ShortDetails = ({ shopData = {} }) => {
 
           {/* Mobile Address */}
           <div className="flex lg:hidden items-start gap-2.5 mb-3">
-            <MapPin size={18} className="text-gray-500 mt-0.5 flex-shrink-0" />
+            <MapPin size={18} className="text-black mt-0.5 flex-shrink-0" />
             <p className="text-gray-700 text-sm leading-relaxed">
               {address}
             </p>
@@ -77,7 +77,7 @@ const ShortDetails = ({ shopData = {} }) => {
 
           {/* Opening Hours */}
           <div className="flex items-center gap-2.5 lg:gap-2 mb-4 lg:mb-0 lg:mt-1 text-sm lg:text-gray-600">
-            <Clock size={18} className="text-gray-500 lg:text-gray-400 flex-shrink-0" />
+            <Clock size={18} className="text-black lg:text-gray-400 flex-shrink-0" />
             <p>
               <span className={isOpen ? "text-green-600 lg:text-green-500 font-semibold lg:font-medium" : "text-red-600 lg:text-red-500 font-semibold lg:font-medium"}>
                 {isOpen ? "Open" : "Closed"}
@@ -89,13 +89,13 @@ const ShortDetails = ({ shopData = {} }) => {
           {/* Languages */}
           {languages?.length > 0 && (
             <div className="flex items-start lg:items-center gap-2.5 lg:gap-4 lg:mt-2">
-              <Languages size={18} className="lg:hidden text-gray-500 mt-1.5 flex-shrink-0" />
+              <Languages size={18} className="lg:hidden text-black mt-1.5 flex-shrink-0" />
               <span className="hidden lg:block text-gray-900 font-medium text-[15px]">Languages:</span>
               <div className="flex gap-2 overflow-x-auto scrollbar-hide flex-nowrap pb-1 lg:pb-0">
                 {languages.map((language, index) => (
                   <span
                     key={index}
-                    className="bg-gray-100 lg:bg-gray-100/80 text-gray-700 lg:text-gray-600 text-sm px-3 lg:px-4 py-1.5 rounded-lg lg:rounded-full whitespace-nowrap flex-shrink-0 lg:font-medium"
+                    className="bg-gray-200 lg:bg-gray-100/80 text-gray-700 lg:text-gray-600 text-sm px-3 lg:px-4 py-1.5 rounded-lg lg:rounded-full whitespace-nowrap flex-shrink-0 lg:font-medium"
                   >
                     {language?.languageName || language}
                   </span>

@@ -92,7 +92,8 @@ const LocationSearchModal = ({ isOpen, onClose }) => {
           
           setLocation({
             address: place.formatted_address || place.name || description,
-            coords: { latitude: lat, longitude: lng }
+            lat: lat,
+            lng: lng
           });
           onClose();
         }
@@ -127,7 +128,8 @@ const LocationSearchModal = ({ isOpen, onClose }) => {
           
           setLocation({
             address: addressText,
-            coords: { latitude, longitude }
+            lat: latitude,
+            lng: longitude
           });
           onClose();
         });

@@ -9,6 +9,7 @@ const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect, saloonId }) => {
   
   // Fetch available slots from API
   const { data, isLoading, isError } = useGetSlots(saloonId, formattedDate);
+  console.log(data, "get slot data")
 
   // Check if the selected date is strictly before today
   const isPastDate = isBefore(selectedDate, startOfToday());
@@ -41,6 +42,20 @@ const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect, saloonId }) => {
       return format(parsedTime, 'hh:mm a');
     } catch {
       return timeString; // Fallback to raw string if parsing fails
+    }
+  };
+
+  // Get end time — use next slot's start time, or add 30 min for the last slot
+  const getEndTime = (currentTimeString, nextTimeString) => {
+    try {
+      if (nextTimeString) {
+        return formatTimeSlot(nextTimeString);
+      }
+      // Fallback: add 30 minutes to the current slot using date math
+      const parsedTime = parse(currentTimeString, 'HH:mm:ss', new Date());
+      return format(new Date(parsedTime.getTime() + 30 * 60 * 1000), 'hh:mm a');
+    } catch {
+      return '';
     }
   };
 
@@ -77,14 +92,17 @@ const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect, saloonId }) => {
         <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
           {slots.map((apiSlot, index) => {
             const isPastTime = isSlotPastTime(apiSlot.time);
-            
+            const nextSlot = slots[index + 1]; // next slot for end time
+
             // Map the API structure to the structure expected by TimeSlotCard
             const slot = {
               id: index,
-              // Formatted presentation: e.g. "09:30 AM"
-              time: formatTimeSlot(apiSlot.time), 
+              // Formatted start time: e.g. "09:30 AM"
+              time: formatTimeSlot(apiSlot.time),
+              // Formatted end time: next slot's start, or +30 min for last slot
+              endTime: getEndTime(apiSlot.time, nextSlot?.time),
               // Convert "available" status string to boolean
-              available: apiSlot.status?.toLowerCase() === 'available', 
+              available: apiSlot.status?.toLowerCase() === 'available',
               isPastTime: isPastTime,
               raw: apiSlot // Store raw for booking request later
             };

@@ -10,9 +10,9 @@ const mapContainerStyle = {
 const Location = ({ locationData = {}, shopName = "" }) => {
   const address = locationData?.address || "Address not provided";
   
-  // Safely parse lat/long
-  const lat = parseFloat(locationData?.latitude);
-  const lng = parseFloat(locationData?.longitude);
+  // Safely parse lat/long, supporting both explicit and shorthand keys
+  const lat = parseFloat(locationData?.latitude ?? locationData?.lat);
+  const lng = parseFloat(locationData?.longitude ?? locationData?.lng);
   const hasCoordinates = !isNaN(lat) && !isNaN(lng);
   
   const center = {
@@ -22,17 +22,20 @@ const Location = ({ locationData = {}, shopName = "" }) => {
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
   });
 
+  // Hotfix for Vite HMR bug: If the script was loaded in a previous render, 
+  // useJsApiLoader sometimes fails to detect it.
+  const isMapReady = isLoaded || (typeof window !== 'undefined' && window.google !== undefined);
+
   // Debug logging
-  React.useEffect(() => {
-    console.log('Google Maps API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing');
-    console.log('Map isLoaded:', isLoaded);
-    console.log('Map loadError:', loadError);
-    console.log('Has coordinates:', hasCoordinates);
-    console.log('Coordinates:', { lat, lng });
-  }, [isLoaded, loadError, hasCoordinates, lat, lng]);
+  // React.useEffect(() => {
+  //   console.log('Google Maps API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing');
+  //   console.log('Map isLoaded (from hook):', isLoaded);
+  //   console.log('Map isMapReady (fallback):', isMapReady);
+  //   console.log('Coordinates:', { lat, lng });
+  // }, [isLoaded, isMapReady, lat, lng]);
 
   const handleDirectionsClick = () => {
     if (hasCoordinates) {
@@ -57,7 +60,7 @@ const Location = ({ locationData = {}, shopName = "" }) => {
                 Failed to load map. Please check your internet connection.
               </span>
             </div>
-          ) : isLoaded && hasCoordinates ? (
+          ) : isMapReady && hasCoordinates ? (
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={center}

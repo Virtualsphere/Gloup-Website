@@ -3,6 +3,7 @@ import BillingRow from './BillingRow';
 
 const BillingSummary = ({
   amount,
+  serviceDiscount,
   couponDiscount,
   couponCode,
   subtotal,
@@ -22,6 +23,14 @@ const BillingSummary = ({
           label="Amount" 
           value={`₹${amount}`} 
         />
+
+        {serviceDiscount > 0 && (
+          <BillingRow 
+            label="Discount" 
+            value={`-₹${serviceDiscount}`} 
+            variant="discount" 
+          />
+        )}
         
         {couponDiscount > 0 && (
           <BillingRow 

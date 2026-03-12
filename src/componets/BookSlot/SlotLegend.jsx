@@ -1,20 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SlotLegend = ({ selectedSlot, selectedDate }) => {
+const SlotLegend = ({ selectedSlot, selectedDate, id }) => {
   if (selectedSlot) {
     return (
       <div className="flex items-center justify-between w-full h-14">
         <div className="flex flex-col">
-          <span className="text-gray-900 font-semibold mb-1">
-            {selectedSlot.time}
-          </span>
+
           <span className="text-xs text-gray-500">
-            slot selected. Ready to Book?
+            Selected Slot
           </span>
+
+          <span className="text-sm font-semibold text-black">
+            {selectedDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
+
+          <span className="text-gray-900 font-semibold mb-0.5">
+            {selectedSlot.time}{selectedSlot.endTime ? ` - ${selectedSlot.endTime}` : ''}
+          </span>
+          
         </div>
         <Link
-        to="/review-order"
+        to={`/${id}/review-order`}
         state={{ 
           bookingDate: selectedDate.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }), 
           bookingTime: selectedSlot.time 

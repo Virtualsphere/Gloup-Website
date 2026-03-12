@@ -1,7 +1,7 @@
 import React from 'react';
 import { dumBanner, galleryImage1, galleryImage2 } from '../../assets/images';
 
-const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
+const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 const DeskBanner = ({ images = [] }) => {
   const urlImages = images?.length > 0 ? images.map(img => `${BASE_IMAGE_URL}/${img}`) : [];

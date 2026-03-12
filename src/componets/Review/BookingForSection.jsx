@@ -4,6 +4,7 @@ import UserProfileCard from './UserProfileCard';
 import AddPersonModal from './AddPersonModal';
 import { useGetAllGuest } from '../../hooks/services/useGetAllGuest';
 import { useAddGuest } from '../../hooks/services/useAddGuest';
+import { useUpdateGuest } from '../../hooks/services/useUpdateGuest';
 import { toast } from 'react-hot-toast';
 import { useBookingStore } from '../../store/bookingStore';
 
@@ -20,6 +21,7 @@ const BookingForSection = () => {
     // --- API Hooks ---
     const { data: guestsResponse, isLoading, refetch } = useGetAllGuest();
     const addGuestMutation = useAddGuest();
+    const updateGuestMutation = useUpdateGuest();
 
     const otherProfiles = guestsResponse?.data || [];
 
@@ -56,13 +58,28 @@ const BookingForSection = () => {
         };
 
         if (editingPerson) {
-            console.warn("Update guest functionality not yet linked to API");
-            toast('Edit guest is under construction.', { icon: '🚧' });
-            setEditingPerson(null);
-            setIsAddPersonModalOpen(false);
+            // --- UPDATE existing guest ---
+            const guestId = editingPerson._id ?? editingPerson.id;
+            const loadingToastId = toast.loading('Updating guest...');
+            updateGuestMutation.mutate(
+                { guestId, ...payload },
+                {
+                    onSuccess: () => {
+                        toast.success('Guest updated successfully', { id: loadingToastId });
+                        refetch();
+                        setEditingPerson(null);
+                        setIsAddPersonModalOpen(false);
+                    },
+                    onError: (error) => {
+                        toast.error('Failed to update guest', { id: loadingToastId });
+                        console.error('Update guest error:', error);
+                    }
+                }
+            );
             return;
         }
 
+        // --- ADD new guest ---
         const loadingToastId = toast.loading('Adding guest...');
         addGuestMutation.mutate(payload, {
             onSuccess: () => {
@@ -72,15 +89,15 @@ const BookingForSection = () => {
             },
             onError: (error) => {
                 toast.error('Failed to add guest', { id: loadingToastId });
-                console.error("Add guest error:", error);
+                console.error('Add guest error:', error);
             }
         });
     };
 
     const handleEditProfile = (profile) => {
-        toast('Edit guest is under construction.', { icon: '🚧' });
-        // setEditingPerson(profile);
-        // setIsAddPersonModalOpen(true);
+        // Pass the raw profile object so the modal can pre-fill correctly
+        setEditingPerson(profile);
+        setIsAddPersonModalOpen(true);
     };
 
     const openAddNewModal = () => {

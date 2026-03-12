@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
+const BASE_IMAGE_URL = import.meta.env.VITE_PROFILE_IMG_URL;
 
 const Team = ({ teamMembers = [] }) => {
 
@@ -24,11 +24,11 @@ const Team = ({ teamMembers = [] }) => {
                    className="w-full h-full object-cover"
                  />
               </div>
-              <h3 className="text-base md:text-lg lg:text-xl font-medium text-gray-900 text-center leading-tight">
+              <h3 className="text-sm md:text-base font-medium text-gray-900 text-center leading-tight truncate w-full px-1">
                 {member.name}
               </h3>
-              <p className="text-sm md:text-base text-gray-500 text-center leading-tight mt-0.5">
-                {member.role}
+              <p className="text-xs md:text-sm text-gray-500 text-center leading-tight mt-0.5 truncate w-full px-1">
+                {member.role || 'Member'}
               </p>
             </div>
           ))}

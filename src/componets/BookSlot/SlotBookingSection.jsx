@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addMonths, subMonths } from 'date-fns';
+import { addMonths, subMonths, startOfMonth, isSameMonth, isSameDay } from 'date-fns';
 import { Link, useParams } from 'react-router-dom';
 import CalendarHeader from './CalendarHeader';
 import DateSelector from './DateSelector';
@@ -30,15 +30,26 @@ const SlotBookingSection = () => {
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const handlePrevMonth = () => setCurrentMonth(prev => subMonths(prev, 1));
+  const handlePrevMonth = () => setCurrentMonth(prev => {
+    const prevMonth = subMonths(prev, 1);
+    // Never go before the current real-world month
+    return isSameMonth(prevMonth, new Date()) || startOfMonth(prevMonth) >= startOfMonth(new Date())
+      ? prevMonth
+      : prev;
+  });
   const handleNextMonth = () => setCurrentMonth(prev => addMonths(prev, 1));
 
   const handleDateSelect = (date) => {
+    const isAlreadySelected = isSameDay(date, selectedDate);
     setSelectedDate(date);
-    setSelectedSlot(null);
+    // Only clear the slot if the user actually switched to a different date
+    if (!isAlreadySelected) {
+      setSelectedSlot(null);
+      setSlot({ selectedDate: date, selectedSlot: null });
+    } else {
+      setSlot({ selectedDate: date });
+    }
     if (date.getMonth() !== currentMonth.getMonth()) setCurrentMonth(date);
-    // Mirror to store — clear the previously selected slot when date changes
-    setSlot({ selectedDate: date, selectedSlot: null });
   };
 
   const handleSlotSelect = (slot) => {
@@ -99,7 +110,7 @@ const SlotBookingSection = () => {
 
       {/* Mobile: fixed bottom slot legend */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50">
-        <SlotLegend selectedSlot={selectedSlot} selectedDate={selectedDate} />
+        <SlotLegend selectedSlot={selectedSlot} selectedDate={selectedDate} id={id} />
       </div>
     </div>
   );

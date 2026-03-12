@@ -14,8 +14,8 @@ const AddPersonModal = ({ isOpen, onClose, onSave, initialData }) => {
         if (initialData) {
             setFormData({
                 fullName: initialData.name || '',
-                age: initialData.details.split(' ')[0] || '', // Extract age from details string for now
-                gender: initialData.details.split(' • ')[1] || 'Female',
+                age: initialData.age || '', 
+                gender: initialData.gender || 'Male',
                 phone: initialData.phone || ''
             });
         } else {

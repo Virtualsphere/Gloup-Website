@@ -29,6 +29,8 @@ const ShopDetails = () => {
 
   const {id} = useParams()
   const {data, isLoading, isError} = useGetSalonDetails(id)
+
+  console.log(data, "shop-details")
   
   const apiData = data?.data || {}
   const apiServices = apiData?.services || []
@@ -104,13 +106,26 @@ const ShopDetails = () => {
     }
   }
 
-  // On mount: scroll to top + measure sticky header
+  // On mount: scroll to top
   useEffect(() => {
     window.scrollTo(0, 0)
-    if (shortDetailsRef.current) {
-      setHeaderHeight(shortDetailsRef.current.offsetHeight)
-    }
   }, [])
+
+  // Dynamically track sticky header height
+  useEffect(() => {
+    const el = shortDetailsRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // offsetHeight includes padding + borders (which is what we want for spacing)
+        setHeaderHeight(el.offsetHeight);
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [apiData]);
 
   // Scroll to section on tab click
   const scrollToSection = (label) => {
@@ -118,7 +133,8 @@ const ShopDetails = () => {
     const ref = sectionRefs[label]
     if (!ref?.current) return
     const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
-    const offset = 80 + shortDetailsHeight + 60 // navbar + shortDetails + sectionHeading
+    // 64 navbar + shortDetails + 60 sectionHeading
+    const offset = 64 + shortDetailsHeight + 60 
     const top = ref.current.getBoundingClientRect().top + window.scrollY - offset
     window.scrollTo({ top, behavior: 'smooth' })
   }
@@ -129,7 +145,8 @@ const ShopDetails = () => {
 
     const handleScroll = () => {
       const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
-      const checkPosition = window.scrollY + 80 + shortDetailsHeight + 60 + 10
+      // 64 navbar + shortDetails + sectionHeading + buffer
+      const checkPosition = window.scrollY + 64 + shortDetailsHeight + 60 + 10
 
       for (const section of sections) {
         const el = sectionRefs[section]?.current
@@ -150,16 +167,16 @@ const ShopDetails = () => {
   return (
     <div className="mb-20">
       {/* Banner */}
-      {isMobile ? <Banner images={apiData?.images} /> : <DeskBanner images={apiData?.images} />}
+      {isMobile ? <Banner images={apiData?.images} salonId={apiData?.id ?? apiData?._id} /> : <DeskBanner images={apiData?.images} salonId={apiData?.id ?? apiData?._id} />}
 
       <div className="lg:px-10 xl:px-32">
         {/* Sticky: Shop Info */}
-        <div ref={shortDetailsRef} className="sticky top-16 z-20">
+        <div ref={shortDetailsRef} className="sticky top-16 z-20 bg-white">
           <ShortDetails shopData={apiData} />
         </div>
 
         {/* Sticky: Section Tabs (mobile only) */}
-        <div className="sticky z-10" style={{ top: `${headerHeight + (window.innerWidth >= 768 ? 60 : 70)}px` }}>
+        <div className="sticky z-10 bg-white shadow-sm" style={{ top: `${headerHeight + 62}px` }}>
           <SectionHeading activeTab={activeTab} onTabClick={scrollToSection} />
         </div>
 
@@ -193,7 +210,7 @@ const ShopDetails = () => {
 
       {/* Mobile: Fixed bottom price bar */}
       <div className="lg:hidden">
-        <PriceSection services={apiServices} addedServices={addedServices} />
+        <PriceSection services={apiServices} addedServices={addedServices} id={apiData?.id} />
       </div>
     </div>
   )

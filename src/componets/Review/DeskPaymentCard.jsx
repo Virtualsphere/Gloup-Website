@@ -5,6 +5,8 @@ import CouponSection from './CouponSection';
 
 const DeskPaymentCard = ({
   amount,
+  discountedAmount,
+  serviceDiscount,
   couponDiscount,
   appliedCoupon,
   onApplyCoupon,
@@ -20,6 +22,7 @@ const DeskPaymentCard = ({
   totalBeforeWallet,
   onPay,
   isLoading,
+  disabled,
 }) => {
   return (
     <div className="sticky top-24 space-y-4">
@@ -31,6 +34,13 @@ const DeskPaymentCard = ({
             <span>Amount</span>
             <span className="font-medium text-gray-900">₹{amount}</span>
           </div>
+
+          {serviceDiscount > 0 && (
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Discount</span>
+              <span className="font-medium text-red-500">-₹{serviceDiscount}</span>
+            </div>
+          )}
 
           {couponDiscount > 0 && (
             <div className="flex items-center justify-between text-sm">
@@ -98,14 +108,18 @@ const DeskPaymentCard = ({
             </div>
             <button
               onClick={onPay}
-              disabled={isLoading}
-              className="bg-green-500 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-green-600 transition-colors shadow-sm shadow-green-200 text-sm disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+              disabled={isLoading || disabled}
+              className={`text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-sm text-sm flex items-center gap-2 ${
+                isLoading || disabled
+                  ? 'bg-gray-300 cursor-not-allowed shadow-none'
+                  : 'bg-green-500 hover:bg-green-600 shadow-green-200'
+              } disabled:opacity-70 disabled:cursor-not-allowed`}
             >
               {isLoading ? (
                 <>
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
                   Processing…
                 </>
@@ -120,7 +134,7 @@ const DeskPaymentCard = ({
       {/* Coupons & Offers */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-5 py-4">
         <h3 className="text-base font-bold text-gray-900 mb-3">Coupons &amp; Offers</h3>
-        <CouponSection appliedCoupon={appliedCoupon} onApplyCoupon={onApplyCoupon} />
+        <CouponSection amount={discountedAmount} appliedCoupon={appliedCoupon} onApplyCoupon={onApplyCoupon} />
       </div>
     </div>
   );
