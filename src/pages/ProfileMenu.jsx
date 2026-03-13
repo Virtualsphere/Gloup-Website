@@ -9,7 +9,6 @@ const ProfileMenu = () => {
 
   const menuItems1 = [
     { icon: <User className="w-5 h-5 text-gray-700" />, label: 'Profile', path: '/profile-details' },
-    { icon: <Star className="w-5 h-5 text-gray-700" />, label: 'My Reviews', path: '/my-reviews' },
     { icon: <UserPlus className="w-5 h-5 text-gray-700" />, label: 'Invite & Earn', path: '/invite-earn' },
     { icon: <Settings className="w-5 h-5 text-gray-700" />, label: 'Settings', path: '/settings' },
   ];
@@ -21,17 +20,16 @@ const ProfileMenu = () => {
   return (
     <div className="bg-gray-100 min-h-screen pb-8 lg:hidden">
       {/* Header */}
-      <div className="flex items-center gap-4 p-6 bg-gray-100">
-        <button onClick={() => navigate(-1)} className="p-1 -ml-1 hover:bg-gray-200 rounded-full transition-colors">
-          <ChevronLeft className="w-6 h-6 text-gray-900" />
-        </button>
-        <div className="flex-1">
-          <h1 className="text-xl font-bold text-gray-900">Muthupandi Murugaiah</h1>
+      <div className="px-4 my-3">
+        <div className='bg-white p-4 flex items-center rounded-3xl'>
+          <div className="flex-1">
+          <h1 className="text-lg font-semibold text-gray-900">Muthupandi Murugaiah</h1>
           <p className="text-sm text-gray-500">Personal Profile</p>
         </div>
         <div className="w-10 h-10 bg-gray-200 rounded-xl flex items-center justify-center">
           {/* Avatar placeholder */}
           <User className="w-5 h-5 text-gray-400" />
+        </div>
         </div>
       </div>
 
@@ -45,12 +43,6 @@ const ProfileMenu = () => {
             <span>₹</span>
             <span>500.00</span>
           </div>
-          <Link
-            to="/wallet"
-            className="inline-block px-4 py-2 rounded-full border border-white/30 text-sm font-medium hover:bg-white/10 transition-colors relative z-10"
-          >
-            View Wallet
-          </Link>
           {/* Example logo placeholder in bottom right */}
           <div className="absolute bottom-4 right-4 opacity-50">
             <div className="w-10 h-10 border-4 border-white/50 rounded-full flex items-center justify-center opacity-50 relative">
