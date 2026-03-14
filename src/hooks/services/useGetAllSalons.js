@@ -15,10 +15,13 @@ export const useGetAllSalons = (filters = {}) => {
     queryKey: ["allSalons", filters],
     queryFn: ({ pageParam = 1 }) =>
       getAllSalons({ ...filters, page: pageParam }),
+    initialPageParam: 1, // Required in React Query v5
     getNextPageParam: (lastPage) => {
-      const { currentPage, totalPages } = lastPage.pagination ?? {};
-      if (!currentPage || !totalPages) return undefined;
-      return currentPage < totalPages ? currentPage + 1 : undefined;
+      const pagination = lastPage?.pagination ?? {};
+      console.log("getAllSalons Pagination:", pagination);
+      const { page, totalPages } = pagination;
+      if (!page || !totalPages) return undefined;
+      return page < totalPages ? page + 1 : undefined;
     },
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,

@@ -5,6 +5,7 @@ import { useGetAllSalons } from "../../hooks/services/useGetAllSalons";
 import ServiceCard from "../shared/ui/ServiceCard";
 import ServiceCardSkeleton from "../shared/ui/ServiceCardSkeleton";
 import { useHomeFilterStore } from "../../store/homeFilterStore";
+import { useLocationStore } from "../../store/locationStore";
 
 const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 const PROFILE_IMG_URL = import.meta.env.VITE_PROFILE_IMG_URL;
@@ -55,12 +56,20 @@ const normalizeSalon = (salon) => {
     services: salon.categories?.length > 0 ? salon.categories : ["Service"],
     images,
     languageCodes: salon.languageCodes,
-    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.salontype || '',
+    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || salon.salontype || '',
   };
 };
 
 function RecommendedSalons() {
   const { filters } = useHomeFilterStore();
+  const { location } = useLocationStore();
+
+  const queryParams = { 
+    limit: 8, 
+    ...filters,
+    ...(location?.lat ? { lat: location.lat } : {}),
+    ...(location?.lng ? { lng: location.lng } : {}),
+  };
 
   const {
     data,
@@ -69,26 +78,16 @@ function RecommendedSalons() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetAllSalons({ limit: 8, ...filters });
+  } = useGetAllSalons(queryParams);
+
+  console.log(fetchNextPage, "fetching Next page..............")
 
   console.log(data, "RecommendedSalons")
 
   // Flatten all pages into a single list
   let salons = data?.pages.flatMap((p) => p.data ?? []).map(normalizeSalon) ?? [];
 
-  if (filters?.gender) {
-    const activeGender = filters.gender.toLowerCase();
-    const isTarget = (str) => {
-       if(!str) return false;
-       const s = str.toLowerCase();
-       if (activeGender === 'male' || activeGender === 'men') return s === 'male' || s === 'men' || s.includes('men');
-       if (activeGender === 'female' || activeGender === 'women') return s === 'female' || s === 'women' || s.includes('women');
-       if (activeGender.includes('kid') || activeGender.includes('baby')) return s.includes('kid') || s.includes('baby');
-       if (activeGender === 'unisex') return s.includes('unisex') || s.includes('both');
-       return s.includes(activeGender);
-    };
-    salons = salons.filter(s => isTarget(s.rawGender) || s.services.some(isTarget));
-  }
+  // The backend already filters by gender natively
 
   // Sentinel element — sits at the bottom of the list
   const sentinelRef = useRef(null);

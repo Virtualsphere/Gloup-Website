@@ -50,7 +50,7 @@ const normalizeService = (salon) => {
     services: salon.categories?.length > 0 ? salon.categories : ['Service'],
     images,
     languageCodes: salon.languageCodes,
-    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.salontype || '',
+    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || '',
   };
 };
 

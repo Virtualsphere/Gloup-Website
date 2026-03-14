@@ -18,9 +18,9 @@ export default function ProfileDetails() {
   };
 
   return (
-    <div className="bg-[#F8F8F8] flex flex-col relative">
+    <div className="bg-[#F2F2F2] flex flex-col relative">
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 bg-[#F8F8F8]">
+      <div className="flex items-center gap-3 p-4 bg-[#F2F2F2]">
         <button onClick={() => navigate(-1)} className="p-1 -ml-1 hover:bg-gray-200 rounded-full transition-colors">
           <ChevronLeft className="w-6 h-6 text-black" strokeWidth={2.5} />
         </button>

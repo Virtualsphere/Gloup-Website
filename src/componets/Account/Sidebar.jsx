@@ -44,7 +44,7 @@ export default function Sidebar() {
 
         {/* Invite & Earn */}
         <button 
-          onClick={() => navigate("/profile/invite-earn")}
+          onClick={() => navigate("/profile/invite")}
           className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors text-left"
         >
           <UserPlus className="w-5 h-5 text-gray-700" />

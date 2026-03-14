@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, MapPin, Search, Crosshair } from 'lucide-react';
-import { useLoadScript } from '@react-google-maps/api';
 import { useLocationStore } from '../../../store/locationStore';
-
-const libraries = ['places'];
-const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+import { useMapsLoader } from '../../../store/CustomMapsProvider';
 
 const LocationSearchModal = ({ isOpen, onClose }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -17,10 +14,7 @@ const LocationSearchModal = ({ isOpen, onClose }) => {
   const autocompleteService = useRef(null);
   const placesService = useRef(null);
 
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: GOOGLE_API_KEY,
-    libraries,
-  });
+  const { isLoaded, loadError } = useMapsLoader();
 
   useEffect(() => {
     if (isLoaded && !autocompleteService.current) {

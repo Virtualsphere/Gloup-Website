@@ -46,10 +46,10 @@ const normalizeService = (salon) => {
     reviews: 0,
     location: salon.address || 'Nearby',
     distance: salon.distance ? `${salon.distance.toFixed(1)} km` : '',
-    services: salon.categories?.length > 0 ? salon.categories : ['Service'],
+    services: salon.categories?.length > 0 ? salon.categories : ['Haircut', 'Facial'],
     images,
     languageCodes: salon.languageCodes,
-    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.salontype || '',
+    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || salon.salontype || '',
   };
 };
 
@@ -61,7 +61,7 @@ const PopularServices = () => {
 
   // Pass dynamic filters directly down to the query hook
   const { data, isLoading, isError } = useNearbySalons(filters)
-  // console.log(data, "PopularServices")
+  console.log(data, "PopularServices")
 
   useEffect(() => {
     getLocation()
@@ -70,19 +70,7 @@ const PopularServices = () => {
   const rawSalons = data?.data?.data || []
   let services = rawSalons.map(normalizeService)
 
-  if (filters?.gender) {
-    const activeGender = filters.gender.toLowerCase();
-    const isTarget = (str) => {
-      if (!str) return false;
-      const s = str.toLowerCase();
-      if (activeGender === 'male' || activeGender === 'men') return s === 'male' || s === 'men' || s.includes('men');
-      if (activeGender === 'female' || activeGender === 'women') return s === 'female' || s === 'women' || s.includes('women');
-      if (activeGender.includes('kid') || activeGender.includes('baby')) return s.includes('kid') || s.includes('baby');
-      if (activeGender === 'unisex') return s.includes('unisex') || s.includes('both');
-      return s.includes(activeGender);
-    };
-    services = services.filter(s => isTarget(s.rawGender) || s.services.some(isTarget));
-  }
+  // The backend already filters by gender, so we no longer need native frontend filtering.
 
   // Loading skeleton
   if (isLoading) {

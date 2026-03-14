@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useGetCategory } from '../../hooks/services/useGetCategory'
 
 const ServiceSlider = () => {
   const [activeService, setActiveService] = useState(0)
+  const navigate = useNavigate()
   
   const { data, isLoading, isError } = useGetCategory()
-  console.log(data, "service slider")
   const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  const handleCategoryClick = (service, index) => {
+    setActiveService(index)
+    navigate(`/salons/category/${service.id}`, {
+      state: { categoryName: service.label.trim(), categories: data?.data || [] }
+    })
+  }
 
   if (isLoading) {
     return (
@@ -32,7 +40,7 @@ const ServiceSlider = () => {
           return (
             <button
               key={service.id}
-              onClick={() => setActiveService(index)}
+              onClick={() => handleCategoryClick(service, index)}
               className="flex flex-col items-center gap-2 lg:gap-3 group cursor-pointer flex-shrink-0 lg:flex-shrink"
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-full lg:h-auto lg:aspect-square rounded-xl sm:rounded-2xl lg:rounded-2xl overflow-hidden bg-gray-200 lg:shadow-sm lg:group-hover:shadow-md transition-shadow flex items-center justify-center">

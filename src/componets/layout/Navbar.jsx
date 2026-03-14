@@ -22,7 +22,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="sticky top-0 left-0 right-0 w-full bg-white z-50 border-b border-gray-100">
+      <div className=" hidden lg:block sticky top-0 left-0 right-0 w-full bg-white z-50 border-b border-gray-100">
         <nav className="w-full max-w-[1536px] mx-auto flex items-center justify-between px-6 xl:px-32 lg:px-10 py-4 h-[80px] md:h-auto">
           {/* Left Section: Logo & Location */}
         <div className="flex items-center gap-8">

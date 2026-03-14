@@ -124,13 +124,15 @@ const ServiceCard = ({ service }) => {
         </div>
 
         {/* Price Tag - Outside Swiper */}
-        <div 
-          className="absolute bottom-3 right-3 bg-white px-1.5 py-1.5 rounded-lg shadow-md z-10"
-        >
-          <span className="text-xs font-normal text-gray-800">
-            {service.mainService} • ₹{service.price}
-          </span>
-        </div>
+        <div className="absolute bottom-3 right-3 bg-white px-1.5 py-1.5 rounded-lg shadow-md z-10">
+  <div className="flex items-center text-xs font-normal text-gray-800 gap-1">
+    <span className="truncate max-w-[180px]">
+      {service.mainService}
+    </span>
+    <span>•</span>
+    <span>₹{service.price}</span>
+  </div>
+</div>
       </div>
 
       {/* Card Content */}
@@ -208,7 +210,7 @@ const ServiceCard = ({ service }) => {
                 {service.services.slice(0, 1).map((tag, index) => (
                   <span 
                     key={index}
-                    className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full"
+                    className="px-3 py-1 bg-violet-50 text-violet-500 text-xs font-medium rounded-full truncate max-w-[90px]"
                   >
                     {tag}
                   </span>

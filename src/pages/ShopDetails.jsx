@@ -145,8 +145,9 @@ const ShopDetails = () => {
 
     const handleScroll = () => {
       const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
-      // 64 navbar + shortDetails + sectionHeading + buffer
-      const checkPosition = window.scrollY + 64 + shortDetailsHeight + 60 + 10
+      // navbar (only on lg: 80px), shortDetails + buffer
+      const navOffset = isMobile ? 0 : 80;
+      const checkPosition = window.scrollY + navOffset + shortDetailsHeight + 10;
 
       for (const section of sections) {
         const el = sectionRefs[section]?.current
@@ -162,7 +163,7 @@ const ShopDetails = () => {
     window.addEventListener('scroll', handleScroll)
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMobile])
 
   return (
     <div className="mb-20">
@@ -171,12 +172,12 @@ const ShopDetails = () => {
 
       <div className="lg:px-10 xl:px-32">
         {/* Sticky: Shop Info */}
-        <div ref={shortDetailsRef} className="sticky top-16 z-20 bg-white">
+        <div ref={shortDetailsRef} className="sticky top-0 lg:top-[80px] z-20 bg-white shadow-sm lg:shadow-none">
           <ShortDetails shopData={apiData} />
         </div>
 
         {/* Sticky: Section Tabs (mobile only) */}
-        <div className="sticky z-10 bg-white shadow-sm" style={{ top: `${headerHeight + 62}px` }}>
+        <div className="sticky z-10 bg-white shadow-sm lg:hidden" style={{ top: `${headerHeight}px` }}>
           <SectionHeading activeTab={activeTab} onTabClick={scrollToSection} />
         </div>
 

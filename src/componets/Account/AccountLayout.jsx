@@ -14,14 +14,14 @@ export default function AccountLayout() {
             return <Sidebar />;
         }
         return (
-            <div className="w-full bg-white">
+            <div className="w-full">
                 <Outlet />
             </div>
         );
     }
 
     return (
-        <div className="flex h-[800px] my-5 bg-white shadow-xl rounded-3xl container mx-auto overflow-hidden border border-gray-100">
+        <div className="flex h-[800px] my-5 shadow-2xl rounded-3xl container mx-auto overflow-hidden border border-gray-200 bg-white">
 
             {/* LEFT SIDEBAR */}
             <div className="w-[320px] border-r border-gray-100 bg-[#F8F8F8]">
@@ -29,7 +29,7 @@ export default function AccountLayout() {
             </div>
 
             {/* RIGHT DEFAULT PAGE (Content) */}
-            <div className="flex-1 p-6 overflow-y-auto relative">
+            <div className="flex-1 p-0 overflow-y-auto relative bg-white">
                 <Outlet />
             </div>
 

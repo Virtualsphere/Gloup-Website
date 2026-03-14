@@ -20,8 +20,14 @@ import Settings from "./pages/Settings";
 import About from "./pages/About";
 import PopularServicesPage from "./pages/PopularServicesPage";
 import TopSalonsPage from "./pages/TopSalonsPage";
+import SaloonCategoryPage from "./pages/SaloonCategoryPage";
 import AccountLayout from "./componets/Account/AccountLayout";
 import Orders from "./componets/Account/ProfileDetails";
+import Invite from "./componets/Account/Invite";
+import SettingsPage from "./componets/Account/setting";
+import Support from "./componets/Account/support";
+import MapLayout from "./componets/map/MapLayout";
+import CustomMapsProvider from "./store/CustomMapsProvider";
 // import Header from "./componets/Header";
 // import Footer from "./componets/Footer";
 // import AppRoutes from "./routes";
@@ -54,7 +60,7 @@ function App() {
     //  <Layout/>
     // </Router>
 
-    <>
+    <CustomMapsProvider>
       <Toaster position="top-right" />
       {/* Global login modal — open from anywhere via useUiStore */}
       <LoginModal />
@@ -67,9 +73,11 @@ function App() {
             <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
             <Route path="/terms-conditions" element={<TermsAndConditions />} />
             <Route path="/about" element={<About />} />
+            <Route path="/explore-map" element={<MapLayout />} />
             <Route path="/explore" element={<ExploreSalonsPage />} />
             <Route path="/popular-services" element={<PopularServicesPage />} />
             <Route path="/top-salons" element={<TopSalonsPage />} />
+            <Route path="/salons/category/:categoryId" element={<SaloonCategoryPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/salon-details/:id" element={<ShopDetails />} />
 
@@ -89,15 +97,16 @@ function App() {
               }
             >
               <Route index element={<Orders />} />
-              {/* <Route path="profile-details" element={<Settings />} /> */}
-      <Route path="details" element={<Orders />} />
-      {/* <Route path="support" element={<Support />} /> */}
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="details" element={<Orders />} />
+              <Route path="invite" element={<Invite />} />
+              <Route path="support" element={<Support />} />
             </Route>
 
           </Routes>
         </Layout>
       </div>
-    </>
+    </CustomMapsProvider>
   );
 }
 

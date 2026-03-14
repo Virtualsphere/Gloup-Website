@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Navigation } from 'lucide-react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import { useMapsLoader } from '../../store/CustomMapsProvider';
 
 const mapContainerStyle = {
   width: '100%',
@@ -20,10 +21,7 @@ const Location = ({ locationData = {}, shopName = "" }) => {
     lng: hasCoordinates ? lng : 80.2340045,
   };
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
-  });
+  const { isLoaded, loadError } = useMapsLoader();
 
   // Hotfix for Vite HMR bug: If the script was loaded in a previous render, 
   // useJsApiLoader sometimes fails to detect it.

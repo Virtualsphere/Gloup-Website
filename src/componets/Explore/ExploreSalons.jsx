@@ -53,8 +53,8 @@ const normalizeSalon = (salon) => {
     isPremium: salon.isPremium ?? false,
     isFavorite: salon.isFavourite ?? salon.isFavorite ?? false,
     // languages: [],
-    // services: salon.categories ?? ["Service"],
-    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.salontype || "",
+    services: salon.categories ?? ["Service"],
+    rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || salon.salontype || "",
   };
 };
 
@@ -95,19 +95,7 @@ const ExploreSalons = () => {
 
   let salons = data?.pages.flatMap((p) => p.data ?? []).map(normalizeSalon) ?? [];
 
-  if (filters?.gender) {
-    const activeGender = filters.gender.toLowerCase();
-    const isTarget = (str) => {
-      if (!str) return false;
-      const s = str.toLowerCase();
-      if (activeGender === "male" || activeGender === "men") return s === "male" || s === "men" || s.includes("men");
-      if (activeGender === "female" || activeGender === "women") return s === "female" || s === "women" || s.includes("women");
-      if (activeGender.includes("kid") || activeGender.includes("baby")) return s.includes("kid") || s.includes("baby");
-      if (activeGender === "unisex") return s.includes("unisex") || s.includes("both");
-      return s.includes(activeGender);
-    };
-    salons = salons.filter((s) => isTarget(s.rawGender) || s.services.some(isTarget));
-  }
+  // The backend already filters by gender according to useHomeFilterStore, so we just use the raw map.
 
   const sentinelRef = useRef(null);
 
