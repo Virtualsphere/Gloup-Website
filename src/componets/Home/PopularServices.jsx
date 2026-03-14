@@ -38,7 +38,7 @@ const normalizeService = (salon) => {
   return {
     id: salon.id ?? salon._id,
     name: salon.salonName,
-    mainService: salon.serviceName,
+    mainService: salon.serviceName || '',
     price: salon.servicePrice,
     rating: salon.rating,
     isPremium: salon.isPremium,

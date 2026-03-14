@@ -39,8 +39,6 @@ const normalizeService = (salon) => {
     name: salon.salonName,
     logo: salon.salonName?.charAt(0)?.toUpperCase() || 'S',
     logoUrl,
-    mainService: salon.serviceName,
-    price: salon.servicePrice,
     rating: salon.rating,
     isPremium: salon.isPremium,
     isFavourite: salon.isFavourite ?? salon.isFavorite ?? false, // Note the spelling difference from popular services API mapping if applicable
@@ -60,7 +58,7 @@ function TopSalons() {
 
   // Pass dynamic filters directly down to the query hook
   const { data, isLoading, isError } = useTopSalons(filters);
-  console.log(data, "top-salons")
+  console.log(data, "top-salonssssssssssssss")
 
   const rawSalons = data?.data || []; // Note: TopSalons returns data directly, whereas nearby returns data.data according to previous setups
   let services = rawSalons.map(normalizeService);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Share2, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import HeartOutline from "../../assets/icons/ic_heart.svg?react";
 import HeartFill from "../../assets/icons/ic_heart_fill.svg?react";
 import ShareIcon from "../../assets/icons/ic_share.svg?react";
@@ -12,7 +13,6 @@ import 'swiper/css/pagination';
 // Import custom styles
 import './Banner.css';
 import { useAuthStore } from '../../store/authStore';
-import { useUiStore } from '../../store/uiStore';
 import { useToggleFavourite } from '../../hooks/services/useToggleFavourite';
 import { useGetFavourites } from '../../hooks/services/useGetFavourites';
 import toast from 'react-hot-toast';
@@ -35,7 +35,7 @@ const Banner = ({ images = [], isLoading = false, salonId = null }) => {
   }, [exactFavoriteState]);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const openLoginModal = useUiStore((s) => s.openLoginModal);
+  const navigate        = useNavigate();
   const { mutate: toggle, isPending } = useToggleFavourite();
 
   // Map API images or provide a fallback slide
@@ -79,7 +79,7 @@ const Banner = ({ images = [], isLoading = false, salonId = null }) => {
 
   const handleFavorite = () => {
     if (!isAuthenticated) {
-      openLoginModal();
+      navigate('/login');
       return;
     }
 

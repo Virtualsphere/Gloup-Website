@@ -18,7 +18,7 @@ const Footer = () => {
     { name: 'Home', path: '/', outlineIcon: HomeIcon, fillIcon: HomeFillIcon },
     { name: 'Explore', path: '/explore', outlineIcon: SearchIcon, fillIcon: SearchFillIcon },
     { name: 'Favorites', path: '/favourite', outlineIcon: HeartIcon, fillIcon: HeartFillIcon },
-    { name: 'Bookings', path: '/bookings', outlineIcon: CalendarIcon, fillIcon: CalendarFillIcon }
+    { name: 'Bookings', path: '/my-bookings', outlineIcon: CalendarIcon, fillIcon: CalendarFillIcon }
   ];
 
   return (

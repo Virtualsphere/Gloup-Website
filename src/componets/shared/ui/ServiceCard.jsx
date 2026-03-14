@@ -18,6 +18,7 @@ import { Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './ServiceCard.css'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../../store/authStore'
 import { useUiStore } from '../../../store/uiStore'
 import { useToggleFavourite } from '../../../hooks/services/useToggleFavourite'
@@ -43,7 +44,7 @@ const ServiceCard = ({ service }) => {
   }, [exactFavoriteState]);
 
   const isAuthenticated  = useAuthStore((s) => s.isAuthenticated)
-  const openLoginModal   = useUiStore((s) => s.openLoginModal)
+  const navigate = useNavigate()
   const { mutate: toggle, isPending } = useToggleFavourite()
 
   const HeartIcon = isFavorite ? HeartFill : HeartOutline;
@@ -53,7 +54,7 @@ const ServiceCard = ({ service }) => {
     e.stopPropagation()
 
     if (!isAuthenticated) {
-      openLoginModal()
+      navigate('/login')
       return
     }
 
@@ -124,7 +125,9 @@ const ServiceCard = ({ service }) => {
         </div>
 
         {/* Price Tag - Outside Swiper */}
+        {service.mainService && (
         <div className="absolute bottom-3 right-3 bg-white px-1.5 py-1.5 rounded-lg shadow-md z-10">
+
   <div className="flex items-center text-xs font-normal text-gray-800 gap-1">
     <span className="truncate max-w-[180px]">
       {service.mainService}
@@ -132,7 +135,9 @@ const ServiceCard = ({ service }) => {
     <span>•</span>
     <span>₹{service.price}</span>
   </div>
+
 </div>
+)}
       </div>
 
       {/* Card Content */}

@@ -12,11 +12,10 @@ import OpeningHours from '../componets/ShopDetails/OpeningHours'
 import Location from '../componets/ShopDetails/Location'
 import PriceSection from '../componets/ShopDetails/PriceSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useGetSalonDetails } from '../hooks/services/useSalonDetails'
 import { useBookingStore } from '../store/bookingStore'
 import { useAuthStore } from '../store/authStore'
-import { useUiStore } from '../store/uiStore'
 
 
 
@@ -48,7 +47,7 @@ const ShopDetails = () => {
   const addedServices = new Set(storedServices.map((s) => s.id))
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const openLoginModal = useUiStore((s) => s.openLoginModal)
+  const navigate = useNavigate()
 
   // Push salon info into the store — reset first if it's a different salon
   useEffect(() => {
@@ -88,7 +87,7 @@ const ShopDetails = () => {
   const handleToggleService = (serviceId) => {
     // Require login before adding any service
     if (!isAuthenticated) {
-      openLoginModal()
+      navigate('/login')
       return
     }
     const service = apiServices.find((s) => s.id === serviceId || s._id === serviceId)

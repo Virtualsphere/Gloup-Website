@@ -19,16 +19,8 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated) return;
 
-    // window.history.state.idx === 0 means there's no in-app history —
-    // the user landed here via a direct URL or hard refresh.
-    const isDirectAccess = !window.history.state?.idx;
-
-    if (isDirectAccess) {
-      navigate('/login', { replace: true });
-    } else {
-      openLoginModal();
-    }
-  }, [isAuthenticated]);
+    navigate('/login', { replace: true });
+  }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) return null;
 

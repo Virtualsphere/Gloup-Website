@@ -5,6 +5,7 @@ import HeartFill from "../../../assets/icons/ic_heart_fill.svg?react";
 import { useToggleFavourite } from "../../../hooks/services/useToggleFavourite";
 import { useGetFavourites } from "../../../hooks/services/useGetFavourites";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { useUiStore } from "../../../store/uiStore";
 
@@ -34,7 +35,7 @@ const FavoriteCard = ({ salon, onRemoved }) => {
   }, [exactFavoriteState]);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const openLoginModal = useUiStore((s) => s.openLoginModal);
+  const navigate = useNavigate();
   const { mutate: toggle, isPending } = useToggleFavourite();
 
   const handleHeartClick = (e) => {
@@ -42,7 +43,7 @@ const FavoriteCard = ({ salon, onRemoved }) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      openLoginModal();
+      navigate("/login");
       return;
     }
 
