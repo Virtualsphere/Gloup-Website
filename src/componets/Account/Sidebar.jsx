@@ -53,17 +53,7 @@ export default function Sidebar() {
         <div className="h-[1px] bg-gray-100 mx-4" />
 
         {/* Switch Theme */}
-        <div className="w-full flex items-center justify-between p-4 bg-white">
-          <div className="flex items-center gap-4">
-            <Palette className="w-5 h-5 text-gray-700" />
-            <span className="text-gray-800 font-medium text-[15px]">Switch Theme</span>
-          </div>
-          {/* Toggle Button */}
-          <div className="w-[52px] h-7 bg-[#E5E5E5] rounded-full flex items-center p-1 relative cursor-pointer justify-end shadow-inner">
-             <Moon className="w-[18px] h-[18px] text-gray-800 absolute left-1.5" strokeWidth={2.5} />
-             <div className="w-[22px] h-[22px] bg-white rounded-full shadow-sm z-10"></div>
-          </div>
-        </div>
+        
         <div className="h-[1px] bg-gray-100 mx-4" />
 
         {/* Settings */}

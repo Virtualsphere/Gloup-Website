@@ -4,7 +4,7 @@ const TABS = ['Upcoming', 'Completed', 'Cancelled'];
 
 const BookingTabs = ({ activeTab, onTabChange }) => {
   return (
-    <div className="px-4 py-3 bg-white border-b border-gray-100">
+    <div className="px-4 lg:px-10 xl:px-32 py-3 bg-white border-b border-gray-100">
       <div className="flex items-center bg-gray-100 rounded-2xl p-1 gap-1">
         {TABS.map((tab) => (
           <button

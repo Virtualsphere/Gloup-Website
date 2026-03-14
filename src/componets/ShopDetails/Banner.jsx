@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 
 const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
-const Banner = ({ images = [], salonId = null }) => {
+const Banner = ({ images = [], isLoading = false, salonId = null }) => {
   const { data: favData } = useGetFavourites();
   const favouritesList = favData?.data ?? [];
   const isGloballyFavorited = favouritesList.some((fav) => {
@@ -50,6 +50,18 @@ const Banner = ({ images = [], salonId = null }) => {
       alt: 'Salon Image 1 fallback'
     }
   ];
+
+  if (isLoading) {
+    return (
+      <div className="relative w-full h-[400px] lg:h-[500px] bg-gray-200 animate-pulse">
+        {/* Skeleton Action Icons */}
+        <div className="absolute top-4 right-4 z-10 flex gap-3">
+          <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-300 rounded-full" />
+          <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-300 rounded-full" />
+        </div>
+      </div>
+    );
+  }
 
   const handleShare = () => {
     // Implement share functionality

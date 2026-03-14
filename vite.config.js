@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     allowedHosts: [
       "defence-powder-deviation-walker.trycloudflare.com"
-    ]
+    ],
+    
   }
 });

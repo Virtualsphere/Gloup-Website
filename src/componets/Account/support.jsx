@@ -23,7 +23,7 @@ export default function Support() {
         <h1 className="text-[19px] md:text-xl font-semibold text-black">Support</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto w-full max-w-md sm:max-w-full md:max-w-3xl lg:max-w-4xl mx-auto md:px-8">
+      <div className="flex-1 overflow-y-auto w-full">
         <div className="px-5 sm:px-10 py-6 md:py-8">
           
           {/* Support Options Card */}

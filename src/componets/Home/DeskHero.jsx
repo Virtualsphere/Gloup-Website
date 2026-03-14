@@ -6,20 +6,29 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import { useGetBanner } from '../../hooks/services/useGetBanner'
 import { useLocationStore } from '../../store/locationStore'
+import { useHomeFilterStore } from '../../store/homeFilterStore'
 import LocationSearchModal from '../shared/ui/LocationSearchModal'
 
 const DeskHero = () => {
   const [service, setService] = useState('')
-  const [gender, setGender] = useState('Unisex')
+  const [gender, setGender] = useState('All')
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
+  const { setFilters } = useHomeFilterStore()
 
   const locationData = useLocationStore((state) => state.location);
-  const displayAddress = locationData?.address 
+  const displayAddress = locationData?.address
     ? locationData.address.split(',')[0]
     : 'Bengaluru';
 
   const { data, isLoading, isError } = useGetBanner()
   const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  const handleSearch = () => {
+    setFilters({
+      search: service,
+      gender: gender === 'All' ? '' : gender
+    })
+  }
 
   if (isLoading) {
     return <div className="w-full h-[680px] bg-gray-200 animate-pulse hidden lg:block"></div>
@@ -56,7 +65,7 @@ const DeskHero = () => {
       </Swiper>
 
       {/* Content overlay — z-10 to sit above the Swiper */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 xl:px-32 pb-8 max-w-[1536px] mx-auto w-full">
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 xl:px-32 pb-8 w-full">
         {/* Headline */}
         <h1 className="text-4xl xl:text-5xl font-bold text-gray-900 mb-3 leading-tight">
           Book local selfcare services
@@ -89,7 +98,7 @@ const DeskHero = () => {
             </div>
 
             {/* Section 2: Location */}
-            <button 
+            <button
               onClick={() => setIsLocationModalOpen(true)}
               className="flex-1 flex items-center justify-start gap-2 px-4 py-4 hover:bg-gray-50 transition-colors focus:outline-none h-full"
             >
@@ -106,12 +115,16 @@ const DeskHero = () => {
                   onChange={e => setGender(e.target.value)}
                   className="text-sm text-black outline-none bg-transparent cursor-pointer"
                 >
+                  <option value="All">All</option>
                   <option value="Unisex">Unisex</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </select>
               </div>
-              <button className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-900 transition-colors flex-shrink-0">
+              <button
+                onClick={handleSearch}
+                className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-900 transition-colors flex-shrink-0"
+              >
                 Search
               </button>
             </div>
@@ -125,9 +138,9 @@ const DeskHero = () => {
         </button>
       </div>
 
-      <LocationSearchModal 
-        isOpen={isLocationModalOpen} 
-        onClose={() => setIsLocationModalOpen(false)} 
+      <LocationSearchModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
       />
     </div>
   )

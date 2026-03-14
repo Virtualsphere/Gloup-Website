@@ -27,11 +27,11 @@ import { useUiStore } from '../store/uiStore'
 const ShopDetails = () => {
   const isMobile = useMediaQuery(1024)
 
-  const {id} = useParams()
-  const {data, isLoading, isError} = useGetSalonDetails(id)
+  const { id } = useParams()
+  const { data, isLoading, isError } = useGetSalonDetails(id)
 
   console.log(data, "shop-details")
-  
+
   const apiData = data?.data || {}
   const apiServices = apiData?.services || []
 
@@ -39,16 +39,16 @@ const ShopDetails = () => {
   console.log(apiData)
 
   // ─── Booking Store ──────────────────────────────────────────────────────
-  const setSalon          = useBookingStore((s) => s.setSalon)
-  const resetBooking      = useBookingStore((s) => s.resetBooking)
-  const currentSalonId    = useBookingStore((s) => s.salon.id)
-  const toggleService     = useBookingStore((s) => s.toggleService)
-  const storedServices    = useBookingStore((s) => s.selectedServices)
+  const setSalon = useBookingStore((s) => s.setSalon)
+  const resetBooking = useBookingStore((s) => s.resetBooking)
+  const currentSalonId = useBookingStore((s) => s.salon.id)
+  const toggleService = useBookingStore((s) => s.toggleService)
+  const storedServices = useBookingStore((s) => s.selectedServices)
   // Derive a Set of selected IDs directly — no extra function call, stays reactive
-  const addedServices     = new Set(storedServices.map((s) => s.id))
+  const addedServices = new Set(storedServices.map((s) => s.id))
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const openLoginModal  = useUiStore((s) => s.openLoginModal)
+  const openLoginModal = useUiStore((s) => s.openLoginModal)
 
   // Push salon info into the store — reset first if it's a different salon
   useEffect(() => {
@@ -66,19 +66,19 @@ const ShopDetails = () => {
   const [headerHeight, setHeaderHeight] = useState(0)
 
   // Section nav refs
-  const servicesRef  = useRef(null)
-  const aboutRef     = useRef(null)
+  const servicesRef = useRef(null)
+  const aboutRef = useRef(null)
   const amenitiesRef = useRef(null)
-  const teamRef      = useRef(null)
-  const reviewsRef   = useRef(null)
+  const teamRef = useRef(null)
+  const reviewsRef = useRef(null)
   const [activeTab, setActiveTab] = useState('Services')
 
   const sectionRefs = {
-    Services:  servicesRef,
-    About:     aboutRef,
+    Services: servicesRef,
+    About: aboutRef,
     Amenities: amenitiesRef,
-    Team:      teamRef,
-    Reviews:   reviewsRef,
+    Team: teamRef,
+    Reviews: reviewsRef,
   }
 
   /**
@@ -134,7 +134,7 @@ const ShopDetails = () => {
     if (!ref?.current) return
     const shortDetailsHeight = shortDetailsRef.current?.offsetHeight ?? 0
     // 64 navbar + shortDetails + 60 sectionHeading
-    const offset = 64 + shortDetailsHeight + 60 
+    const offset = 64 + shortDetailsHeight + 60
     const top = ref.current.getBoundingClientRect().top + window.scrollY - offset
     window.scrollTo({ top, behavior: 'smooth' })
   }
@@ -168,7 +168,7 @@ const ShopDetails = () => {
   return (
     <div className="mb-20">
       {/* Banner */}
-      {isMobile ? <Banner images={apiData?.images} salonId={apiData?.id ?? apiData?._id} /> : <DeskBanner images={apiData?.images} salonId={apiData?.id ?? apiData?._id} />}
+      {isMobile ? <Banner images={apiData?.images} isLoading={isLoading} salonId={apiData?.id ?? apiData?._id} /> : <DeskBanner images={apiData?.images} isLoading={isLoading} salonId={apiData?.id ?? apiData?._id} />}
 
       <div className="lg:px-10 xl:px-32">
         {/* Sticky: Shop Info */}

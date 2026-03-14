@@ -5,7 +5,7 @@ import { useGetCategory } from '../../hooks/services/useGetCategory'
 const ServiceSlider = () => {
   const [activeService, setActiveService] = useState(0)
   const navigate = useNavigate()
-  
+
   const { data, isLoading, isError } = useGetCategory()
   const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
 
@@ -19,7 +19,7 @@ const ServiceSlider = () => {
   if (isLoading) {
     return (
       <div className="bg-white lg:bg-gray-100 py-2 lg:py-8 overflow-x-auto lg:overflow-visible scrollbar-hide">
-        <div className="flex lg:grid grid-cols-6 gap-4 lg:gap-5 px-3 lg:px-10 xl:px-32 max-w-[1536px] mx-auto w-full">
+        <div className="flex lg:grid grid-cols-6 gap-4 lg:gap-5 px-3 lg:px-10 xl:px-32 w-full">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 lg:w-full lg:h-auto lg:aspect-square bg-gray-200 animate-pulse rounded-xl sm:rounded-2xl lg:rounded-2xl flex-shrink-0 lg:flex-shrink"></div>
           ))}
@@ -34,7 +34,7 @@ const ServiceSlider = () => {
 
   return (
     <div className="bg-white lg:bg-gray-100 py-2 lg:py-8 overflow-x-auto lg:overflow-visible scrollbar-hide pb-2">
-      <div className="flex lg:grid grid-cols-6 gap-4 lg:gap-5 px-3 lg:px-10 xl:px-32 max-w-[1536px] mx-auto w-full">
+      <div className="flex lg:grid grid-cols-6 gap-4 lg:gap-5 px-3 lg:px-10 xl:px-32 w-full">
         {data.data.map((service, index) => {
           const isActiveMobile = activeService === index;
           return (
@@ -55,7 +55,7 @@ const ServiceSlider = () => {
                   />
                 ) : null}
               </div>
-              <span 
+              <span
                 className={`text-sm whitespace-nowrap lg:whitespace-normal transition-all duration-300
                   ${isActiveMobile ? 'font-medium text-black' : 'font-normal text-gray-400'}
                   lg:font-medium lg:text-gray-700 lg:group-hover:text-gray-900

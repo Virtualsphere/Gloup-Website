@@ -72,13 +72,27 @@ const Favourites = () => {
         </button>
       </div>
 
-      <div className="px-4 py-4 lg:py-8 lg:px-32 mx-auto">
-        {/* Header */}
-        <div className="mb-4 lg:mb-8">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">My Favorites</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            {isLoading ? "Loading..." : `${favourites.length} saved salon${favourites.length !== 1 ? "s" : ""}`}
-          </p>
+      <div className="px-4 py-4 lg:py-8 lg:px-32 xl:px-32 mx-auto">
+        {/* Header & Desktop Search */}
+        <div className="mb-4 lg:mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">My Favorites</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              {isLoading ? "Loading..." : `${favourites.length} saved salon${favourites.length !== 1 ? "s" : ""}`}
+            </p>
+          </div>
+
+          {/* Desktop Search bar */}
+          <div className="hidden lg:flex items-center gap-2 bg-white border border-gray-300 rounded-full px-4 py-2.5 w-[400px] transition-all hover:border-gray-400 focus-within:border-gray-500 focus-within:shadow-sm">
+            <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search favorites..."
+              className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+            />
+          </div>
         </div>
 
         {/* Loading skeletons */}

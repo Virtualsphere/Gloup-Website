@@ -13,6 +13,8 @@ import YouMightLikeSection from './YouMightLikeSection';
 import ToastNotification from './ToastNotification';
 import DeskPaymentCard from './DeskPaymentCard';
 import OfferBanner from '../BookSlot/OfferBanner';
+import PaymentFailedModal from '../shared/ui/PaymentFailedModal';
+import PaymentSuccessModal from '../shared/ui/PaymentSuccessModal';
 import { useBookingStore } from '../../store/bookingStore';
 import { useCreateOrder } from '../../hooks/services/useCreateOrder';
 import { usePaymentSuccess } from '../../hooks/services/usePaymentSuccess';
@@ -49,6 +51,13 @@ const ReviewConfirmPage = () => {
   const [useWallet, setUseWallet] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [isToastVisible, setIsToastVisible] = useState(false);
+
+  // Failure & Success Modals
+  const [isFailedModalOpen, setIsFailedModalOpen] = useState(false);
+  const [paymentErrorMessage, setPaymentErrorMessage] = useState('');
+
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
 
   // ─── Billing ────────────────────────────────────────────────────────────────
   const platformFee = 7;
@@ -93,7 +102,7 @@ const ReviewConfirmPage = () => {
     const payload = buildBookingPayload({
       salon,
       storeSlot,
-      selectedServices,
+      selectedServices: allServices,
       bookingFor,
       finalAmount,
       useWallet,
@@ -109,27 +118,39 @@ const ReviewConfirmPage = () => {
     createOrderMutation.mutate(payload, {
       onSuccess: (data) => {
         console.log('✅ Order Created:', data);
-        openRazorpay(data.data, (response) => {
-          paymentSuccessMutation.mutate(
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            },
-            {
-              onSuccess: () => {
-                resetBooking();
-                toast.success('Booking confirmed! 🎉');
-                navigate('/my-bookings');
+        openRazorpay(data.data, {
+          onSuccess: (response) => {
+            paymentSuccessMutation.mutate(
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
               },
-              onError: (err) => {
-                console.error('❌ paymentSuccess API failed:', err);
-                toast.error(
-                  err?.response?.data?.message ?? 'Payment verification failed. Please contact support.'
-                );
-              },
-            }
-          );
+              {
+                onSuccess: (responseData) => {
+                  resetBooking();
+                  toast.success('Booking confirmed! 🎉');
+                  setPaymentSuccessMessage(responseData?.message || 'Your booking has been confirmed.');
+                  setIsSuccessModalOpen(true);
+                },
+                onError: (err) => {
+                  console.error('❌ paymentSuccess API failed:', err);
+                  setPaymentErrorMessage(
+                    err?.response?.data?.message ?? 'Payment verification failed.'
+                  );
+                  setIsFailedModalOpen(true);
+                },
+              }
+            );
+          },
+          onFailure: (err) => {
+            setPaymentErrorMessage(err?.description ?? err?.reason ?? 'Your payment was declined.');
+            setIsFailedModalOpen(true);
+          },
+          onDismiss: () => {
+            setPaymentErrorMessage('You cancelled the payment.');
+            setIsFailedModalOpen(true);
+          }
         });
       },
       onError: (error) => {
@@ -203,7 +224,7 @@ const ReviewConfirmPage = () => {
           </div>
 
           {/* ── Right: Sticky payment sidebar (desktop only) ── */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block sticky top-[100px] z-10 transition-all duration-300">
             <DeskPaymentCard
               {...billingProps}
               appliedCoupon={appliedCoupon}
@@ -238,6 +259,29 @@ const ReviewConfirmPage = () => {
         </div>
         <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} disabled={hasNoServices} />
       </div>
+
+      <PaymentFailedModal 
+        isOpen={isFailedModalOpen} 
+        onClose={() => setIsFailedModalOpen(false)} 
+        onTryAgain={() => {
+          setIsFailedModalOpen(false);
+          handlePay(); // Re-trigger the payment creation + razorpay flow
+        }}
+        errorMessage={paymentErrorMessage}
+      />
+
+      <PaymentSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => {
+          setIsSuccessModalOpen(false);
+          navigate('/my-bookings');
+        }}
+        onContinue={() => {
+          setIsSuccessModalOpen(false);
+          navigate('/my-bookings');
+        }}
+        message={paymentSuccessMessage}
+      />
     </div>
   );
 };

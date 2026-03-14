@@ -3,12 +3,24 @@ import { dumBanner, galleryImage1, galleryImage2 } from '../../assets/images';
 
 const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
-const DeskBanner = ({ images = [] }) => {
+const DeskBanner = ({ images = [], isLoading = false }) => {
   const urlImages = images?.length > 0 ? images.map(img => `${BASE_IMAGE_URL}/${img}`) : [];
 
   const mainImage = urlImages[0] || dumBanner;
   const sideImage1 = urlImages[1] || galleryImage1;
   const sideImage2 = urlImages[2] || galleryImage2;
+
+  if (isLoading) {
+    return (
+      <div className="w-full hidden lg:grid grid-cols-3 gap-2 h-[450px] xl:px-32 lg:px-10">
+        <div className="col-span-2 h-[450px] rounded-2xl bg-gray-200 animate-pulse" />
+        <div className="col-span-1 grid grid-rows-2 gap-2 h-[450px]">
+          <div className="rounded-2xl bg-gray-200 animate-pulse" />
+          <div className="rounded-2xl bg-gray-200 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full hidden lg:grid grid-cols-3 gap-2 h-[450px] xl:px-32 lg:px-10">

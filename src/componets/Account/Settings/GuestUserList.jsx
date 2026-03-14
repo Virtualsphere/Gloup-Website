@@ -15,7 +15,7 @@ const GuestUserList = ({ guests }) => {
   return (
     <div className="flex flex-col gap-3">
       {guests.map((guest) => (
-        <div key={guest.id} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between relative md:border md:border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm">
+        <div key={guest.id} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between relative md:border md:border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm">
           <div>
             <h3 className="text-[16px] text-black mb-1 tracking-wide">{guest.name}</h3>
             <div className="flex items-center gap-2 text-[#3b82f6] text-sm">

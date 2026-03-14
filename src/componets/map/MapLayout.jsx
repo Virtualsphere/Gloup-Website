@@ -9,7 +9,7 @@ import MapView from './MapView';
 import MapSearchBar from './MapSearchBar';
 import MapControls from './MapControls';
 import MapFilter from './MapFilter';
-import FavoriteCard from '../shared/ui/FavoriteCard';
+import MapSalonCard from './MapSalonCard';
 
 const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 const PROFILE_IMG_URL = import.meta.env.VITE_PROFILE_IMG_URL;
@@ -49,6 +49,7 @@ const normalizeSalon = (salon) => {
     isFavorite: salon.isFavourite ?? salon.isFavorite ?? false,
     rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || salon.salontype || "",
     services: salon.categories ?? ["Service"],
+    languageCodes: salon.languageCodes || [],
   };
 };
 
@@ -229,7 +230,7 @@ export default function MapLayout() {
                 <div className="flex flex-col gap-3">
                   {salons.map((salon, idx) => (
                     <Link key={`${salon.id}-${idx}`} to={`/salon-details/${salon.id}`} className="block">
-                      <FavoriteCard salon={salon} />
+                      <MapSalonCard salon={salon} />
                     </Link>
                   ))}
                   

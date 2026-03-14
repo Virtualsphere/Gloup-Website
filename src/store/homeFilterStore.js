@@ -3,6 +3,7 @@ import { create } from "zustand";
 export const useHomeFilterStore = create((set) => ({
   filters: {
     gender: "",
+    search: "",
     page: 1,
     limit: 10,
   },
@@ -25,6 +26,6 @@ export const useHomeFilterStore = create((set) => ({
     })),
   resetFilters: () =>
     set(() => ({
-      filters: { gender: "", page: 1, limit: 10 },
+      filters: { gender: "", search: "", page: 1, limit: 10 },
     })),
 }));

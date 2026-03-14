@@ -33,7 +33,7 @@ const YouMightLikeSection = () => {
   const allServices = salonDetailsResponse?.data?.services || [];
 
   // Filter out services that are already selected from the main page
-  const recommendedServices = allServices.filter(service => !addedIds.has(service.id));
+  const recommendedServices = allServices.filter(service => !addedIds.has(service.id ?? service._id));
 
   if (isLoading) {
     return (
@@ -63,12 +63,13 @@ const YouMightLikeSection = () => {
       {/* Horizontal Scroll Container */}
       <div className="flex overflow-x-auto gap-4 px-4 lg:px-0 pb-4 snap-x hide-scrollbar">
         {recommendedServices.map((service) => {
+          const serviceId = service.id ?? service._id;
           // Check if this service is in our add-on cart
-          const isAdded = addOnServices.some(s => s.id === service.id);
+          const isAdded = addOnServices.some(s => String(s.id) === String(serviceId));
 
           return (
             <div 
-              key={service.id} 
+              key={serviceId} 
               className="min-w-[160px] w-[160px] bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex flex-col justify-between snap-start shrink-0"
             >
               <div>
@@ -97,7 +98,16 @@ const YouMightLikeSection = () => {
                 </div>
 
                 <button
-                  onClick={() => toggleAddOn(service)}
+                  onClick={() => toggleAddOn({
+                    id: serviceId,
+                    name: service.name,
+                    duration: service.duration,
+                    price: service.price,
+                    originalPrice: service.originalPrice ?? null,
+                    discountPercentage: service.discountPercentage ?? null,
+                    discount: service.discount ?? null,
+                    isPopular: service.isPopular ?? false,
+                  })}
                   className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors shrink-0 ${
                     isAdded 
                     ? 'bg-green-500 text-white' 

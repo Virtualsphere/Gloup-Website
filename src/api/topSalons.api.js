@@ -10,6 +10,7 @@ export const getTopSalons = async (filters = {}) => {
   if (gender) params.gender = gender;
   if (lat) params.lat = lat;
   if (lng) params.lng = lng;
+  if (filters.search) params.search = filters.search;
 
   const response = await axiosInstance.get('/app/v2/salons/top', {
     params,

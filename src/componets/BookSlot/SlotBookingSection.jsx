@@ -54,8 +54,12 @@ const SlotBookingSection = () => {
 
   const handleSlotSelect = (slot) => {
     setSelectedSlot(slot);
-    // Mirror to store
-    setSlot({ selectedSlot: slot });
+    // Mirror both the slot AND the currently selected date to the store 
+    // so it doesn't stay null if the user clicks a time without changing the default date.
+    setSlot({ 
+      selectedDate: selectedDate,
+      selectedSlot: slot 
+    });
   };
 
   return (
@@ -101,7 +105,7 @@ const SlotBookingSection = () => {
           </div>
 
           {/* Desktop sidebar */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block sticky top-[100px] z-10 transition-all duration-300">
             <DeskBookingCard selectedSlot={selectedSlot} selectedDate={selectedDate} id={id} />
           </div>
 

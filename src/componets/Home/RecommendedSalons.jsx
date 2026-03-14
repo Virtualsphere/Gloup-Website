@@ -45,15 +45,15 @@ const normalizeSalon = (salon) => {
     name: salon.salonName,
     logo: salon.salonName?.charAt(0)?.toUpperCase() || "S",
     logoUrl,
-    mainService: salon.serviceName || "Service",
-    price: salon.servicePrice || 0,
-    rating: salon.rating ?? 0,
+    mainService: salon.serviceName,
+    price: salon.servicePrice,
+    rating: salon.rating,
     isPremium: salon.isPremium,
     isFavourite: salon.isFavourite ?? salon.isFavorite ?? false,
-    reviews: salon.reviewCount || 0,
-    location: salon.address || "Nearby",
+    reviews: salon.reviewCount,
+    location: salon.address,
     distance: salon.distance ? `${salon.distance.toFixed(1)} km` : "",
-    services: salon.categories?.length > 0 ? salon.categories : ["Service"],
+    services: salon.categories?.length > 0 ? salon.categories : ["Haircut", "Facial"],
     images,
     languageCodes: salon.languageCodes,
     rawGender: salon.gender || salon.salonGender || salon.salonType || salon.storeType || salon.salontype || '',
@@ -112,7 +112,7 @@ function RecommendedSalons() {
   if (isLoading) {
     return (
       <section className="bg-gray-100 py-8 lg:py-12">
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto">
+        <div className="px-4 lg:px-10 xl:px-32">
           <div className="flex items-start justify-between mb-6">
           <div>
             <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
@@ -136,7 +136,7 @@ function RecommendedSalons() {
   if (isError || salons.length === 0) {
     return (
       <section className="bg-gray-100 py-8 lg:py-12">
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto">
+        <div className="px-4 lg:px-10 xl:px-32">
           <div className="flex items-start justify-between mb-5 lg:mb-8">
             <div>
               <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
@@ -149,7 +149,7 @@ function RecommendedSalons() {
           </div>
           <div className="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-gray-200 shadow-sm text-center px-4">
             <p className="text-gray-500 font-medium text-lg">No recommended salons found.</p>
-            {filters?.gender && <p className="text-gray-400 text-sm mt-1">Try changing the category filter.</p>}
+            {(filters?.gender || filters?.search) && <p className="text-gray-400 text-sm mt-1">Try changing the category or search filters.</p>}
           </div>
         </div>
       </section>
@@ -158,7 +158,7 @@ function RecommendedSalons() {
 
   return (
     <section className="bg-gray-100 py-8 lg:py-12">
-      <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto">
+      <div className="px-4 lg:px-10 xl:px-32">
         {/* Header */}
       <div className="flex items-start justify-between mb-5 lg:mb-8">
         <div>
@@ -169,9 +169,11 @@ function RecommendedSalons() {
             Discover top-rated salons near you
           </p>
         </div>
-        <button className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-pink-500 transition-colors">
+        <Link
+          to="/explore"
+          className="flex items-center gap-1 text-sm font-medium text-gray-900 transition-colors">
           See All <ChevronRight size={16} />
-        </button>
+        </Link>
       </div>
 
       {/* Responsive grid

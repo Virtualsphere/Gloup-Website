@@ -21,7 +21,7 @@ export default function AccountLayout() {
     }
 
     return (
-        <div className="flex h-[800px] my-5 shadow-2xl rounded-3xl container mx-auto overflow-hidden border border-gray-200 bg-white">
+        <div className="flex h-[800px] my-5 shadow-2xl rounded-3xl container mx-auto overflow-hidden border border-gray-200">
 
             {/* LEFT SIDEBAR */}
             <div className="w-[320px] border-r border-gray-100 bg-[#F8F8F8]">
@@ -29,7 +29,7 @@ export default function AccountLayout() {
             </div>
 
             {/* RIGHT DEFAULT PAGE (Content) */}
-            <div className="flex-1 p-0 overflow-y-auto relative bg-white">
+            <div className="flex-1 p-0 overflow-y-auto relative bg-[#F2F2F2] ">
                 <Outlet />
             </div>
 

@@ -24,7 +24,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen md:min-h-full flex flex-col relative pb-20 md:pb-0 md:rounded-3xl md:overflow-hidden md:bg-white md:shadow-sm font-sans">
+    <div className="bg-[#F2F2F2] min-h-screen md:min-h-full flex flex-col relative pb-20 md:pb-0 md:rounded-3xl md:overflow-hidden md:bg-white md:shadow-sm font-sans">
       {/* Header */}
       <div className="flex items-center px-4 py-4 bg-[#F5F5F5] md:bg-white md:border-b border-b border-gray-200 md:px-6 md:py-5">
         <button onClick={() => navigate(-1)} className="mr-3">
@@ -33,11 +33,11 @@ export default function Settings() {
         <h1 className="text-[19px] md:text-xl font-semibold text-black">Settings</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto w-full max-w-md sm:max-w-full md:max-w-3xl lg:max-w-4xl mx-auto md:px-8">
+      <div className="flex-1 overflow-y-auto w-full">
         <div className="px-5 sm:px-10 py-6 md:py-8 flex flex-col gap-4">
           
           {/* Top Profile Banner Placeholder */}
-          <div className="w-full bg-white rounded-2xl p-4 flex items-center md:border md:border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm h-28">
+          <div className="w-full bg-white rounded-2xl p-4 flex items-center md:border md:border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm h-28">
             <div className="w-[60px] h-[60px] bg-gray-100 rounded-full flex items-center justify-center mr-4">
                {/* Image placeholder icon equivalent to mock */}
                <div className="w-6 h-6 border-2 border-gray-400 rounded flex items-center justify-center relative overflow-hidden">
@@ -58,7 +58,7 @@ export default function Settings() {
           {/* Delete Account Button */}
           <button 
             onClick={() => setShowDeleteAccountModal(true)}
-            className="w-full bg-white rounded-2xl p-5 flex items-center gap-4 text-left hover:bg-gray-50 transition-colors md:border md:border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm"
+            className="w-full bg-white rounded-2xl p-5 flex items-center gap-4 text-left hover:bg-gray-50 transition-colors md:border md:border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] md:shadow-sm"
           >
             <Trash2 className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
             <span className="text-[16px] text-black tracking-wide">Delete Account</span>

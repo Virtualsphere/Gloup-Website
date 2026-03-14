@@ -101,11 +101,11 @@ const MyBooking = () => {
 
   return (
     // lg:hidden makes the whole page invisible on desktop (mobile-only)
-    <div className="lg:hidden min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
       <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
-        <div className="flex items-center gap-3 px-4 py-4">
+        <div className="flex items-center gap-3 px-4 lg:px-10 xl:px-32 py-4 lg:hidden">
           <button
             onClick={() => navigate(-1)}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"

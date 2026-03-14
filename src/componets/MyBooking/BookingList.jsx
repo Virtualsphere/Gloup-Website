@@ -4,7 +4,7 @@ import BookingCard from './BookingCard';
 import BookingDetailModal from './BookingDetailModal';
 
 const EmptyState = ({ tab }) => (
-  <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+  <div className="flex flex-col items-center justify-center py-20 px-6 lg:px-10 xl:px-32 text-center">
     <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
       <CalendarX className="w-8 h-8 text-gray-400" />
     </div>
@@ -26,7 +26,7 @@ const BookingList = ({ bookings, activeTab }) => {
 
   return (
     <>
-      <div className="px-4 py-4 space-y-4">
+      <div className="px-4 lg:px-10 xl:px-32 py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {bookings.map((booking) => (
           <BookingCard
             key={booking.id}

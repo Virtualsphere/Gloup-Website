@@ -29,33 +29,13 @@ const LANG_MAP = {
  * Right: name (bold), star rating top-right, location + distance, language icons, category tags.
  */
 const SalonCategoryCard = ({ salon }) => {
-  const { data: favData } = useGetFavourites();
-  const favouritesList = favData?.data ?? [];
-  const isGloballyFavorited = favouritesList.some((fav) => {
-    const favId = fav?.store?.id ?? fav?.store?._id ?? fav?.id;
-    return String(favId) === String(salon?.id);
-  });
-  const exactFavoriteState = favData
-    ? isGloballyFavorited
-    : salon?.isFavourite || salon?.isFavorite || false;
-  const [isFavorite, setIsFavorite] = useState(exactFavoriteState);
-  useEffect(() => setIsFavorite(exactFavoriteState), [exactFavoriteState]);
 
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const openLoginModal = useUiStore((s) => s.openLoginModal);
-  const { mutate: toggle, isPending } = useToggleFavourite();
 
-  const HeartIcon = isFavorite ? HeartFill : HeartOutline;
+ 
 
-  const handleHeartClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isAuthenticated) { openLoginModal(); return; }
-    setIsFavorite((p) => !p);
-    toggle(salon?.id, {
-      onError: () => setIsFavorite((p) => !p),
-    });
-  };
+
+
+
 
   // — Safe defaults ——————————————————————
   const image    = salon?.image    || salon?.images?.[0] || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80";
@@ -73,7 +53,7 @@ const SalonCategoryCard = ({ salon }) => {
     <div className="bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-gray-100 flex overflow-hidden w-full min-h-[130px] transition-shadow hover:shadow-md">
       
       {/* ── Left Image ──────────────────────────────────── */}
-      <div className="relative w-[120px] flex-shrink-0 self-stretch">
+      <div className="relative w-[120px] h-[120px] flex-shrink-0 self-stretch">
         <img
           src={image}
           alt={name}
@@ -154,17 +134,7 @@ const SalonCategoryCard = ({ salon }) => {
                 {services[0]}
               </span>
             )}
-            <button
-              onClick={handleHeartClick}
-              disabled={isPending}
-              className="w-7 h-7 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm hover:scale-110 transition-transform disabled:opacity-50"
-            >
-              <HeartIcon
-                width={13}
-                height={13}
-                className={isFavorite ? "text-red-500" : "text-gray-400"}
-              />
-            </button>
+            
           </div>
         </div>
       </div>

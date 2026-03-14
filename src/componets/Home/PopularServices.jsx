@@ -38,13 +38,13 @@ const normalizeService = (salon) => {
   return {
     id: salon.id ?? salon._id,
     name: salon.salonName,
-    mainService: salon.serviceName || 'Service',
-    price: salon.servicePrice || 0,
-    rating: salon.rating ?? 0,
+    mainService: salon.serviceName,
+    price: salon.servicePrice,
+    rating: salon.rating,
     isPremium: salon.isPremium,
     isFavourite: salon.isFavourite ?? salon.isFavorite ?? false,
     reviews: 0,
-    location: salon.address || 'Nearby',
+    location: salon.address,
     distance: salon.distance ? `${salon.distance.toFixed(1)} km` : '',
     services: salon.categories?.length > 0 ? salon.categories : ['Haircut', 'Facial'],
     images,
@@ -76,13 +76,13 @@ const PopularServices = () => {
   if (isLoading) {
     return (
       <div className="bg-gray-100 py-10">
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto flex items-start justify-between mb-6">
+        <div className="px-4 lg:px-10 xl:px-32 flex items-start justify-between mb-6">
           <div>
             <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
             <p className="text-sm text-gray-500 mt-1">Based on your location</p>
           </div>
         </div>
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto flex gap-4 overflow-hidden">
+        <div className="px-4 lg:px-10 xl:px-32 flex gap-4 overflow-hidden">
           {[1, 2, 3].map((i) => (
             <div key={i} className="min-w-[280px] w-full max-w-[320px]">
               <ServiceCardSkeleton />
@@ -97,16 +97,16 @@ const PopularServices = () => {
   if (isError || services.length === 0) {
     return (
       <div className="bg-gray-100 py-6 lg:py-10 overflow-hidden">
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto flex items-start justify-between mb-4 lg:mb-6">
+        <div className="px-4 lg:px-10 xl:px-32 flex items-start justify-between mb-4 lg:mb-6">
           <div>
             <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
             <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">Based on your location</p>
           </div>
         </div>
-        <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto">
+        <div className="px-4 lg:px-10 xl:px-32">
           <div className="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-gray-200 shadow-sm text-center px-4">
             <p className="text-gray-500 font-medium text-lg">No nearby salons found.</p>
-            {filters?.gender && <p className="text-gray-400 text-sm mt-1">Try changing the category filter.</p>}
+            {(filters?.gender || filters?.search) && <p className="text-gray-400 text-sm mt-1">Try changing the category or search filters.</p>}
           </div>
         </div>
       </div>
@@ -116,21 +116,21 @@ const PopularServices = () => {
   return (
     <div className="bg-gray-100 py-6 lg:py-10 overflow-hidden">
       {/* Header */}
-      <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto flex items-start justify-between mb-4 lg:mb-6">
+      <div className="px-4 lg:px-10 xl:px-32 flex items-start justify-between mb-4 lg:mb-6">
         <div>
           <h2 className="text-lg lg:text-2xl font-bold text-gray-900">Popular Services Nearby</h2>
           <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">Based on your location</p>
         </div>
         <Link
-          to="/popular-services"
-          className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-pink-500 transition-colors"
+          to="/explore"
+          className="flex items-center gap-1 text-sm font-medium text-gray-900 transition-colors"
         >
           See All <ChevronRight size={16} />
         </Link>
       </div>
 
       {/* Single Swiper — mobile shows 1.2 cards, desktop shows 3+ */}
-      <div className="px-4 lg:px-10 xl:px-32 max-w-[1536px] mx-auto">
+      <div className="px-4 lg:px-10 xl:px-32">
         <Swiper
           slidesPerView={1.2}
           spaceBetween={12}

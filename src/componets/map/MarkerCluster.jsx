@@ -13,7 +13,7 @@ export default function MarkerCluster({ cluster, map }) {
   
   const svgMarkup = `
     <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <circle cx="${size/2}" cy="${size/2}" r="${size/2}" fill="#22c55e" fill-opacity="0.9" stroke="white" stroke-width="2"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${size/2}" fill="#000000" fill-opacity="0.9" stroke="white" stroke-width="2"/>
       <text x="${size/2}" y="${size/2}" font-family="Arial, sans-serif" font-size="${size/2.5}" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">${count}</text>
     </svg>
   `;
@@ -34,6 +34,7 @@ export default function MarkerCluster({ cluster, map }) {
       icon={{
         url: svgUrl,
         anchor: new window.google.maps.Point(size/2, size/2)
+        
       }}
       zIndex={100}
     />

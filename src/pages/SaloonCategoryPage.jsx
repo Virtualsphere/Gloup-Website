@@ -111,9 +111,9 @@ const SaloonCategoryPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-white border-b border-gray-100 shadow-sm">
+      <div className="sticky top-0 lg:top-[75px] z-20 bg-white border-b lg:border-none border-gray-100 shadow-sm">
         {/* Title row */}
-        <div className="flex items-center gap-3 px-4 pt-4 pb-2">
+        <div className=" lg:hidden flex items-center gap-3 px-4 lg:px-10 xl:px-32 pt-4 pb-2">
           <button
             onClick={() => navigate(-1)}
             className="p-1.5 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
@@ -129,7 +129,7 @@ const SaloonCategoryPage = () => {
         {categories.length > 0 && (
           <div
             ref={tabsRef}
-            className="flex overflow-x-auto scrollbar-hide gap-3 px-4 pb-3 border-b border-gray-100"
+            className="flex lg:py-10 overflow-x-auto scrollbar-hide gap-3 px-4 lg:px-10 xl:px-32 pb-3 border-b lg:border-none border-gray-100"
           >
             {categories.map((cat) => {
               const isActive = String(cat.id) === String(currentCategoryId);
@@ -142,8 +142,7 @@ const SaloonCategoryPage = () => {
                 >
                   {/* Image */}
                   <div
-                    className={`w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center transition-all duration-200
-                      ${isActive ? 'ring-2 ring-black ring-offset-1' : 'ring-0'}
+                    className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center transition-all duration-200
                     `}
                   >
                     {cat.imageUrl ? (
@@ -173,10 +172,10 @@ const SaloonCategoryPage = () => {
           </div>
         )}
 
-        {/* Search bar */}
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5">
-            <Search size={16} className="text-gray-400 flex-shrink-0" />
+        {/* Search bar (Mobile Only) */}
+        <div className="px-4 py-3 border-t border-gray-50 lg:hidden">
+          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 w-full transition-all focus-within:border-gray-400 focus-within:shadow-sm">
+            <Search size={18} className="text-gray-400 flex-shrink-0" />
             <input
               type="text"
               value={searchQuery}
@@ -185,8 +184,8 @@ const SaloonCategoryPage = () => {
               className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="flex-shrink-0">
-                <X size={15} className="text-gray-400 hover:text-gray-600" />
+              <button onClick={() => setSearchQuery('')} className="flex-shrink-0 hover:bg-gray-100 p-1 rounded-full transition-colors">
+                <X size={16} className="text-gray-500" />
               </button>
             )}
           </div>
@@ -194,13 +193,32 @@ const SaloonCategoryPage = () => {
       </div>
 
       {/* ── Content ────────────────────────────────────────────── */}
-      <div className="px-4 lg:px-10 xl:px-32 py-4 max-w-[1536px] mx-auto">
-        {/* Section heading */}
-        <div className="mb-4">
-          <h2 className="text-base font-bold text-gray-900">
-            Salons offering {categories.find(c => String(c.id) === String(currentCategoryId))?.label || passedCategoryName}
-          </h2>
-          <p className="text-sm text-gray-400 mt-0.5">Browse through our curated list of salons</p>
+      <div className="px-4 lg:px-10 xl:px-32 py-4">
+        {/* Section heading & Desktop Search */}
+        <div className="mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base lg:text-xl font-bold text-gray-900">
+              Salons offering {categories.find(c => String(c.id) === String(currentCategoryId))?.label || passedCategoryName}
+            </h2>
+            <p className="text-sm text-gray-400 mt-0.5">Browse through our curated list of salons</p>
+          </div>
+
+          {/* Desktop Search bar */}
+          <div className="hidden lg:flex items-center gap-2 bg-white border border-gray-300 rounded-full px-4 py-2.5 w-[400px] transition-all hover:border-gray-400 focus-within:border-gray-500 focus-within:shadow-sm">
+            <Search size={18} className="text-gray-400 flex-shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for salons, parlors, or massages..."
+              className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="flex-shrink-0 hover:bg-gray-100 p-1 rounded-full transition-colors">
+                <X size={16} className="text-gray-500" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Loading skeleton */}
