@@ -1,17 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import { User, UserPlus, Palette, Settings, HelpCircle, LogOut, Moon } from "lucide-react";
+import { useUserProfile } from "../../hooks/useUserProfile";
+import { useUserStore } from "../../store/userStore";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  useUserProfile(); // Fetch profile data
+  const { user } = useUserStore();
 
   return (
     <div className="p-4 bg-[#F2F2F2] min-h-screen lg:min-h-full rounded-l-3xl space-y-4 font-sans">
       
       {/* Profile Header */}
       <div className="bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm">
-        <span className="text-gray-600 font-medium">Personal Profile</span>
-        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-          <User className="w-5 h-5 text-gray-500" />
+        <span className="text-gray-600 font-medium">
+          {user ? (`${user.firstname || ""} ${user.lastname || ""}`.trim() || "Personal Profile") : "Personal Profile"}
+        </span>
+        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+          {user?.profilePic ? (
+            <img src={user.profilePic} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-5 h-5 text-gray-500" />
+          )}
         </div>
       </div>
 
