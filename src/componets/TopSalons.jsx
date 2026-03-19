@@ -375,241 +375,32 @@ function TopSalons({ topsalons = [], setIsHitFavourite }) {
           {topsalons?.length > 0 ? (
             topsalons.map((service, index) => (
               <div
-                className="col-6 col-md-6 col-lg-3 d-flex"
-                style={{ cursor: "pointer" }}
+                className="col-12 col-md-6 col-lg-3 d-flex"
+                style={{ cursor: "pointer", minHeight: "350px", marginBottom: "20px" }}
                 key={index}
                 onClick={() => {
                   navigate(`/shopdetail/${service?.store_id}`);
                   window.location.reload();
                 }}
               >
-                <div
-                  className="service-item-layout2 wow fadeInUp d-flex flex-column h-100 w-100 shadow-sm rounded-3 overflow-hidden bg-white"
-                  data-wow-delay={service.delay}
-                  style={{ transition: "all 0.3s ease" }}
-                >
-                  {/* Image Section */}
-                  <div
-                    className="service-image position-relative"
-                    onMouseEnter={() =>
-                      swiperRefs.current[index]?.autoplay?.start()
-                    }
-                    onMouseLeave={() =>
-                      swiperRefs.current[index]?.autoplay?.stop()
-                    }
-                    onTouchStart={() =>
-                      swiperRefs.current[index]?.autoplay?.start()
-                    }
-                    onTouchEnd={() =>
-                      swiperRefs.current[index]?.autoplay?.stop()
-                    }
-                  >
-                    {service.images.length > 1 ? (
-                      <Swiper
-                        modules={[Autoplay]}
-                        loop
-                        speed={700}
-                        slidesPerView={1}
-                        autoplay={{
-                          delay: 1000,
-                          disableOnInteraction: false,
-                        }}
-                        onSwiper={(swiper) => {
-                          swiperRefs.current[index] = swiper;
-                          swiper.autoplay.stop(); // start paused
-                        }}
-                      >
-                        {service.images.map((img, imgIndex) => (
-                          <SwiperSlide key={imgIndex}>
-                            <div
-                              style={{
-                                position: "relative",
-                                width: "100%",
-                                aspectRatio: "18 / 9",
-                                overflow: "hidden",
-                              }}
-                            >
-                              <img
-                                src={`${
-                                  import.meta.env.VITE_API_BASE_URL
-                                }/images/${img}`}
-                                alt={`${service.name}-${imgIndex}`}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                  display: "block",
-                                }}
-                              />
-                            </div>
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    ) : (
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          aspectRatio: "18 / 9",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <img
-                          src={`${import.meta.env.VITE_API_BASE_URL}/images/${
-                            service.images[0]
-                          }`}
-                          alt={service.name}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Wishlist Icon */}
-                    <button
-                      onClick={(e) => handleFavourite(e, service.store_id)}
-                      className="wishlist-icon btn p-2 d-flex align-items-center justify-content-center"
-                      style={{
-                        position: "absolute",
-                        top: "12px",
-                        right: "12px",
-                        zIndex: 10,
-                        background: "rgba(54, 52, 52, 0.4)",
-                        borderRadius: "50%",
-                        color: "#fff",
-                      }}
-                    >
-                      <FaRegHeart
-                        size={18}
-                        color={service.is_favourite ? "red" : "white"}
-                        onClick={() =>
-                          handleFavourite(service.id, localFavs[service.id])
-                        }
-                      />
-                    </button>
-                  </div>
-
-                  {/* Content Section */}
-                  <div className="service-content p-2 p-md-3 d-flex flex-column justify-content-between flex-grow-1">
-                    <div>
-                      <div className="title-type d-flex justify-content-between align-items-center mb-2">
-                        <h5 className="mb-0 fs-6 fs-md-3">{service?.name}</h5>
-                        {service?.averagerating >= 0 && (
-                          <span
-                            className="star-rating d-flex align-items-center fs-9 fs-md-4"
-                            style={{ color: "#f5c518" }}
-                          >
-                            <MdStar
-                              className="fs-6 fs-md-4"
-                              style={{
-                                marginRight: "4px",
-                              }}
-                            />
-                            {Number(service?.averagerating).toFixed(1)}
-                          </span>
-                        )}
-                      </div>
-                      <div
-                        className="text-muted small d-flex align-items-center gap-1"
-                        style={{ marginLeft: "-3px" }}
-                      >
-                        {service?.store_type?.toLowerCase() === "male only" && (
-                          <>
-                            <Mars size={14} strokeWidth={2} /> Male Only
-                          </>
-                        )}
-
-                        {service?.store_type?.toLowerCase() ===
-                          "female only" && (
-                          <>
-                            <Venus size={14} strokeWidth={2} /> Female Only
-                          </>
-                        )}
-
-                        {(!service?.store_type ||
-                          service?.store_type?.toLowerCase() === "unisex") && (
-                          <>
-                            <VenusAndMars size={14} strokeWidth={2} /> Unisex
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    {/* <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        marginTop: "5px",
-                      }}
-                    >
-                      <p
-                        style={{
-                          width: "5px",
-                          height: "5px",
-                          background: "black",
-                          borderRadius: "50%",
-                          marginRight: "3px",
-                        }}
-                      ></p>
-                      <p style={{ fontSize: "14px", margin: 0 }}>
-                        {service?.distance_m
-                          ? `${(service.distance_m / 1000).toFixed(1)} KM`
-                          : "-"}
-                      </p>
-                    </div> */}
-
-                    <div
-                      className="d-flex align-items-start"
-                      style={{ marginTop: "5px" }}
-                    >
-                      <MdLocationOn
-                        size={18}
-                        className="text-danger flex-shrink-0"
-                        style={{
-                          marginTop: "1.5px",
-                          marginLeft: "-3px",
-                          marginRight: "2px",
-                        }}
-                      />
-                      <span
-                        className="text-truncate small"
-                        style={{ maxWidth: "calc(100% - 24px)" }}
-                      >
-                        {service?.area || service?.city || service?.district ? (
-                          <>
-                            {service?.area ? `${service.area}` : ""}
-                            {service?.city
-                              ? `${service.area ? ", " : ""}${service.city}`
-                              : ""}
-                            {service?.district
-                              ? `${service.area || service.city ? ", " : ""}${
-                                  service.district
-                                }`
-                              : ""}
-                          </>
-                        ) : (
-                          "Location not available"
-                        )}
-                      </span>
-                    </div>
-
-                    <div className="mt-3 text-center">
-                      <span
-                        className="service-readmore text-decoration-none"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          navigate(`/shopdetail/${service?.store_id}`);
-                          window.location.reload();
-                        }}
-                      >
-                        Book Now
-                      </span>
-                    </div>
-                  </div>
+                <div className="w-100 h-100" data-wow-delay={service.delay}>
+                  <ServiceCard 
+                    service={{
+                      id: service.id,
+                      name: service.name,
+                      logo: null,
+                      rating: service.averagerating ? Number(service.averagerating).toFixed(1) : null,
+                      reviews: null,
+                      location: service.area || service.city || service.district ? [service.area, service.city, service.district].filter(Boolean).join(", ") : null,
+                      distance: null, /* Removed for now based on comment */
+                      type: service.store_type && service.store_type.toLowerCase() !== "unisex" ? service.store_type : "Unisex",
+                      services: [], // TopSalons doesn't provide this directly in the array easily
+                      isPremium: false,
+                      images: service.images?.length > 0 
+                        ? service.images.map(img => `${import.meta.env.VITE_API_BASE_URL}/images/${img}`)
+                        : []
+                    }}
+                  />
                 </div>
               </div>
             ))

@@ -1,357 +1,274 @@
-// import React from "react";
-// import { faqIcon } from "../assets/images";
-
-// export default function PrivacyPolicy() {
-//   return (
-//     <main>
-//       <header className="page-header">
-//         <div className="container">
-//           <div className="row align-items-center">
-//             <div className="col-md-8 order-md-1 order-2">
-//               <div className="page-header-box">
-//                 <h1 className="text-anime">Privacy Policy</h1>
-//               </div>
-//             </div>
-//             <div className="col-md-4 order-md-2 order-1">
-//               <div
-//                 className="page-header-icon-box wow fadeInUp"
-//                 data-wow-delay="0.5s"
-//               >
-//                 <div className="page-header-icon">
-//                   <img src={faqIcon} alt="Privacy Policy Icon" />
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </header>
-
-//       <article className="container py-5">
-//         <header>
-//           <h2 className="mb-4">Last updated on Jun 2, 2025</h2>
-//         </header>
-
-//         <section className="privacy-policy-content">
-//           <p>
-//             This privacy policy sets out how{" "}
-//             <strong>JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED</strong> uses
-//             and protects any information that you give JRSTYLEO BOOKING AND
-//             FASHION PRIVATE LIMITED when you visit their website and/or agree to
-//             purchase from them.
-//           </p>
-//           <p>
-//             JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED is committed to
-//             ensuring that your privacy is protected. Should we ask you to
-//             provide certain information by which you can be identified when
-//             using this website, then you can be assured that it will only be
-//             used in accordance with this privacy statement.
-//           </p>
-//           <p>
-//             JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED may change this policy
-//             from time to time by updating this page. You should check this page
-//             from time to time to ensure that you adhere to these changes.
-//           </p>
-
-//           <h4>Information We May Collect</h4>
-//           <ul>
-//             <li>Name</li>
-//             <li>Contact information including email address</li>
-//             <li>
-//               Demographic information such as postcode, preferences and
-//               interests
-//             </li>
-//             <li>
-//               Other information relevant to customer surveys and/or offers
-//             </li>
-//           </ul>
-
-//           <h4>What We Do with the Information We Gather</h4>
-//           <ul>
-//             <li>Internal record keeping</li>
-//             <li>Improving our products and services</li>
-//             <li>
-//               Sending promotional emails about new products, special offers, or
-//               other information which we think you may find interesting
-//             </li>
-//             <li>
-//               Contacting you for market research purposes via email, phone, fax,
-//               or mail
-//             </li>
-//             <li>Customizing the website according to your interests</li>
-//           </ul>
-
-//           <h4>Security</h4>
-//           <p>
-//             We are committed to ensuring that your information is secure. In
-//             order to prevent unauthorized access or disclosure, we have put in
-//             suitable measures.
-//           </p>
-
-//           <h4>How We Use Cookies</h4>
-//           <p>
-//             A cookie is a small file which asks permission to be placed on your
-//             computer's hard drive. Once you agree, the file is added and the
-//             cookie helps analyze web traffic or lets you know when you visit a
-//             particular site.
-//           </p>
-//           <p>
-//             We use traffic log cookies to identify which pages are being used.
-//             This helps us analyze data about webpage traffic and improve our
-//             website in order to tailor it to customer needs.
-//           </p>
-//           <p>
-//             Overall, cookies help us provide you with a better website by
-//             enabling us to monitor which pages you find useful and which you do
-//             not. A cookie in no way gives us access to your computer or any
-//             information about you, other than the data you choose to share with
-//             us.
-//           </p>
-//           <p>
-//             You can choose to accept or decline cookies. Most web browsers
-//             automatically accept cookies, but you can usually modify your
-//             browser setting to decline cookies if you prefer. This may prevent
-//             you from taking full advantage of the website.
-//           </p>
-
-//           <h4>Controlling Your Personal Information</h4>
-//           <p>
-//             You may choose to restrict the collection or use of your personal
-//             information in the following ways:
-//           </p>
-//           <ul>
-//             <li>Look for the box on forms to opt-out of direct marketing</li>
-//             <li>
-//               If you previously agreed to direct marketing, you may change your
-//               mind at any time by emailing us at:{" "}
-//               <a href="mailto:bookings@gmail.com">
-//                 bookings@gmail.com
-//               </a>
-//             </li>
-//           </ul>
-
-//           <p>
-//             We will not sell, distribute or lease your personal information to
-//             third parties unless we have your permission or are required by law
-//             to do so. We may use your personal information to send you
-//             promotional information about third parties if you tell us that you
-//             wish this to happen.
-//           </p>
-//           <p>
-//             If you believe that any information we are holding on you is
-//             incorrect or incomplete, please write to: <br />
-//             <strong>
-//               No.54 Chola Avenue, SNM Green City, Thanjavur, Tamil Nadu – 613007
-//             </strong>{" "}
-//             <br />
-//             or contact us at: <strong>7538808796</strong> or{" "}
-//             <a href="mailto:bookings@gmail.com">
-//               bookings@gmail.com
-//             </a>
-//             .
-//           </p>
-//         </section>
-//       </article>
-//     </main>
-//   );
-// }
-
-
 import React from "react";
-import { faqIcon } from "../assets/images";
 
-export default function PrivacyPolicy() {
+const PrivacyPolicy = () => {
   return (
-    <main>
-      <header className="page-header">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-8 order-md-1 order-2">
-              <div className="page-header-box">
-                <h1 className="text-anime">Privacy Policy</h1>
-              </div>
-            </div>
-            <div className="col-md-4 order-md-2 order-1">
-              <div
-                className="page-header-icon-box wow fadeInUp"
-                data-wow-delay="0.5s"
-              >
-                <div className="page-header-icon">
-                  <img src={faqIcon} alt="Privacy Policy Icon" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="max-w-7xl mx-auto py-12 text-gray-800 leading-relaxed">
+      <h1 className="text-4xl font-bold mb-4">PRIVACY POLICY</h1>
 
-      <article className="container py-5">
-        <header>
-          <h2 className="mb-4">Last updated on Jun 2, 2025</h2>
-        </header>
+      <p className="text-lg font-medium mb-2">
+        For Users & Partners of the Gloup Instantly Platform
+      </p>
 
-        <section className="privacy-policy-content">
-          <p>
-            This privacy policy sets out how{" "}
-            <strong>JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED</strong> uses
-            and protects any information that you give JRSTYLEO BOOKING AND
-            FASHION PRIVATE LIMITED when you visit their website and/or agree to
-            purchase from them.
-          </p>
-          <p>
-            JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED is committed to
-            ensuring that your privacy is protected. Should we ask you to
-            provide certain information by which you can be identified when
-            using this website, then you can be assured that it will only be
-            used in accordance with this privacy statement.
-          </p>
-          <p>
-            JRSTYLEO BOOKING AND FASHION PRIVATE LIMITED may change this policy
-            from time to time by updating this page. You should check this page
-            from time to time to ensure that you adhere to these changes.
-          </p>
+      <p className="mb-1">
+        Operated by JR STYLE'O BOOKING AND FASHION PVT LTD
+      </p>
 
-          <h4>Information We May Collect</h4>
-          <ul>
-            <li>Name</li>
-            <li>Contact information including email address</li>
-            <li>
-              Demographic information such as postcode, preferences and
-              interests
-            </li>
-            <li>
-              Other information relevant to customer surveys and/or offers
-            </li>
-          </ul>
+      <p className="mb-8">Last Updated: [01/03/2026]</p>
 
-          <h4>What We Do with the Information We Gather</h4>
-          <ul>
-            <li>Internal record keeping</li>
-            <li>Improving our products and services</li>
-            <li>
-              Sending promotional emails about new products, special offers, or
-              other information which we think you may find interesting
-            </li>
-            <li>
-              Contacting you for market research purposes via email, phone, fax,
-              or mail
-            </li>
-            <li>Customizing the website according to your interests</li>
-          </ul>
+      {/* 1 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
 
-          <h4>Security</h4>
-          <p>
-            We are committed to ensuring that your information is secure. In
-            order to prevent unauthorized access or disclosure, we have put in
-            suitable measures.
-          </p>
+      <p className="mb-4">
+        This Privacy Policy explains how JR STYLE'O BOOKING AND FASHION PVT LTD
+        (“Company”, “We”, “Us”, “Our”) collects, uses, shares, protects, and
+        processes personal information when Users and Partners (“You”, “Your”)
+        access or use the Gloup Instantly website, mobile application, and
+        related services (“Platform”).
+      </p>
 
-          <h4>Account Activation and Deactivation</h4>
+      <p className="mb-4">
+        By using the Platform, You consent to the data practices described in
+        this Policy.
+      </p>
 
-          <h5>1. Account Activation</h5>
-          <ul>
-            <li>To access and use our services, users are required to sign in using a valid mobile number.</li>
-            <li>Upon sign-in, a One-Time Password (OTP) will be sent to the provided mobile number for verification.</li>
-            <li>Your account will become active once the OTP is successfully verified.</li>
-          </ul>
+      <p className="mb-2">This Policy complies with:</p>
 
-          <h5>2. Account Deactivation</h5>
-          <ul>
-            <li>Users have the option to deactivate their account at any time.</li>
-            <li>
-              Before deactivation is processed, we will ask for confirmation. A clear message will be shown stating:
-              <br />
-              <em>
-                “Once you deactivate your account, it cannot be recovered. You
-                will need to create a new account to use our services again.”
-              </em>
-            </li>
-            <li>
-              After confirmation, the account will be permanently deactivated and all associated access will be revoked.
-            </li>
-          </ul>
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Information Technology Act, 2000</li>
+        <li>
+          Information Technology (Reasonable Security Practices and Procedures
+          and Sensitive Personal Data or Information) Rules, 2011
+        </li>
+        <li>IT Intermediary Guidelines 2021</li>
+        <li>Indian Contract Act, 1872</li>
+      </ul>
 
-          <h5>3. Important Notes on Deactivation</h5>
-          <ul>
-            <li>Deactivated accounts cannot be reactivated or recovered.</li>
-            <li>All user data associated with the account may be deleted in accordance with our data retention policy.</li>
-            <li>Users who wish to return must register again using a new account.</li>
-          </ul>
+      {/* 2 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        2. Information We Collect
+      </h2>
 
-          <h5>4. Platform-Initiated Deactivation</h5>
-          <ul>
-            <li>We reserve the right to deactivate or suspend accounts at our discretion in cases such as:</li>
-            <ul>
-              <li>Violation of our Terms of Use</li>
-              <li>Fraudulent or suspicious activity</li>
-              <li>Legal or regulatory requirements</li>
-            </ul>
-          </ul>
+      <p className="mb-4">We may collect the following:</p>
 
-          <h4>How We Use Cookies</h4>
-          <p>
-            A cookie is a small file which asks permission to be placed on your
-            computer's hard drive. Once you agree, the file is added and the
-            cookie helps analyze web traffic or lets you know when you visit a
-            particular site.
-          </p>
-          <p>
-            We use traffic log cookies to identify which pages are being used.
-            This helps us analyze data about webpage traffic and improve our
-            website in order to tailor it to customer needs.
-          </p>
-          <p>
-            Overall, cookies help us provide you with a better website by
-            enabling us to monitor which pages you find useful and which you do
-            not. A cookie in no way gives us access to your computer or any
-            information about you, other than the data you choose to share with
-            us.
-          </p>
-          <p>
-            You can choose to accept or decline cookies. Most web browsers
-            automatically accept cookies, but you can usually modify your
-            browser setting to decline cookies if you prefer. This may prevent
-            you from taking full advantage of the website.
-          </p>
+      <h3 className="text-xl font-semibold mb-2">A. User Information</h3>
 
-          <h4>Controlling Your Personal Information</h4>
-          <p>
-            You may choose to restrict the collection or use of your personal
-            information in the following ways:
-          </p>
-          <ul>
-            <li>Look for the box on forms to opt-out of direct marketing</li>
-            <li>
-              If you previously agreed to direct marketing, you may change your
-              mind at any time by emailing us at:{" "}
-              <a href="mailto:bookings@gmail.com">
-                bookings@gmail.com
-              </a>
-            </li>
-          </ul>
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Name, gender</li>
+        <li>Phone number, email address</li>
+        <li>Location data (with permission)</li>
+        <li>Device information</li>
+        <li>Service preferences</li>
+        <li>Booking history</li>
+        <li>Payment details (via Razorpay gateways only)</li>
+        <li>Reviews and feedback</li>
+      </ul>
 
-          <p>
-            We will not sell, distribute or lease your personal information to
-            third parties unless we have your permission or are required by law
-            to do so. We may use your personal information to send you
-            promotional information about third parties if you tell us that you
-            wish this to happen.
-          </p>
-          <p>
-            If you believe that any information we are holding on you is
-            incorrect or incomplete, please write to: <br />
-            <strong>
-              No.54 Chola Avenue, SNM Green City, Thanjavur, Tamil Nadu – 613007
-            </strong>{" "}
-            <br />
-            or contact us at: <strong>7538808796</strong> or{" "}
-            <a href="mailto:bookings@gmail.com">
-              bookings@gmail.com
-            </a>
-            .
-          </p>
-        </section>
-      </article>
-    </main>
+      <h3 className="text-xl font-semibold mb-2">
+        B. Partner (Salon) Information
+      </h3>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Owner/Manager name</li>
+        <li>Business name</li>
+        <li>Business address & licence</li>
+        <li>GST details (if applicable)</li>
+        <li>Service menu & pricing</li>
+        <li>Staff details</li>
+        <li>Bank account details for settlements</li>
+      </ul>
+
+      <h3 className="text-xl font-semibold mb-2">
+        C. Automatically Collected Data
+      </h3>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>IP address</li>
+        <li>Device model</li>
+        <li>App usage analytics</li>
+        <li>Cookies</li>
+        <li>Crash logs</li>
+        <li>Advertising identifiers</li>
+      </ul>
+
+      {/* 3 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">3. Use of Information</h2>
+
+      <p className="mb-4">We use data to:</p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Facilitate salon discovery & booking</li>
+        <li>Process payments</li>
+        <li>Provide customer support</li>
+        <li>Send appointment reminders</li>
+        <li>Deliver push notifications</li>
+        <li>Improve platform functionality</li>
+        <li>Prevent fraud</li>
+        <li>Display targeted offers</li>
+        <li>Conduct analytics and reporting</li>
+        <li>Maintain safety and security</li>
+      </ul>
+
+      {/* 4 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        4. Sharing of Information
+      </h2>
+
+      <p className="mb-4">We may share data with:</p>
+
+      <h3 className="text-xl font-semibold mb-2">A. Partner Salons</h3>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>User booking details</li>
+        <li>Service selection</li>
+        <li>Contact details</li>
+      </ul>
+
+      <h3 className="text-xl font-semibold mb-2">
+        B. Third-Party Service Providers
+      </h3>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Payment gateways</li>
+        <li>SMS/Email partners</li>
+        <li>Cloud storage providers</li>
+        <li>Analytics tools</li>
+        <li>Marketing partners</li>
+      </ul>
+
+      <h3 className="text-xl font-semibold mb-2">
+        C. Legal Authorities (if required)
+      </h3>
+
+      <p className="mb-2">Only under:</p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Court order</li>
+        <li>Law enforcement request</li>
+        <li>Fraud investigation</li>
+      </ul>
+
+      <p className="mb-6">
+        We do not sell or rent personal information to third parties.
+      </p>
+
+      {/* 5 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        5. Payment & Financial Data
+      </h2>
+
+      <p className="mb-4">
+        Payments on Gloup Instantly are processed by certified third-party
+        payment gateways complying with:
+      </p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>PCI-DSS Standards</li>
+        <li>RBI Guidelines</li>
+      </ul>
+
+      <p className="mb-6">
+        We do not store full card numbers, CVV, or sensitive payment
+        credentials.
+      </p>
+
+      {/* 6 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        6. Data Protection & Security
+      </h2>
+
+      <p className="mb-4">We implement:</p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Encryption</li>
+        <li>Secure servers</li>
+        <li>Access controls</li>
+        <li>Multi-level authentication</li>
+        <li>Regular audits</li>
+      </ul>
+
+      <p className="mb-6">
+        However, no internet transmission is 100% secure. The User agrees that
+        the Company is not liable for unauthorized access, hacking, or data
+        theft beyond reasonable measures.
+      </p>
+
+      {/* 7 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">7. User Rights</h2>
+
+      <p className="mb-4">Users may:</p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>Request data deletion</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Withdraw permissions</li>
+        <li>Disable location access</li>
+        <li>Opt-out of marketing communications</li>
+      </ul>
+
+      <p className="mb-6">
+        Requests can be emailed to contact@gloup.in.
+      </p>
+
+      {/* 8 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        8. Retention of Data
+      </h2>
+
+      <p className="mb-4">We retain information:</p>
+
+      <ul className="list-disc pl-6 space-y-1 mb-6">
+        <li>As long as your account is active</li>
+        <li>
+          As required by Indian law (for audit, tax, or regulatory needs)
+        </li>
+        <li>As necessary to resolve disputes</li>
+      </ul>
+
+      {/* 9 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        9. Children’s Privacy
+      </h2>
+
+      <p className="mb-6">
+        The Platform is not intended for children under 13 years of age.
+      </p>
+
+      {/* 10 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        10. Third-Party Links
+      </h2>
+
+      <p className="mb-6">
+        Gloup Instantly may contain links to external websites. We are not
+        responsible for their privacy and data practices.
+      </p>
+
+      {/* 11 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        11. Updates to This Policy
+      </h2>
+
+      <p className="mb-6">
+        We may update this Policy at any time. Continued use of the Platform
+        constitutes acceptance of updated terms.
+      </p>
+
+      {/* 12 */}
+      <h2 className="text-2xl font-semibold mt-8 mb-4">
+        12. Contact Information
+      </h2>
+
+      <p className="mb-2">For concerns or queries:</p>
+
+      <p className="mb-1">
+        JR STYLE'O BOOKING AND FASHION PVT LTD
+      </p>
+
+      <p className="mb-1">Email: contact@gloup.in</p>
+
+      <p>Phone: +91 75388 08796</p>
+    </div>
   );
-}
+};
 
+export default PrivacyPolicy;

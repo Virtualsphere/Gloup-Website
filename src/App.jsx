@@ -1,36 +1,109 @@
 import React from "react";
-import { BrowserRouter as Router, } from "react-router-dom";
-import Header from "./componets/Header";
-import Footer from "./componets/Footer";
-import AppRoutes from "./routes";
+import Layout from "./componets/layout/Layout";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { Route, Routes } from "react-router-dom";
+import ShopDetails from "./pages/ShopDetails";
+import BookSlot from "./pages/BookSlot";
+import ReviewOrderPage from "./pages/ReviewOrderPage";
+import FavouritesPage from "./pages/FavouritePage";
+import ExploreSalonsPage from "./pages/ExploreSalonsPage";
 import { Toaster } from "react-hot-toast";
-import "../src/styles/custom.css";
-import "../src/styles/all.mim.css";
-import "../src/styles/animate.css";
-import "../src/styles/bootstrap.min.css";
-import "../src/styles/magnific-popup.css";
-import "../src/styles/slicknav.min.css";
-import "../src/styles/swiper-bundle.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import PageHeader from "./componets/PageHeader";
-import Layout from "./Layout";
+import MyBooking from "./pages/MyBooking";
+import LoginModal from "./componets/login/LoginModal";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ProtectedRoute from "./componets/ProtectedRoute";
+import RefundCancellationPolicy from "./pages/RefundCancellationPolicy";
+import TermsAndConditions from "./pages/TermsConditions";
+import About from "./pages/About";
+
+import SaloonCategoryPage from "./pages/SaloonCategoryPage";
+import AccountLayout from "./componets/Account/AccountLayout";
+import Orders from "./componets/Account/ProfileDetails";
+import Invite from "./componets/Account/Invite";
+import SettingsPage from "./componets/Account/setting";
+import Support from "./componets/Account/support";
+import MapLayout from "./componets/map/MapLayout";
+import ScrollToTop from "./componets/shared/ScrollToTop";
+import CustomMapsProvider from "./store/CustomMapsProvider";
+// import Header from "./componets/Header";
+// import Footer from "./componets/Footer";
+// import AppRoutes from "./routes";
+// import { Toaster } from "react-hot-toast";
+// import "../src/styles/custom.css";
+// import "../src/styles/all.mim.css";
+// import "../src/styles/animate.css";
+// import "../src/styles/bootstrap.min.css";
+// import "../src/styles/magnific-popup.css";
+// import "../src/styles/slicknav.min.css";
+// import "../src/styles/swiper-bundle.min.css";
+// import "@fortawesome/fontawesome-free/css/all.min.css";
+// import PageHeader from "./componets/PageHeader";
+// import Layout from "./Layout";
 
 function App() {
 
   return (
-    <Router>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            marginTop: "100px",
-            transition: "all 0.3s ease-in-out",
-          },
-        }}
-      />
-     <Layout/>
-    </Router>
+    // <Router>
+    //   <Toaster
+    //     position="top-right"
+    //     toastOptions={{
+    //       duration: 4000,
+    //       style: {
+    //         marginTop: "100px",
+    //         transition: "all 0.3s ease-in-out",
+    //       },
+    //     }}
+    //   />
+    //  <Layout/>
+    // </Router>
+
+    <CustomMapsProvider>
+      <Toaster position="top-right" />
+      <ScrollToTop />
+      {/* Global login modal — open from anywhere via useUiStore */}
+      <LoginModal />
+      <div className="bg-gray-100">
+        <Layout>
+          <Routes>
+
+            <Route path="/" element={<Home />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
+            <Route path="/terms-conditions" element={<TermsAndConditions />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/explore-map" element={<MapLayout />} />
+            <Route path="/explore" element={<ExploreSalonsPage />} />
+            <Route path="/salons/category/:categoryId" element={<SaloonCategoryPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/salon-details/:id" element={<ShopDetails />} />
+
+            <Route path="/:id/book-slot" element={<ProtectedRoute><BookSlot /></ProtectedRoute>} />
+            <Route path="/:id/review-order" element={<ProtectedRoute><ReviewOrderPage /></ProtectedRoute>} />
+            <Route path="/favourite" element={<ProtectedRoute><FavouritesPage /></ProtectedRoute>} />
+            <Route path="/my-bookings" element={<ProtectedRoute><MyBooking /></ProtectedRoute>} />
+
+            {/* PROFILE LAYOUT ROUTES */}
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <AccountLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Orders />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="details" element={<Orders />} />
+              <Route path="invite" element={<Invite />} />
+              <Route path="support" element={<Support />} />
+            </Route>
+
+          </Routes>
+        </Layout>
+      </div>
+    </CustomMapsProvider>
   );
 }
 

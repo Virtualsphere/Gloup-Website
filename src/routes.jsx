@@ -31,6 +31,8 @@ const PaymentSuccessPage = lazy(() => import("../src/pages/PaymentSuccess"));
 const PaymentFailedPage = lazy(() => import("../src/pages/PaymentFailed"));
 const CategoryshopPage = lazy(() => import("../src/pages/CategoryShop"));
 const DownloadPage = lazy(() => import("../src/pages/DownloadPage"));
+const MyBookingPage = lazy(() => import("../src/pages/MyBooking"));
+const SaloonCategoryPage = lazy(() => import("../src/pages/SaloonCategoryPage"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -78,6 +80,8 @@ const AppRoutes = () => {
         <Route path="/myappointments" element={<MyAppointmentPage />} />
         <Route path="/paymentsuccess" element={<PaymentSuccessPage />} />
         <Route path="/paymentfailed" element={<PaymentFailedPage />} />
+        <Route path="/my-bookings" element={<MyBookingPage />} />
+        <Route path="/salons/category/:categoryName" element={<SaloonCategoryPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
