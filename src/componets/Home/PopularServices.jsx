@@ -61,7 +61,7 @@ const PopularServices = () => {
 
   // Pass dynamic filters directly down to the query hook
   const { data, isLoading, isError } = useNearbySalons(filters)
-  console.log(data, "PopularServices")
+  //(data, "PopularServices")
 
   useEffect(() => {
     getLocation()

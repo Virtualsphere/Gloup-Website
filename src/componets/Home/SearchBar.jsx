@@ -1,7 +1,10 @@
 import React from 'react'
 import { Search, SlidersHorizontal } from 'lucide-react'
+import { Link } from 'react-router-dom';
 
 const SearchBar = ({ isSticky }) => {
+  
+
   return (
     <div className="lg:hidden w-full">
       <div 
@@ -13,14 +16,15 @@ const SearchBar = ({ isSticky }) => {
       >
         {/* Search Icon */}
         <Search size={20} className="text-black flex-shrink-0" strokeWidth={2} />
-        
-        {/* Search Input */}
-        <input 
-          type="text" 
-          placeholder="Search for salons, parlors, or massages..."
-          className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400 bg-transparent"
-        />
-        
+
+        {/* Fake Search Input */}
+        <Link
+          to="/explore"
+          className="flex-1 text-sm text-gray-400 cursor-pointer select-none"
+        >
+          Search for salons, parlors, or massages...
+        </Link>
+
         {/* Filter Icon */}
         <button 
           className="flex-shrink-0 bg-pink-50 text-pink-500"
@@ -30,7 +34,7 @@ const SearchBar = ({ isSticky }) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default SearchBar

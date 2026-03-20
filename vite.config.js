@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), svgr()],
   server: {
     allowedHosts: [
-      "defence-powder-deviation-walker.trycloudflare.com"
+      "c45b-2402-3a80-425c-47af-8555-b971-6d61-a115.ngrok-free.app"
     ],
     
   }

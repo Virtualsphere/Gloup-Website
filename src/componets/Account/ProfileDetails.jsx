@@ -31,7 +31,7 @@ export default function ProfileDetails() {
   =============================== */
 
 useEffect(() => {
-  console.log("USER OBJECT:", user);
+  //("USER OBJECT:", user);
   if (!user) return;
 
   setFormData({

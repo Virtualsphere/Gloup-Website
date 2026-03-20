@@ -58,7 +58,7 @@ function TopSalons() {
 
   // Pass dynamic filters directly down to the query hook
   const { data, isLoading, isError } = useTopSalons(filters);
-  console.log(data, "top-salonssssssssssssss")
+  //(data, "top-salonssssssssssssss")
 
   const rawSalons = data?.data || []; // Note: TopSalons returns data directly, whereas nearby returns data.data according to previous setups
   let services = rawSalons.map(normalizeService);

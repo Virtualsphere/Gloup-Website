@@ -20,17 +20,15 @@ const HeroSlider = () => {
   const { data, isLoading, isError } = useGetBanner()
   const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
 
-  if (isLoading) {
+  // Consistent skeleton for loading, error, or empty states to prevent UI collapse
+  if (isLoading || isError || !data?.success || !data?.data?.length) {
     return (
       <div className="lg:hidden">
-        <div className="w-full h-48 bg-gray-200 animate-pulse flex items-center justify-center">
+        <div className="w-full h-56 bg-gray-200 animate-pulse flex items-center justify-center">
+          {/* Optional: Add a subtle loading icon or message */}
         </div>
       </div>
     );
-  }
-
-  if (isError || !data?.success || !data?.data?.length) {
-    return null;
   }
 
   return (

@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { useVerifyOtp } from '../../hooks/services/auth/useVerifyOtp';
 import { useSendOtp } from '../../hooks/services/auth/useSendOtp';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -12,6 +13,8 @@ const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
 
   const { mutate: verifyOtpMutate, isPending } = useVerifyOtp();
   const { mutate: sendOtpMutate, isPending: isResending } = useSendOtp();
+
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -64,6 +67,7 @@ const OTPModal = ({ isOpen, onClose, mobileNumber }) => {
         onSuccess: (response) => {
           toast.success(response?.message || 'OTP verified successfully!');
           onClose();
+          navigate('/profile');
         },
         onError: (err) => {
           toast.error(err?.response?.data?.message || 'Invalid OTP. Please try again.');

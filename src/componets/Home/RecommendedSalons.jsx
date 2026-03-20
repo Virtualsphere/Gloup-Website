@@ -80,9 +80,9 @@ function RecommendedSalons() {
     isFetchingNextPage,
   } = useGetAllSalons(queryParams);
 
-  console.log(fetchNextPage, "fetching Next page..............")
+  //(fetchNextPage, "fetching Next page..............")
 
-  console.log(data, "RecommendedSalons")
+  //(data, "RecommendedSalons")
 
   // Flatten all pages into a single list
   let salons = data?.pages.flatMap((p) => p.data ?? []).map(normalizeSalon) ?? [];

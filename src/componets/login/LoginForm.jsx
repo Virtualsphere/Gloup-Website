@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useSendOtp } from '../../hooks/services/auth/useSendOtp';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ onLoginSubmit }) => {
   const [mobileNumber, setMobileNumber] = useState('');
 
   const { mutate, isPending, isSuccess, isError, data, error } = useSendOtp();
 
+  const navigate = useNavigate();
 
 
   const handleSubmit = (e) => {
@@ -16,6 +18,7 @@ const LoginForm = ({ onLoginSubmit }) => {
         onSuccess: (response) => {
           toast.success(response?.message || 'OTP sent successfully!');
           onLoginSubmit(mobileNumber);
+          
         },
         onError: (err) => {
           toast.error(err?.response?.data?.message || 'Failed to send OTP. Please try again.');

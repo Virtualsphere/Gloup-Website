@@ -9,7 +9,7 @@ const TimeSlotGrid = ({ selectedDate, selectedSlot, onSelect, saloonId }) => {
   
   // Fetch available slots from API
   const { data, isLoading, isError } = useGetSlots(saloonId, formattedDate);
-  console.log(data, "get slot data")
+  //(data, "get slot data")
 
   // Check if the selected date is strictly before today
   const isPastDate = isBefore(selectedDate, startOfToday());
