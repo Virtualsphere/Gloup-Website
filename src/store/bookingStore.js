@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL ?? '';
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL ?? '';
 
 /**
  * Resolve a raw image path from the API to a full URL.
  * If the path is already absolute (starts with http), leave it as-is.
  */
-const resolveImageUrl = (rawPath) => {
+const resolveImageUrl = (rawPath, storeId) => {
   if (!rawPath) return '';
   if (rawPath.startsWith('http')) return rawPath;
-  return `${IMAGE_BASE_URL}/${rawPath}`.replace(/([^:])\/\/+/g, '$1/');
+  return `${SALON_IMAGE_URL}/${storeId}/images/${rawPath}`.replace(/([^:])\/\/+/g, '$1/');
 };
 
 
@@ -49,21 +49,24 @@ export const useBookingStore = create(
     isVerified: false,
   },
 
-  setSalon: (salonData) =>
-    set({
+  setSalon: (salonData) => {
+    const storeId = salonData.id ?? salonData._id ?? null;
+    return set({
       salon: {
-        id: salonData.id ?? salonData._id ?? null,
+        id: storeId,
         name: salonData.name ?? "",
         rating: salonData.averageRating ?? salonData.rating ?? null,
         reviewCount: salonData.totalReviews ?? salonData.reviewCount ?? null,
         gender: salonData.gender ?? "",
         address: salonData.location?.address ?? salonData.address ?? "",
         imageUrl: resolveImageUrl(
-          salonData.images?.[0] ?? salonData.imageUrl ?? ""
+          salonData.images?.[0] ?? salonData.salonImage ?? salonData.imageUrl ?? "",
+          storeId
         ),
         isVerified: salonData.isVerified ?? false,
       },
-    }),
+    });
+  },
 
   // ─── Selected Services (from ShopDetails → Services section) ──────────────
   selectedServices: [],
@@ -146,6 +149,10 @@ export const useBookingStore = create(
 
   /** Remove the currently applied coupon. */
   clearCoupon: () => set({ appliedCoupon: null }),
+
+  // ─── Self Profile Modal Trigger ───────────────────────────────────────────
+  isProfileModalOpen: false,
+  setIsProfileModalOpen: (isOpen) => set({ isProfileModalOpen: isOpen }),
 
   /** All services in the billing: selected + add-ons merged. */
   getAllServices: () => {

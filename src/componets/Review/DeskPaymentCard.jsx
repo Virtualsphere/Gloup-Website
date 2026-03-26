@@ -12,7 +12,7 @@ const DeskPaymentCard = ({
   onApplyCoupon,
   subtotal,
   gstAmount,
-  isPlatformFree,
+
   platformFee,
   walletUsed,
   walletBalance,
@@ -23,6 +23,7 @@ const DeskPaymentCard = ({
   onPay,
   isLoading,
   disabled,
+  isProfileMissing,
 }) => {
   return (
     <div className="sticky top-24 space-y-4">
@@ -44,8 +45,8 @@ const DeskPaymentCard = ({
 
           {couponDiscount > 0 && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Discount</span>
-              <span className="font-medium text-red-500">-₹{couponDiscount}</span>
+              <span className="text-green-500 font-medium">Coupon ({appliedCoupon?.code})</span>
+              <span className="font-medium text-green-500">-₹{couponDiscount}</span>
             </div>
           )}
 
@@ -61,8 +62,11 @@ const DeskPaymentCard = ({
 
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>Platform Fee</span>
-            <span className="font-medium text-green-500 flex items-center gap-1">
-              <span className="text-xs">✦</span> Free
+            <span className="flex items-center gap-2">
+              <span className="text-gray-400 line-through">₹{platformFee}</span>
+              <span className="font-medium text-green-500 flex items-center gap-1">
+                <span className="text-xs"></span> Free
+              </span>
             </span>
           </div>
 
@@ -86,11 +90,11 @@ const DeskPaymentCard = ({
 
         {/* Wallet toggle */}
         <div className="border-t border-gray-100 px-5 py-3">
-          <WalletToggle
+          {/* <WalletToggle
             balance={walletBalance}
             useWallet={useWallet}
             onToggle={onToggleWallet}
-          />
+          /> */}
         </div>
 
         {/* Pay via Razorpay */}
@@ -110,10 +114,10 @@ const DeskPaymentCard = ({
               onClick={onPay}
               disabled={isLoading || disabled}
               className={`text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-sm text-sm flex items-center gap-2 ${
-                isLoading || disabled
-                  ? 'bg-gray-300 cursor-not-allowed shadow-none'
+                isLoading || disabled || isProfileMissing
+                  ? 'bg-gray-300 cursor-not-allowed shadow-none opacity-70'
                   : 'bg-green-500 hover:bg-green-600 shadow-green-200'
-              } disabled:opacity-70 disabled:cursor-not-allowed`}
+              }`}
             >
               {isLoading ? (
                 <>

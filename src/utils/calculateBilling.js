@@ -17,7 +17,20 @@ export const calculateBilling = ({
   const discountedAmount = allServices.reduce((total, s) => total + (parseFloat(s.price) || 0), 0);
   const serviceDiscount = Math.max(0, baseAmount - discountedAmount);
 
-  const couponDiscount = parseFloat(appliedCoupon?.savings) || 0;
+  let couponDiscount = 0;
+  if (appliedCoupon) {
+      if (appliedCoupon.discountType === 'flat') {
+          const flatValue = parseFloat(appliedCoupon.discountValue) || 0;
+          if (discountedAmount >= flatValue + 30) {
+              couponDiscount = flatValue;
+          }
+      } else if (appliedCoupon.discountType === 'percentage') {
+          const percentValue = parseFloat(appliedCoupon.discountValue) || 0;
+          couponDiscount = Math.round((discountedAmount * percentValue) / 100);
+      } else {
+          couponDiscount = parseFloat(appliedCoupon.savings) || 0;
+      }
+  }
   const subtotal = Math.max(0, discountedAmount - couponDiscount);
   // Calculate GST from the subtotal securely after coupon is applied
   const gstAmount = Math.round((subtotal * 5) / 100);

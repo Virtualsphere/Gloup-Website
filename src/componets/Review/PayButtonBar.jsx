@@ -1,7 +1,8 @@
 import React from 'react';
 
-const PayButtonBar = ({ amount, onPay, isLoading, disabled }) => {
+const PayButtonBar = ({ amount, onPay, isLoading, disabled, isProfileMissing }) => {
   const isDisabled = isLoading || disabled;
+  const isStylingDisabled = isDisabled || isProfileMissing;
   return (
     <div className="bg-white border-t border-gray-100 px-4 py-3">
       <div className="flex items-center justify-between">
@@ -23,8 +24,8 @@ const PayButtonBar = ({ amount, onPay, isLoading, disabled }) => {
           onClick={onPay}
           disabled={isDisabled}
           className={`text-white font-bold py-3 px-8 rounded-xl min-w-[140px] transition-colors shadow-sm flex items-center justify-center gap-2 ${
-            isDisabled
-              ? 'bg-gray-300 cursor-not-allowed opacity-70 shadow-none'
+            isStylingDisabled
+              ? 'bg-gray-300 cursor-pointer opacity-70 shadow-none'
               : 'bg-green-500 hover:bg-green-600 shadow-green-200'
           }`}
         >

@@ -1,10 +1,10 @@
 import React from 'react';
 import { dumBanner, galleryImage1, galleryImage2 } from '../../assets/images';
 
-const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
-const DeskBanner = ({ images = [], isLoading = false }) => {
-  const urlImages = images?.length > 0 ? images.map(img => `${BASE_IMAGE_URL}/${img}`) : [];
+const DeskBanner = ({ images = [], isLoading = false, salonId = null }) => {
+  const urlImages = images?.length > 0 ? images.map(img => `${SALON_IMAGE_URL}/${salonId}/images/${img}`) : [];
 
   const mainImage = urlImages[0] || dumBanner;
   const sideImage1 = urlImages[1] || galleryImage1;

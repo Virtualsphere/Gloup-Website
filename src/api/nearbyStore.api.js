@@ -4,7 +4,7 @@ import axiosInstance from "./axiosInstance";
 
 export const getNearbySalons = async (filters) => {
   const response = await axiosInstance.post(
-    "/app/v2/store/nearby/",
+    "/user/app/v2/store/nearby/",
     filters
   );
 

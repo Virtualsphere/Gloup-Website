@@ -12,6 +12,6 @@ import axiosInstance from "./axiosInstance";
  * }
  */
 export const createOrder = async (payload) => {
-  const response = await axiosInstance.post("/app/v2/createorder", payload);
+  const response = await axiosInstance.post("/user/app/v2/createorder", payload);
   return response.data;
 };

@@ -12,7 +12,7 @@ export const getTopSalons = async (filters = {}) => {
   if (lng) params.lng = lng;
   if (filters.search) params.search = filters.search;
 
-  const response = await axiosInstance.get('/app/v2/salons/top', {
+  const response = await axiosInstance.get('/user/app/v2/salons/top', {
     params,
   });
 

@@ -19,10 +19,10 @@ const SearchBar = ({ isSticky }) => {
 
         {/* Fake Search Input */}
         <Link
-          to="/explore"
+          to="/explore-salons"
           className="flex-1 text-sm text-gray-400 cursor-pointer select-none"
         >
-          Search for salons, parlors, or massages...
+          Search for salons...
         </Link>
 
         {/* Filter Icon */}

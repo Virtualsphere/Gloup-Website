@@ -2,7 +2,7 @@ import axiosInstance from "../axiosInstance";
 
 export const verifyOtp = async (payload) => {
   const response = await axiosInstance.post(
-    `/auth/verifyOTP`,
+    `/user/auth/verifyOTP`,
     payload
   );
 

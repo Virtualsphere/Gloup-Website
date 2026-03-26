@@ -9,7 +9,7 @@ const Services = ({ services = [], addedServices, toggleService }) => {
   return (
     <div className="bg-white lg:bg-gray-100 px-5 lg:px-0 py-6">
       {/* Services Heading */}
-      <h2 className="text-2xl font-normal text-gray-900 mb-5">Services</h2>
+      <h2 className="text-base lg:text-2xl font-normal text-gray-900 mb-5">Services</h2>
 
       {/* Filter Tabs */}
       <div className="flex gap-2 mb-5 overflow-x-auto scrollbar-hide pb-1">
@@ -38,7 +38,7 @@ const Services = ({ services = [], addedServices, toggleService }) => {
             >
               {/* Top Row: Name and Add/Added Button */}
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                <h3 className="text-sm lg:text-lg font-semibold text-gray-900 pr-4">
                   {service.name}
                 </h3>
                 

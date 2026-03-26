@@ -4,22 +4,23 @@ import { ListFilter } from "lucide-react";
 import { useGetFavourites } from "../../hooks/services/useGetFavourites";
 import { Link } from "react-router-dom";
 
-const BASE_IMAGE_URL = "https://v1.gloup.in/images";
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 const normalizeFav = (item) => {
   const salon = item?.store ?? item;
+  const storeId = salon.id ?? salon._id;
 
   const rawImages = Array.isArray(salon.images) ? salon.images : [];
   const validImages = rawImages.filter((img) => img && img.trim() !== "");
   const image =
     validImages.length > 0
-      ? `${BASE_IMAGE_URL}/${validImages[0]}`
+      ? `${SALON_IMAGE_URL}/${storeId}/images/${validImages[0]}`
       : salon.salonImage
-      ? `${BASE_IMAGE_URL}/${salon.salonImage}`
+      ? `${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`
       : "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80";
 
   return {
-    id: salon.id ?? salon._id,
+    id: storeId,
     image,
     name: salon.salonName ?? salon.name,
     rating: salon.rating ?? "0.0",

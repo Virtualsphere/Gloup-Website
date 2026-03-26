@@ -6,13 +6,14 @@ import ServiceCard from "../shared/ui/ServiceCard";
 import ServiceCardSkeleton from "../shared/ui/ServiceCardSkeleton";
 import { useHomeFilterStore } from "../../store/homeFilterStore";
 import { useLocationStore } from "../../store/locationStore";
+import ErrorState from "../shared/ui/ErrorState";
 
-const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
-const PROFILE_IMG_URL = import.meta.env.VITE_PROFILE_IMG_URL;
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 // Normalize API response to ServiceCard shape
 const normalizeSalon = (salon) => {
   let images = [];
+  const storeId = salon.id ?? salon._id;
 
   const validImages = Array.isArray(salon.images)
     ? salon.images.filter(
@@ -21,30 +22,23 @@ const normalizeSalon = (salon) => {
     : [];
 
   if (validImages.length > 0) {
-    images = validImages.map((img) => `${BASE_IMAGE_URL}/${img}`);
+    images = validImages.map((img) => `${SALON_IMAGE_URL}/${storeId}/images/${img}`);
   } else if (
     salon.salonImage &&
     typeof salon.salonImage === "string" &&
     salon.salonImage.trim() !== ""
   ) {
-    images = [`${BASE_IMAGE_URL}/${salon.salonImage}`];
+    images = [`${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`];
   } else {
     images = [
       "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
     ];
   }
 
-  const logoUrl = salon.profilePic 
-    ? `${PROFILE_IMG_URL}/${salon.profilePic}`
-    : salon.logo 
-      ? `${PROFILE_IMG_URL}/${salon.logo}`
-      : null;
-
   return {
-    id: salon.id ?? salon._id,
+    id: storeId,
     name: salon.salonName,
     logo: salon.salonName?.charAt(0)?.toUpperCase() || "S",
-    logoUrl,
     mainService: salon.serviceName,
     price: salon.servicePrice,
     rating: salon.rating,
@@ -75,14 +69,11 @@ function RecommendedSalons() {
     data,
     isLoading,
     isError,
+    refetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetAllSalons(queryParams);
-
-  //(fetchNextPage, "fetching Next page..............")
-
-  //(data, "RecommendedSalons")
 
   // Flatten all pages into a single list
   let salons = data?.pages.flatMap((p) => p.data ?? []).map(normalizeSalon) ?? [];
@@ -133,33 +124,12 @@ function RecommendedSalons() {
     );
   }
 
-  if (isError || salons.length === 0) {
-    return (
-      <section className="bg-gray-100 py-8 lg:py-12">
-        <div className="px-4 lg:px-10 xl:px-32">
-          <div className="flex items-start justify-between mb-5 lg:mb-8">
-            <div>
-              <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
-                Recommended Salons
-              </h2>
-              <p className="text-sm text-gray-500 mt-0.5 lg:mt-1">
-                Discover top-rated salons near you
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-gray-200 shadow-sm text-center px-4">
-            <p className="text-gray-500 font-medium text-lg">No recommended salons found.</p>
-            {(filters?.gender || filters?.search) && <p className="text-gray-400 text-sm mt-1">Try changing the category or search filters.</p>}
-          </div>
-        </div>
-      </section>
-    );
-  }
 
-  return (
-    <section className="bg-gray-100 py-8 lg:py-12">
-      <div className="px-4 lg:px-10 xl:px-32">
-        {/* Header */}
+
+return (
+  <section className="bg-gray-100 py-8 lg:py-12">
+    <div className="px-4 lg:px-10 xl:px-32">
+
       <div className="flex items-start justify-between mb-5 lg:mb-8">
         <div>
           <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
@@ -169,51 +139,70 @@ function RecommendedSalons() {
             Discover top-rated salons near you
           </p>
         </div>
+
         <Link
           to="/explore"
-          className="flex items-center gap-1 text-sm font-medium text-gray-900 transition-colors">
+          className="flex items-center gap-1 text-sm font-medium text-gray-900"
+        >
           See All <ChevronRight size={16} />
         </Link>
       </div>
 
-      {/* Responsive grid
-          - mobile  (default)  : 1 card
-          - sm ≥ 640px         : 2 cards
-          - lg ≥ 1024px        : 3 cards
-          - xl ≥ 1280px        : 4 cards               */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-        {salons.map((salon, idx) => (
-          <Link
-            key={`${salon.id}-${idx}`}
-            to={`/salon-details/${salon.id}`}
-            className="block"
-          >
-            <ServiceCard service={salon} />
-          </Link>
-        ))}
-      </div>
+    
+      {isError ? (
 
-      {/* Scroll sentinel — triggers fetchNextPage via IntersectionObserver */}
-      <div ref={sentinelRef} className="h-10 mt-4" />
 
-      {/* Loading more indicator */}
-      {isFetchingNextPage && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mt-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <ServiceCardSkeleton key={`more-${i}`} />
-          ))}
+        <ErrorState onRetry={refetch} />
+
+      ) : !salons || salons.length === 0 ? (
+
+        <div className="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-gray-200 shadow-sm text-center px-4">
+          <p className="text-gray-500 font-medium text-lg">
+            No recommended salons found.
+          </p>
+
+          {(filters?.gender || filters?.search) && (
+            <p className="text-gray-400 text-sm mt-1">
+              Try changing the filters.
+            </p>
+          )}
         </div>
-      )}
 
-      {/* End-of-list message */}
-      {!hasNextPage && salons.length > 0 && (
-        <p className="text-center text-sm text-gray-400 mt-6">
-          You've seen all the salons 🎉
-        </p>
+      ) : (
+
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            {salons.map((salon, idx) => (
+              <Link
+                key={`${salon.id}-${idx}`}
+                to={`/salon-details/${salon.id}`}
+                className="block"
+              >
+                <ServiceCard service={salon} />
+              </Link>
+            ))}
+          </div>
+
+          <div ref={sentinelRef} className="h-10 mt-4" />
+
+          {isFetchingNextPage && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mt-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ServiceCardSkeleton key={`more-${i}`} />
+              ))}
+            </div>
+          )}
+
+          {!hasNextPage && salons.length > 0 && (
+            <p className="text-center text-sm text-gray-400 mt-6">
+              You've seen all the salons.
+            </p>
+          )}
+        </>
       )}
-      </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
 
 export default RecommendedSalons;

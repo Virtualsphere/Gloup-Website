@@ -11,16 +11,31 @@ const CouponSection = ({ amount = 0, appliedCoupon, onApplyCoupon }) => {
     // Fetch dynamic coupons
     const { data: couponsData, isLoading, isError } = useGetCoupon();
 
-    console.log(couponsData, "couponsData")
-
     const activeCoupons = couponsData?.data || [];
 
     const getCouponDetails = (coupon) => {
-        const match = coupon.code.match(/\d+/);
-        const extractedAmount = match ? parseInt(match[0], 10) : 0;
-        const requiredAmount = extractedAmount + 30;
-        const isValid = amount >= requiredAmount;
-        const pendingAmount = isValid ? 0 : requiredAmount - amount;
+        let extractedAmount = 0;
+        let requiredAmount = 0;
+        let pendingAmount = 0;
+        let isValid = false;
+
+        if (coupon.discountType === 'flat') {
+            extractedAmount = Number(coupon.discountValue);
+            requiredAmount = extractedAmount + 30;
+            isValid = amount >= requiredAmount;
+            pendingAmount = isValid ? 0 : requiredAmount - amount;
+        } else if (coupon.discountType === 'percentage') {
+            extractedAmount = Math.round((amount * Number(coupon.discountValue)) / 100);
+            isValid = true;
+            pendingAmount = 0;
+        } else {
+            const match = coupon.code?.match(/\d+/);
+            extractedAmount = match ? parseInt(match[0], 10) : 0;
+            requiredAmount = extractedAmount + 30;
+            isValid = amount >= requiredAmount;
+            pendingAmount = isValid ? 0 : requiredAmount - amount;
+        }
+
         return { extractedAmount, isValid, pendingAmount };
     };
 
@@ -31,8 +46,12 @@ const CouponSection = ({ amount = 0, appliedCoupon, onApplyCoupon }) => {
         if (appliedCoupon?.code === coupon.code) {
             onApplyCoupon(null);
         } else {
-            // Assign a default savings of 50 for now since the API only returns the code
-            onApplyCoupon({ code: coupon.code, savings: extractedAmount });
+            onApplyCoupon({ 
+                code: coupon.code, 
+                savings: extractedAmount,
+                discountType: coupon.discountType,
+                discountValue: coupon.discountValue
+            });
             setIsCouponsModalOpen(false);
             setIsSuccessModalOpen(true);
         }
@@ -61,16 +80,16 @@ const CouponSection = ({ amount = 0, appliedCoupon, onApplyCoupon }) => {
                 const { extractedAmount, isValid, pendingAmount } = getCouponDetails(featuredCoupon);
                 return (
                     <div className={`bg-white rounded-xl shadow-sm border ${isValid ? 'border-stone-100' : 'border-gray-200 opacity-60 bg-gray-50'} mb-2 overflow-hidden`}>
-                        <div className="p-4 flex items-center justify-between">
+                        <div className="p-4 flex items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isValid ? 'bg-green-50 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                                <div className={`w-5 h-5 rounded-xl flex items-center justify-center flex-shrink-0 ${isValid ? 'bg-green-50 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
                                     <Tag className="w-5 h-5" />
                                 </div>
-                                <div>
-                                    <div className={`font-semibold text-sm ${isValid ? 'text-gray-900' : 'text-gray-400'}`}>
+                                <div className="min-w-0">
+                                    <div className={`font-semibold text-sm whitespace-nowrap truncate ${isValid ? 'text-gray-900' : 'text-gray-400'}`}>
                                         Save on this booking
                                     </div>
-                                    <div className={`font-bold text-xs mt-0.5 uppercase ${isValid ? 'text-green-500' : 'text-gray-400'}`}>
+                                    <div className={`font-bold text-xs mt-0.5 uppercase truncate ${isValid ? 'text-green-500' : 'text-gray-400'}`}>
                                         "{featuredCoupon.code}"
                                     </div>
                                 </div>
@@ -81,7 +100,7 @@ const CouponSection = ({ amount = 0, appliedCoupon, onApplyCoupon }) => {
                                     if (isValid) handleApplyCoupon(featuredCoupon, extractedAmount);
                                 }}
                                 disabled={!isValid}
-                                className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-colors ${
+                                className={`flex-shrink-0 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors ${
                                     !isValid
                                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                         : appliedCoupon?.code === featuredCoupon.code

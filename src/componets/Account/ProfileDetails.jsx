@@ -13,8 +13,8 @@ export default function ProfileDetails() {
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     email: '',
     gender: '',
     dob: '',
@@ -35,11 +35,11 @@ useEffect(() => {
   if (!user) return;
 
   setFormData({
-    firstName: user.firstname || '',
-    lastName: user.lastname || '',
+    firstname: user.firstname || '',
+    lastname: user.lastname || '',
     email: user.email || '',
     gender: user.gender || '',
-    dob: user.date_of_birth || '',
+    dob: user.dob || user.date_of_birth || '',
     phone: user.phone || '',
   });
 
@@ -59,11 +59,11 @@ useEffect(() => {
     if (!user) return false;
 
     return (
-      formData.firstName !== (user.firstname || '') ||
-      formData.lastName !== (user.lastname || '') ||
+      formData.firstname !== (user.firstname || '') ||
+      formData.lastname !== (user.lastname || '') ||
       formData.email !== (user.email || '') ||
       formData.gender !== (user.gender || '') ||
-      formData.dob !== (user.date_of_birth || '') ||
+      formData.dob !== (user.dob || user.date_of_birth || '') ||
       selectedImage !== null
     );
   }, [formData, user, selectedImage]);
@@ -74,8 +74,8 @@ useEffect(() => {
 
   const isComplete = useMemo(() => {
     return (
-      formData.firstName &&
-      formData.lastName &&
+      formData.firstname &&
+      formData.lastname &&
       formData.email &&
       formData.gender &&
       formData.dob &&
@@ -118,8 +118,8 @@ useEffect(() => {
 
     const data = new FormData();
 
-    data.append('firstName', formData.firstName);
-    data.append('lastName', formData.lastName);
+    data.append('firstname', formData.firstname);
+    data.append('lastname', formData.lastname);
     data.append('email', formData.email);
     data.append('gender', formData.gender);
     data.append('dob', formData.dob);
@@ -193,8 +193,8 @@ useEffect(() => {
             <div>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="firstname"
+                value={formData.firstname}
                 onChange={handleChange}
                 placeholder="First Name"
                 className="w-full h-12 px-4 rounded-xl bg-[#F5F5F5] border-none focus:ring-1 focus:ring-black outline-none placeholder:text-gray-400 text-[15px] font-medium text-gray-900"
@@ -205,8 +205,8 @@ useEffect(() => {
             <div>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="lastname"
+                value={formData.lastname}
                 onChange={handleChange}
                 placeholder="Last Name"
                 className="w-full h-12 px-4 rounded-xl bg-[#F5F5F5] border-none focus:ring-1 focus:ring-black outline-none placeholder:text-gray-400 text-[15px] font-medium text-gray-900"

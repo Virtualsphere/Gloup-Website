@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useGetSalonDetails } from '../hooks/services/useSalonDetails'
 import { useBookingStore } from '../store/bookingStore'
 import { useAuthStore } from '../store/authStore'
+import { useUiStore } from '../store/uiStore'
 
 
 
@@ -29,13 +30,8 @@ const ShopDetails = () => {
   const { id } = useParams()
   const { data, isLoading, isError } = useGetSalonDetails(id)
 
-  console.log(data, "shop-details")
-
   const apiData = data?.data || {}
   const apiServices = apiData?.services || []
-
-  console.log(apiServices);
-  console.log(apiData)
 
   // ─── Booking Store ──────────────────────────────────────────────────────
   const setSalon = useBookingStore((s) => s.setSalon)
@@ -47,7 +43,8 @@ const ShopDetails = () => {
   const addedServices = new Set(storedServices.map((s) => s.id))
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const navigate = useNavigate()
+  const openLoginModal = useUiStore((s) => s.openLoginModal)
+
 
   // Push salon info into the store — reset first if it's a different salon
   useEffect(() => {
@@ -87,7 +84,7 @@ const ShopDetails = () => {
   const handleToggleService = (serviceId) => {
     // Require login before adding any service
     if (!isAuthenticated) {
-      navigate('/login')
+      openLoginModal()
       return
     }
     const service = apiServices.find((s) => s.id === serviceId || s._id === serviceId)

@@ -2,10 +2,10 @@ import React from "react";
 
 const AboutGloup = () => {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 text-gray-800 leading-relaxed">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 text-sm md:text-base text-gray-800 leading-relaxed">
       
       {/* ABOUT */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         About GloUp
       </h2>
 
@@ -52,7 +52,7 @@ const AboutGloup = () => {
       </p>
 
       {/* FOUNDER STORY */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         Founder Story
       </h2>
 
@@ -112,7 +112,7 @@ const AboutGloup = () => {
       </p>
 
       {/* BIRTH OF GLOUP */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         The Birth of GloUp
       </h2>
 
@@ -145,7 +145,7 @@ const AboutGloup = () => {
       </p>
 
       {/* EARLY DAYS */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         The Early Days
       </h2>
 
@@ -195,7 +195,7 @@ const AboutGloup = () => {
       </p>
 
       {/* GROWTH */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         Growth of GloUp
       </h2>
 
@@ -216,7 +216,7 @@ const AboutGloup = () => {
       </p>
 
       {/* MISSION */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         Mission
       </h2>
 
@@ -230,7 +230,7 @@ const AboutGloup = () => {
       </p>
 
       {/* VISION */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         Vision
       </h2>
 
@@ -244,7 +244,7 @@ const AboutGloup = () => {
       </p>
 
       {/* LEADERSHIP */}
-      <h2 className="text-3xl font-bold text-black mb-6   ">
+      <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6">
         Leadership
       </h2>
 

@@ -18,7 +18,6 @@ export const useGetAllSalons = (filters = {}) => {
     initialPageParam: 1, // Required in React Query v5
     getNextPageParam: (lastPage) => {
       const pagination = lastPage?.pagination ?? {};
-      console.log("getAllSalons Pagination:", pagination);
       const { page, totalPages } = pagination;
       if (!page || !totalPages) return undefined;
       return page < totalPages ? page + 1 : undefined;

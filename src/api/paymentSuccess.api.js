@@ -11,6 +11,6 @@ import axiosInstance from "./axiosInstance";
  * }
  */
 export const paymentSuccess = async (payload) => {
-  const response = await axiosInstance.post("/v2/paymentsuccess", payload);
+  const response = await axiosInstance.post("user/v2/paymentsuccess", payload);
   return response.data;
 };

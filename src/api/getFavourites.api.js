@@ -5,6 +5,6 @@ import axiosInstance from "./axiosInstance";
  * Returns all favourite salons for the authenticated user.
  */
 export const getFavourites = async () => {
-  const response = await axiosInstance.get("/app/v2/favourites");
+  const response = await axiosInstance.get("/user/app/v2/favourites");
   return response.data;
 };

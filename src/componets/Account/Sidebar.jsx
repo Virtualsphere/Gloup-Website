@@ -2,11 +2,26 @@ import { useNavigate } from "react-router-dom";
 import { User, UserPlus, Palette, Settings, HelpCircle, LogOut, Moon } from "lucide-react";
 import { useUserProfile } from "../../hooks/useUserProfile";
 import { useUserStore } from "../../store/userStore";
+import { useLogout } from "../../hooks/services/auth/useLogout";
+import toast from "react-hot-toast";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   useUserProfile(); // Fetch profile data
   const { user } = useUserStore();
+  const { mutate: logoutUser, isPending: isLoggingOut } = useLogout();
+
+  const handleLogout = () => {
+    logoutUser(undefined, {
+      onSuccess: () => {
+        toast.success("Logged out successfully");
+        navigate("/");
+      },
+      onError: (err) => {
+        toast.error(err?.response?.data?.message || "Failed to logout. Please try again.");
+      }
+    });
+  };
 
   return (
     <div className="p-4 bg-[#F2F2F2] min-h-screen lg:min-h-full rounded-l-3xl space-y-4 font-sans">
@@ -90,10 +105,14 @@ export default function Sidebar() {
 
         {/* Logout */}
         <button 
-          className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors text-left"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors text-left disabled:opacity-50"
         >
           <LogOut className="w-5 h-5 text-gray-700" />
-          <span className="text-gray-800 font-medium text-[15px]">Logout</span>
+          <span className="text-gray-800 font-medium text-[15px]">
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </span>
         </button>
       </div>
 

@@ -2,18 +2,18 @@ import React from "react";
 
 const RefundCancellationPolicy = () => {
   return (
-    <div className="max-w-7xl mx-auto py-12 text-gray-800 leading-relaxed">
-      <h1 className="text-4xl font-bold mb-4">REFUND & CANCELLATION POLICY</h1>
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 text-sm md:text-base text-gray-800 leading-relaxed">
+      <h1 className="text-2xl md:text-4xl font-bold mb-4">REFUND & CANCELLATION POLICY</h1>
 
-      <p className="text-lg font-medium mb-1">
+      <p className="text-base md:text-lg font-medium mb-1">
         For JR STYLE'O BOOKING AND FASHION PVT LTD
       </p>
 
-      <p className="text-lg font-medium mb-4">
+      <p className="text-base md:text-lg font-medium mb-4">
         Gloup Instantly Platform
       </p>
 
-      <h2 className="text-2xl font-semibold mb-2">REFUND & CANCELLATION POLICY</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mb-2">REFUND & CANCELLATION POLICY</h2>
 
       <p className="mb-6">Last Updated: [01/03/2026]</p>
 
@@ -29,7 +29,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 1 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         1. Nature of Gloup Instantly Role (Important Legal Clause)
       </h2>
 
@@ -60,7 +60,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 2 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         2. Booking Cancellation by User
       </h2>
 
@@ -82,7 +82,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 3 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         3. Booking Cancellation by Salon
       </h2>
 
@@ -104,7 +104,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 4 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         4. No Refund Situations (Strict Policy)
       </h2>
 
@@ -131,7 +131,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 5 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         5. Payment Gateway Issues
       </h2>
 
@@ -152,7 +152,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 6 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         6. Prepaid Services / Offers
       </h2>
 
@@ -163,7 +163,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 7 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         7. Service Not Delivered
       </h2>
 
@@ -173,7 +173,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 8 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         8. Fraud, Misconduct & Disputes
       </h2>
 
@@ -188,7 +188,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 9 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         9. Timeline for Refunds
       </h2>
 
@@ -199,7 +199,7 @@ const RefundCancellationPolicy = () => {
       </p>
 
       {/* 10 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         10. Contact for Refund Support
       </h2>
 

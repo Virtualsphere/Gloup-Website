@@ -7,7 +7,8 @@ const ServiceSlider = () => {
   const navigate = useNavigate()
 
   const { data, isLoading, isError } = useGetCategory()
-  const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  const imageBaseUrl = import.meta.env.VITE_CATEGORY_IMAGE_URL
 
   const handleCategoryClick = (service, index) => {
     setActiveService(index)
@@ -34,7 +35,7 @@ const ServiceSlider = () => {
 
   return (
     <div className="bg-white lg:bg-gray-100 py-2 lg:py-8 overflow-x-auto lg:overflow-visible scrollbar-hide pb-2">
-      <div className="flex lg:grid grid-cols-6 gap-4 lg:gap-5 px-3 lg:px-10 xl:px-32 w-full">
+      <div className="flex  gap-4 lg:gap-16 px-3 lg:px-10 xl:px-32 w-full overflow-x-auto scrollbar-hide">
         {data.data.map((service, index) => {
           const isActiveMobile = activeService === index;
           return (
@@ -43,7 +44,7 @@ const ServiceSlider = () => {
               onClick={() => handleCategoryClick(service, index)}
               className="flex flex-col items-center gap-2 lg:gap-3 group cursor-pointer flex-shrink-0 lg:flex-shrink"
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-full lg:h-auto lg:aspect-square rounded-xl sm:rounded-2xl lg:rounded-2xl overflow-hidden bg-gray-200 lg:shadow-sm lg:group-hover:shadow-md transition-shadow flex items-center justify-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-48 lg:h-48 lg:aspect-square rounded-xl sm:rounded-2xl lg:rounded-2xl overflow-hidden bg-gray-200 lg:shadow-sm lg:group-hover:shadow-md transition-shadow flex items-center justify-center">
                 {service.imageUrl ? (
                   <img
                     src={`${imageBaseUrl}/${service.imageUrl}`}

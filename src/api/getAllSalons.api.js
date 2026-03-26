@@ -14,7 +14,7 @@ export const getAllSalons = async (params = {}) => {
   if (lng)       queryParams.lng      = lng;
   if (search)    queryParams.search   = search;
 
-  const response = await axiosInstance.get("/app/v2/get-all-stores", {
+  const response = await axiosInstance.get("/user/app/v2/get-all-stores", {
     params: queryParams,
   });
 
