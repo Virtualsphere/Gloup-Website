@@ -292,12 +292,12 @@ Continuing telephonic discussions implies acceptance of this policy.
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-3 lg:px-0 py-12 text-gray-800 leading-relaxed">
-      <h1 className="text-4xl font-bold mb-10">Terms & Conditions</h1>
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 text-sm md:text-base text-gray-800 leading-relaxed">
+      <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-10">Terms & Conditions</h1>
 
       {sections.map((section, index) => (
         <div key={index} className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6">{section.title}</h2>
+          <h2 className="text-xl md:text-3xl font-semibold mb-4 md:mb-6">{section.title}</h2>
 
           <div className="whitespace-pre-line text-gray-700 leading-8">
             {section.content}

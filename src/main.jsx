@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 
 
 // Optional providers (kept commented as requested)
-// import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 // import { Provider } from "react-redux";
 // import { PersistGate } from "redux-persist/integration/react";
 // import { store, persistor } from "./redux/store";
@@ -22,8 +22,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
   <BrowserRouter>
   <StrictMode>
-    {/* Uncomment below when needed */}
-    {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}> */}
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
 
       {/* <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}> */}
@@ -31,7 +30,7 @@ root.render(
         {/* </PersistGate>
       </Provider> */}
 
-    {/* </GoogleOAuthProvider> */}
+    </GoogleOAuthProvider>
   </StrictMode>
   </BrowserRouter>
   </QueryClientProvider>

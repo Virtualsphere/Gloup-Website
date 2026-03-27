@@ -17,31 +17,26 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
-const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
-const PROFILE_IMG_URL = import.meta.env.VITE_PROFILE_IMG_URL;
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 const normalizeSalon = (salon) => {
   let images = [];
+  const storeId = salon.id ?? salon._id;
+
   const validImages = Array.isArray(salon.images)
     ? salon.images.filter((img) => img && typeof img === "string" && img.trim() !== "")
     : [];
 
   if (validImages.length > 0) {
-    images = validImages.map((img) => `${BASE_IMAGE_URL}/${img}`);
+    images = validImages.map((img) => `${SALON_IMAGE_URL}/${storeId}/images/${img}`);
   } else if (salon.salonImage && typeof salon.salonImage === "string" && salon.salonImage.trim() !== "") {
-    images = [`${BASE_IMAGE_URL}/${salon.salonImage}`];
+    images = [`${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`];
   } else {
     images = ["https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80"];
   }
 
-  const logoUrl = salon.profilePic
-    ? `${PROFILE_IMG_URL}/${salon.profilePic}`
-    : salon.logo
-    ? `${PROFILE_IMG_URL}/${salon.logo}`
-    : null;
-
   return {
-    id: salon.id ?? salon._id,
+    id: storeId,
     image: images[0],
     name: salon.salonName ?? salon.name,
     rating: salon.rating ?? "0.0",

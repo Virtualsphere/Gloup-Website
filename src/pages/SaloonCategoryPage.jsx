@@ -5,30 +5,28 @@ import { useGetCategory } from '../hooks/services/useGetCategory';
 import { useGetAllSalons } from '../hooks/services/useGetAllSalons';
 import SalonCategoryCard from '../componets/shared/ui/SalonCategoryCard';
 
-const BASE_IMAGE_URL = 'https://v1.gloup.in/images';
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 const normalizeService = (salon) => {
   let images = ['https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80'];
+  const storeId = salon.id ?? salon._id;
 
   const validImages = Array.isArray(salon.images)
     ? salon.images.filter((img) => img && typeof img === 'string' && img.trim() !== '')
     : [];
 
   if (validImages.length > 0) {
-    images = validImages.map((img) => `${BASE_IMAGE_URL}/${img}`);
+    images = validImages.map((img) => `${SALON_IMAGE_URL}/${storeId}/images/${img}`);
   } else if (salon.salonImage && typeof salon.salonImage === 'string' && salon.salonImage.trim() !== '') {
-    images = [`${BASE_IMAGE_URL}/${salon.salonImage}`];
+    images = [`${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`];
   }
 
   return {
-    id: salon.id,
+    id: storeId,
     name: salon.salonName,
     image: (() => {
-      const validImages = Array.isArray(salon.images)
-        ? salon.images.filter((img) => img && typeof img === 'string' && img.trim() !== '')
-        : [];
-      if (validImages.length > 0) return `${BASE_IMAGE_URL}/${validImages[0]}`;
-      if (salon.salonImage?.trim()) return `${BASE_IMAGE_URL}/${salon.salonImage}`;
+      if (validImages.length > 0) return `${SALON_IMAGE_URL}/${storeId}/images/${validImages[0]}`;
+      if (salon.salonImage?.trim()) return `${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`;
       return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80';
     })(),
     mainService: salon.serviceName || 'Service',

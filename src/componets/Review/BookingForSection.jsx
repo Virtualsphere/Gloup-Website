@@ -7,6 +7,10 @@ import { useAddGuest } from '../../hooks/services/useAddGuest';
 import { useUpdateGuest } from '../../hooks/services/useUpdateGuest';
 import { toast } from 'react-hot-toast';
 import { useBookingStore } from '../../store/bookingStore';
+import CompleteProfileModal from './CompleteProfileModal';
+import { useUserStore } from '../../store/userStore';
+import { useUpdateProfile } from '../../hooks/useUpdateProfile';
+import { useUserProfile } from '../../hooks/useUserProfile';
 
 const BookingForSection = () => {
     // --- State ---
@@ -17,6 +21,11 @@ const BookingForSection = () => {
 
     // --- Store ---
     const setBookingFor = useBookingStore((s) => s.setBookingFor);
+    const isProfileModalOpen = useBookingStore((s) => s.isProfileModalOpen);
+    const setIsProfileModalOpen = useBookingStore((s) => s.setIsProfileModalOpen);
+    const { user, setUser } = useUserStore();
+    const { mutate: updateProfile } = useUpdateProfile();
+    const { isLoading: isProfileLoading } = useUserProfile();
 
     // --- API Hooks ---
     const { data: guestsResponse, isLoading, refetch } = useGetAllGuest();
@@ -32,6 +41,36 @@ const BookingForSection = () => {
         setSelectedProfileId(null);
         // Immediately commit to store with no guest
         setBookingFor({ type, guest: null });
+
+        if (type === 'self') {
+             const hasName = user?.firstname && user?.lastname;
+             if (!hasName) {
+                 setIsProfileModalOpen(true);
+             }
+        }
+    };
+
+    const handleSaveSelfProfile = (personData) => {
+        const payload = {
+            firstname: personData.firstname,
+            lastname: personData.lastname,
+            email: personData.email,
+            dob: personData.dob,
+            gender: personData.gender
+        };
+
+        // Optimistic update
+        setUser({ ...user, ...payload });
+
+        const data = new FormData();
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== '') {
+                data.append(key, value);
+            }
+        });
+
+        updateProfile(data);
+        setIsProfileModalOpen(false);
     };
 
     const handleGuestSelect = (index, profile) => {
@@ -72,7 +111,7 @@ const BookingForSection = () => {
                     },
                     onError: (error) => {
                         toast.error('Failed to update guest', { id: loadingToastId });
-                        console.error('Update guest error:', error);
+                        // console.error('Update guest error:', error);
                     }
                 }
             );
@@ -89,7 +128,7 @@ const BookingForSection = () => {
             },
             onError: (error) => {
                 toast.error('Failed to add guest', { id: loadingToastId });
-                console.error('Add guest error:', error);
+                // console.error('Add guest error:', error);
             }
         });
     };
@@ -123,15 +162,29 @@ const BookingForSection = () => {
         );
     };
 
-    const renderSelfProfile = () => (
-        <UserProfileCard 
-            name="John Doe" 
-            details="28 Yrs • Male" 
-            isSelected={true}
-            onEdit={() => console.log('Edit self')}
-            onSelect={() => {}}
-        />
-    );
+    const renderSelfProfile = () => {
+        if (isProfileLoading && !user?.firstname) {
+            return (
+                <div className="p-4 border border-gray-100 rounded-2xl h-24 animate-pulse bg-gray-50 flex items-center justify-center">
+                    <span className="text-gray-400 font-medium">Loading profile...</span>
+                </div>
+            );
+        }
+
+        const hasName = user?.firstname && user?.lastname;
+        const displayName = hasName ? `${user.firstname} ${user.lastname}` : '';
+
+        return (
+            <UserProfileCard 
+                name={displayName} 
+                isSelected={true}
+                onSelect={() => {
+                   if (!hasName) setIsProfileModalOpen(true);
+                }}
+                onEdit={() => setIsProfileModalOpen(true)}
+            />
+        );
+    };
 
     const renderOtherProfiles = () => {
         if (isLoading) {
@@ -181,6 +234,21 @@ const BookingForSection = () => {
                 }}
                 onSave={handleSavePerson}
                 initialData={editingPerson}
+            />
+
+            <CompleteProfileModal 
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+                onSave={handleSaveSelfProfile}
+                initialData={
+                    user ? {
+                        firstname: user.firstname || '',
+                        lastname: user.lastname || '',
+                        email: user.email || '',
+                        dob: user.dob || user.date_of_birth || '',
+                        gender: user.gender || 'Male',
+                    } : null
+                }
             />
         </div>
     );

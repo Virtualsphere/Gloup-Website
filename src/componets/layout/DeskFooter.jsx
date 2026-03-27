@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const DeskFooter = () => {
   return (
@@ -16,16 +16,16 @@ const DeskFooter = () => {
               Discover top salons, spas, and grooming studios near you. Book and glow with GloUp.
             </p>
             <div className="flex items-center gap-4 mt-2">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61576019464366" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
                 <Facebook size={18} fill="currentColor" strokeWidth={0} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
-                <Twitter size={18} fill="currentColor" strokeWidth={0} />
+              <a href="https://www.youtube.com/channel/UCRgZweOP89YvztGNS7y6PKA" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+               <Youtube size={18}  />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+              <a href="https://www.instagram.com/gloupoffl/" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
                 <Instagram size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+              <a href="https://www.linkedin.com/company/105108604/admin/dashboard/" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
                 <Linkedin size={18} fill="currentColor" strokeWidth={0} />
               </a>
             </div>
@@ -35,10 +35,9 @@ const DeskFooter = () => {
           <div className="col-span-1 flex flex-col gap-5 md:pl-8">
             <h3 className="text-lg font-serif font-semibold text-gray-900">Company</h3>
             <div className="flex flex-col gap-4 text-[15px] text-gray-500">
-              <Link to="#" className="hover:text-gray-900 transition-colors w-fit">About Us</Link>
+              <Link to="/about" className="hover:text-gray-900 transition-colors w-fit">About Us</Link>
               <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Partner With Us</Link>
               <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Careers</Link>
-              <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Blogs</Link>
             </div>
           </div>
 
@@ -46,9 +45,9 @@ const DeskFooter = () => {
           <div className="col-span-1 flex flex-col gap-5">
             <h3 className="text-lg font-serif font-semibold text-gray-900">Legal</h3>
             <div className="flex flex-col gap-4 text-[15px] text-gray-500">
-              <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Privacy Policy</Link>
-              <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Terms of Service</Link>
-              <Link to="#" className="hover:text-gray-900 transition-colors w-fit">Refund Policy</Link>
+              <Link to="/privacy-policy" className="hover:text-gray-900 transition-colors w-fit">Privacy Policy</Link>
+              <Link to="/terms-conditions" className="hover:text-gray-900 transition-colors w-fit">Terms of Service</Link>
+              <Link to="/refund-policy" className="hover:text-gray-900 transition-colors w-fit">Refund Policy</Link>
             </div>
           </div>
 

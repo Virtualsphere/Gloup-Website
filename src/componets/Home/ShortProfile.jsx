@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { MapPin } from 'lucide-react'
-import profile from '../../assets/images/author-1.jpg'
+import { MapPin, User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useLocationStore } from '../../store/locationStore'
 import LocationSearchModal from '../shared/ui/LocationSearchModal'
 
@@ -10,7 +10,7 @@ const ShortProfile = () => {
   
   // Try to split address into locality + city, else defaults
   const addressParts = locationData?.address ? locationData.address.split(',') : [];
-  const mainLocation = addressParts[0] || 'Bengaluru';
+  const mainLocation = addressParts[0] || 'Allow Location';
   const subLocation = addressParts[1]?.trim() || '';
   return (
     <>
@@ -30,13 +30,11 @@ const ShortProfile = () => {
         </div>
       </button>
 
-      {/* Profile Image */}
+      {/* Profile Image / Icon */}
       <div className="flex-shrink-0">
-        <img 
-          src={profile} 
-          alt="Profile" 
-          className="w-16 h-16 rounded-full object-cover"
-        />
+        <Link to="/profile" className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white transition-colors">
+          <User size={24} />
+        </Link>
       </div>
       </div>
 

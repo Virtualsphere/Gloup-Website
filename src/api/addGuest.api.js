@@ -4,7 +4,7 @@ import axiosInstance from "./axiosInstance";
 
 export const addGuest = async (data) => {
   const response = await axiosInstance.post(
-    "/app/v2/guest/add",
+    "/user/app/v2/guest/add",
     data
   );
 

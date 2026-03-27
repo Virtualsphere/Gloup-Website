@@ -10,11 +10,28 @@ const CouponsModal = ({ isOpen, onClose, onApply, appliedCoupon, amount = 0 }) =
   const activeCoupons = couponsData?.data || [];
 
   const getCouponDetails = (coupon) => {
-    const match = coupon.code.match(/\d+/);
-    const extractedAmount = match ? parseInt(match[0], 10) : 0;
-    const requiredAmount = extractedAmount + 30;
-    const isValid = amount >= requiredAmount;
-    const pendingAmount = isValid ? 0 : requiredAmount - amount;
+    let extractedAmount = 0;
+    let requiredAmount = 0;
+    let pendingAmount = 0;
+    let isValid = false;
+
+    if (coupon.discountType === 'flat') {
+        extractedAmount = Number(coupon.discountValue);
+        requiredAmount = extractedAmount + 30;
+        isValid = amount >= requiredAmount;
+        pendingAmount = isValid ? 0 : requiredAmount - amount;
+    } else if (coupon.discountType === 'percentage') {
+        extractedAmount = Math.round((amount * Number(coupon.discountValue)) / 100);
+        isValid = true;
+        pendingAmount = 0;
+    } else {
+        const match = coupon.code?.match(/\d+/);
+        extractedAmount = match ? parseInt(match[0], 10) : 0;
+        requiredAmount = extractedAmount + 30;
+        isValid = amount >= requiredAmount;
+        pendingAmount = isValid ? 0 : requiredAmount - amount;
+    }
+
     return { extractedAmount, isValid, pendingAmount };
   };
 
@@ -48,16 +65,16 @@ const CouponsModal = ({ isOpen, onClose, onApply, appliedCoupon, amount = 0 }) =
               const { extractedAmount, isValid, pendingAmount } = getCouponDetails(coupon);
               return (
                 <div key={coupon.id} className={`flex flex-col bg-white border ${isValid ? 'border-gray-100' : 'border-gray-200 opacity-60 bg-gray-50'} rounded-2xl shadow-sm overflow-hidden`}>
-                  <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between p-4 gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isValid ? 'bg-green-50 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
                         <Tag className="w-5 h-5" />
                       </div>
-                      <div>
-                        <div className={`font-semibold ${isValid ? 'text-gray-900' : 'text-gray-400'}`}>
+                      <div className="min-w-0">
+                        <div className={`font-semibold text-sm whitespace-nowrap truncate ${isValid ? 'text-gray-900' : 'text-gray-400'}`}>
                           Save on this booking
                         </div>
-                        <div className={`font-bold text-sm mt-0.5 uppercase ${isValid ? 'text-green-500' : 'text-gray-400'}`}>
+                        <div className={`font-bold text-sm mt-0.5 uppercase truncate ${isValid ? 'text-green-500' : 'text-gray-400'}`}>
                           "{coupon.code}"
                         </div>
                       </div>
@@ -68,7 +85,7 @@ const CouponsModal = ({ isOpen, onClose, onApply, appliedCoupon, amount = 0 }) =
                           if (isValid) onApply(coupon, extractedAmount);
                       }}
                       disabled={!isValid}
-                      className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors whitespace-nowrap ml-2 ${
+                      className={`flex-shrink-0 px-6 py-2 text-sm font-semibold rounded-full transition-colors whitespace-nowrap ${
                         !isValid
                           ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                           : appliedCoupon?.code === coupon.code

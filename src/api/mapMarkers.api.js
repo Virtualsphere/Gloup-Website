@@ -11,7 +11,7 @@ export const getMapMarkersClustered = async (params) => {
     throw new Error("bounds and zoom are required");
   }
 
-  const response = await axiosInstance.post("/app/v2/salons/map-markers-clustered", {
+  const response = await axiosInstance.post("/user/app/v2/salons/map-markers-clustered", {
     bounds,
     zoom,
     filters,

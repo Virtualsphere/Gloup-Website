@@ -2,10 +2,10 @@ import React from "react";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="max-w-7xl mx-auto py-12 text-gray-800 leading-relaxed">
-      <h1 className="text-4xl font-bold mb-4">PRIVACY POLICY</h1>
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 text-sm md:text-base text-gray-800 leading-relaxed">
+      <h1 className="text-2xl md:text-4xl font-bold mb-4">PRIVACY POLICY</h1>
 
-      <p className="text-lg font-medium mb-2">
+      <p className="text-base md:text-lg font-medium mb-2">
         For Users & Partners of the Gloup Instantly Platform
       </p>
 
@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
       <p className="mb-8">Last Updated: [01/03/2026]</p>
 
       {/* 1 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
 
       <p className="mb-4">
         This Privacy Policy explains how JR STYLE'O BOOKING AND FASHION PVT LTD
@@ -44,13 +44,13 @@ const PrivacyPolicy = () => {
       </ul>
 
       {/* 2 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         2. Information We Collect
       </h2>
 
       <p className="mb-4">We may collect the following:</p>
 
-      <h3 className="text-xl font-semibold mb-2">A. User Information</h3>
+      <h3 className="text-lg md:text-xl font-semibold mb-2">A. User Information</h3>
 
       <ul className="list-disc pl-6 space-y-1 mb-6">
         <li>Name, gender</li>
@@ -63,7 +63,7 @@ const PrivacyPolicy = () => {
         <li>Reviews and feedback</li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+      <h3 className="text-lg md:text-xl font-semibold mb-2">
         B. Partner (Salon) Information
       </h3>
 
@@ -77,7 +77,7 @@ const PrivacyPolicy = () => {
         <li>Bank account details for settlements</li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+      <h3 className="text-lg md:text-xl font-semibold mb-2">
         C. Automatically Collected Data
       </h3>
 
@@ -91,7 +91,7 @@ const PrivacyPolicy = () => {
       </ul>
 
       {/* 3 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">3. Use of Information</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">3. Use of Information</h2>
 
       <p className="mb-4">We use data to:</p>
 
@@ -109,13 +109,13 @@ const PrivacyPolicy = () => {
       </ul>
 
       {/* 4 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         4. Sharing of Information
       </h2>
 
       <p className="mb-4">We may share data with:</p>
 
-      <h3 className="text-xl font-semibold mb-2">A. Partner Salons</h3>
+      <h3 className="text-lg md:text-xl font-semibold mb-2">A. Partner Salons</h3>
 
       <ul className="list-disc pl-6 space-y-1 mb-6">
         <li>User booking details</li>
@@ -123,7 +123,7 @@ const PrivacyPolicy = () => {
         <li>Contact details</li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+      <h3 className="text-lg md:text-xl font-semibold mb-2">
         B. Third-Party Service Providers
       </h3>
 
@@ -135,7 +135,7 @@ const PrivacyPolicy = () => {
         <li>Marketing partners</li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+      <h3 className="text-lg md:text-xl font-semibold mb-2">
         C. Legal Authorities (if required)
       </h3>
 
@@ -152,7 +152,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 5 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         5. Payment & Financial Data
       </h2>
 
@@ -172,7 +172,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 6 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         6. Data Protection & Security
       </h2>
 
@@ -193,7 +193,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 7 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">7. User Rights</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">7. User Rights</h2>
 
       <p className="mb-4">Users may:</p>
 
@@ -210,7 +210,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 8 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         8. Retention of Data
       </h2>
 
@@ -225,7 +225,7 @@ const PrivacyPolicy = () => {
       </ul>
 
       {/* 9 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         9. Children’s Privacy
       </h2>
 
@@ -234,7 +234,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 10 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         10. Third-Party Links
       </h2>
 
@@ -244,7 +244,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 11 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         11. Updates to This Policy
       </h2>
 
@@ -254,7 +254,7 @@ const PrivacyPolicy = () => {
       </p>
 
       {/* 12 */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">
+      <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4">
         12. Contact Information
       </h2>
 

@@ -9,8 +9,8 @@ export default function Support() {
     { icon: <ClipboardList className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'Privacy Policy', path: '/privacy-policy' },
     { icon: <Handshake className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'Terms of Use', path: '/terms-conditions' },
     { icon: <Ban className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'Cancellation', path: '/refund-policy' },
-    { icon: <PhoneCall className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'Contact', path: '/about' },
-    { icon: <HelpCircle className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'FAQs', path: '/faq' },
+    { icon: <PhoneCall className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'Contact', path: '' },
+    { icon: <HelpCircle className="w-[22px] h-[22px] text-gray-700" strokeWidth={1.5} />, label: 'FAQs', path: '' },
   ];
 
   return (

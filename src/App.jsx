@@ -1,103 +1,96 @@
-import React from "react";
-import Layout from "./componets/layout/Layout";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import ShopDetails from "./pages/ShopDetails";
-import BookSlot from "./pages/BookSlot";
-import ReviewOrderPage from "./pages/ReviewOrderPage";
-import FavouritesPage from "./pages/FavouritePage";
-import ExploreSalonsPage from "./pages/ExploreSalonsPage";
 import { Toaster } from "react-hot-toast";
-import MyBooking from "./pages/MyBooking";
-import LoginModal from "./componets/login/LoginModal";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ProtectedRoute from "./componets/ProtectedRoute";
-import RefundCancellationPolicy from "./pages/RefundCancellationPolicy";
-import TermsAndConditions from "./pages/TermsConditions";
-import About from "./pages/About";
 
-import SaloonCategoryPage from "./pages/SaloonCategoryPage";
-import AccountLayout from "./componets/Account/AccountLayout";
-import Orders from "./componets/Account/ProfileDetails";
-import Invite from "./componets/Account/Invite";
-import SettingsPage from "./componets/Account/setting";
-import Support from "./componets/Account/support";
-import MapLayout from "./componets/map/MapLayout";
+// ── Always-eager (shell, needed on every route) ───────────────────────────────
+import Layout from "./componets/layout/Layout";
+import LoginModal from "./componets/login/LoginModal";
+import ProtectedRoute from "./componets/ProtectedRoute";
 import ScrollToTop from "./componets/shared/ScrollToTop";
 import CustomMapsProvider from "./store/CustomMapsProvider";
-// import Header from "./componets/Header";
-// import Footer from "./componets/Footer";
-// import AppRoutes from "./routes";
-// import { Toaster } from "react-hot-toast";
-// import "../src/styles/custom.css";
-// import "../src/styles/all.mim.css";
-// import "../src/styles/animate.css";
-// import "../src/styles/bootstrap.min.css";
-// import "../src/styles/magnific-popup.css";
-// import "../src/styles/slicknav.min.css";
-// import "../src/styles/swiper-bundle.min.css";
-// import "@fortawesome/fontawesome-free/css/all.min.css";
-// import PageHeader from "./componets/PageHeader";
-// import Layout from "./Layout";
+
+// ── Lazy-loaded pages ─────────────────────────────────────────────────────────
+const Home                    = lazy(() => import("./pages/Home"));
+const Login                   = lazy(() => import("./pages/Login"));
+const ShopDetails             = lazy(() => import("./pages/ShopDetails"));
+const BookSlot                = lazy(() => import("./pages/BookSlot"));
+const ReviewOrderPage         = lazy(() => import("./pages/ReviewOrderPage"));
+const FavouritesPage          = lazy(() => import("./pages/FavouritePage"));
+const ExploreSalonsPage       = lazy(() => import("./pages/ExploreSalonsPage"));
+const MyBooking               = lazy(() => import("./pages/MyBooking"));
+const SaloonCategoryPage      = lazy(() => import("./pages/SaloonCategoryPage"));
+const MapLayout               = lazy(() => import("./componets/map/MapLayout"));
+
+// ── Lazy-loaded profile sub-pages ─────────────────────────────────────────────
+const AccountLayout           = lazy(() => import("./componets/Account/AccountLayout"));
+const ProfileDetails          = lazy(() => import("./componets/Account/ProfileDetails"));
+const Invite                  = lazy(() => import("./componets/Account/Invite"));
+const SettingsPage            = lazy(() => import("./componets/Account/setting"));
+const Support                 = lazy(() => import("./componets/Account/support"));
+
+// ── Footer / legal pages ──────────────────────────────────────────────────────
+const PrivacyPolicy            = lazy(() => import("./pages/PrivacyPolicy"));
+const RefundCancellationPolicy = lazy(() => import("./pages/RefundCancellationPolicy"));
+const TermsAndConditions       = lazy(() => import("./pages/TermsConditions"));
+const About                    = lazy(() => import("./pages/About"));
+
+// ── Suspense wrapper — components handle their own skeletons internally ───────
+const S = ({ children }) => (
+  <Suspense fallback={null}>{children}</Suspense>
+);
 
 function App() {
-
   return (
-    // <Router>
-    //   <Toaster
-    //     position="top-right"
-    //     toastOptions={{
-    //       duration: 4000,
-    //       style: {
-    //         marginTop: "100px",
-    //         transition: "all 0.3s ease-in-out",
-    //       },
-    //     }}
-    //   />
-    //  <Layout/>
-    // </Router>
-
     <CustomMapsProvider>
       <Toaster position="top-right" />
       <ScrollToTop />
-      {/* Global login modal — open from anywhere via useUiStore */}
       <LoginModal />
       <div className="bg-gray-100">
         <Layout>
           <Routes>
 
-            <Route path="/" element={<Home />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
-            <Route path="/terms-conditions" element={<TermsAndConditions />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/explore-map" element={<MapLayout />} />
-            <Route path="/explore" element={<ExploreSalonsPage />} />
-            <Route path="/salons/category/:categoryId" element={<SaloonCategoryPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/salon-details/:id" element={<ShopDetails />} />
+            {/* ── Public pages ── */}
+            <Route path="/"                        element={<S><Home /></S>} />
+            <Route path="/login"                   element={<S><Login /></S>} />
+            <Route path="/explore"                 element={<S><ExploreSalonsPage /></S>} />
+            <Route path="/explore-salons"             element={<S><MapLayout /></S>} />
+            <Route path="/salon-details/:id"       element={<S><ShopDetails /></S>} />
+            <Route path="/salons/category/:categoryId" element={<S><SaloonCategoryPage /></S>} />
+            <Route path="/about"                   element={<S><About /></S>} />
 
-            <Route path="/:id/book-slot" element={<ProtectedRoute><BookSlot /></ProtectedRoute>} />
-            <Route path="/:id/review-order" element={<ProtectedRoute><ReviewOrderPage /></ProtectedRoute>} />
-            <Route path="/favourite" element={<ProtectedRoute><FavouritesPage /></ProtectedRoute>} />
-            <Route path="/my-bookings" element={<ProtectedRoute><MyBooking /></ProtectedRoute>} />
+            {/* ── Footer / legal ── */}
+            <Route path="/privacy-policy"          element={<S><PrivacyPolicy /></S>} />
+            <Route path="/refund-policy"           element={<S><RefundCancellationPolicy /></S>} />
+            <Route path="/terms-conditions"        element={<S><TermsAndConditions /></S>} />
 
-            {/* PROFILE LAYOUT ROUTES */}
+            {/* ── Protected pages ── */}
+            <Route path="/:id/book-slot"
+              element={<ProtectedRoute><S><BookSlot /></S></ProtectedRoute>}
+            />
+            <Route path="/:id/review-order"
+              element={<ProtectedRoute><S><ReviewOrderPage /></S></ProtectedRoute>}
+            />
+            <Route path="/favourite"
+              element={<ProtectedRoute><S><FavouritesPage /></S></ProtectedRoute>}
+            />
+            <Route path="/my-bookings"
+              element={<ProtectedRoute><S><MyBooking /></S></ProtectedRoute>}
+            />
 
+            {/* ── Profile nested layout ── */}
             <Route
               path="/profile"
               element={
                 <ProtectedRoute>
-                  <AccountLayout />
+                  <S><AccountLayout /></S>
                 </ProtectedRoute>
               }
             >
-              <Route index element={<Orders />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="details" element={<Orders />} />
-              <Route path="invite" element={<Invite />} />
-              <Route path="support" element={<Support />} />
+              <Route index          element={<S><ProfileDetails /></S>} />
+              <Route path="details"  element={<S><ProfileDetails /></S>} />
+              <Route path="settings" element={<S><SettingsPage /></S>} />
+              <Route path="invite"   element={<S><Invite /></S>} />
+              <Route path="support"  element={<S><Support /></S>} />
             </Route>
 
           </Routes>

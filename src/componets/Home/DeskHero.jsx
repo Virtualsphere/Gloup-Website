@@ -21,7 +21,10 @@ const DeskHero = () => {
     : 'Bengaluru';
 
   const { data, isLoading, isError } = useGetBanner()
-  const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL
+
+  const imageBaseUrl = import.meta.env.VITE_BANNER_IMAGE_URL
+
+
 
   const handleSearch = () => {
     setFilters({
@@ -35,7 +38,7 @@ const DeskHero = () => {
   }
 
   if (isError || !data?.success || !data?.data?.length) {
-    return null;
+    return <div className="w-full h-[680px] bg-gray-200 hidden lg:block"></div>;
   }
 
   return (

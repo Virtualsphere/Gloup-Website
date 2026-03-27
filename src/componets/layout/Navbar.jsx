@@ -18,7 +18,7 @@ const Navbar = () => {
   // Format the display address: take the first part before a comma, or "Bengaluru"
   const displayAddress = locationData?.address
     ? locationData.address.split(',')[0]
-    : 'Bengaluru';
+    : 'Allow Location';
 
   return (
     <>
@@ -41,7 +41,7 @@ const Navbar = () => {
           {/* Center Section: Search (Desktop Only) */}
           <div className="hidden md:block flex-1 max-w-xl px-12">
             <Link
-              to="/explore"
+              to="/explore-salons"
               className="flex items-center gap-3 bg-[#f8f9fa] rounded-lg px-4 py-2.5 border border-gray-200 hover:border-gray-300 hover:bg-white transition-all"
             >
               <Search size={20} className="text-gray-400" />

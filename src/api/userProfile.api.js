@@ -5,7 +5,7 @@ import axiosInstance from "./axiosInstance";
  * @returns {Promise<{ success: boolean, data: { id: number, firstname: string, lastname: string, email: string, phone: number, profilePic: string, gender: string, age: number, date_of_birth: string, city: string, country: string } }>}
  */
 export const getUserProfile = async () => {
-  const response = await axiosInstance.get("/app/v2/profile");
+  const response = await axiosInstance.get("/user/app/v2/profile");
   return response.data;
 };
 
@@ -16,7 +16,7 @@ export const getUserProfile = async () => {
  */
 
 export const updateUserProfile = async (formData) => {
-  const response = await axiosInstance.patch("/app/v2/profile", formData, {
+  const response = await axiosInstance.patch("/user/app/v2/profile", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

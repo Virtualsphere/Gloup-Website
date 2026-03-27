@@ -17,7 +17,7 @@ import { useToggleFavourite } from '../../hooks/services/useToggleFavourite';
 import { useGetFavourites } from '../../hooks/services/useGetFavourites';
 import toast from 'react-hot-toast';
 
-const BASE_IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
+const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 const Banner = ({ images = [], isLoading = false, salonId = null }) => {
   const { data: favData } = useGetFavourites();
@@ -41,7 +41,7 @@ const Banner = ({ images = [], isLoading = false, salonId = null }) => {
   // Map API images or provide a fallback slide
   const slides = images?.length > 0 ? images.map((img, index) => ({
     id: index + 1,
-    image: `${BASE_IMAGE_URL}/${img}`,
+    image: `${SALON_IMAGE_URL}/${salonId}/images/${img}`,
     alt: `Salon Image ${index + 1}`
   })) : [
     {

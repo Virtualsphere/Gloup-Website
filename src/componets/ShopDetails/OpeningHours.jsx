@@ -15,7 +15,7 @@ const OpeningHours = ({ openingHours = {} }) => {
   const hasHours = openingHours && Object.keys(openingHours).length > 0;
 
   return (
-    <div className="bg-white lg:bg-gray-100 py-6 px-5">
+    <div className="bg-white lg:bg-gray-100 py-6 px-5 lg:px-0">
       <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-6">Opening Hours</h2>
       
       {hasHours ? (

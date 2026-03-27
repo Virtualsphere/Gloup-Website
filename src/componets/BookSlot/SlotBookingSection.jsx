@@ -71,7 +71,7 @@ const SlotBookingSection = () => {
           <nav className="flex items-center gap-2 text-sm text-gray-400 mb-4">
             <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
             <span>/</span>
-            <Link to="/shop-details" className="hover:text-gray-600 transition-colors">Mohan Men&apos;s Park Salon</Link>
+            <Link to={`/salon-details/${id}`} className="hover:text-gray-600 transition-colors">Mohan Men&apos;s Park Salon</Link>
             <span>/</span>
             <span className="text-gray-900 font-semibold">Book Slot</span>
           </nav>

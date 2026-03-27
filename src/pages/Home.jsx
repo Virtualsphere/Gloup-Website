@@ -37,7 +37,7 @@ const Home = () => {
       {/* Hero: mobile slider vs desktop full hero */}
       {isMobile ? (
         <>
-          <div className="relative" ref={heroRef}>
+          <div className="relative min-h-[224px]" ref={heroRef}>
             {/* Location / Profile overlay */}
             <div className="absolute top-0 left-0 right-0 z-10">
               <ShortProfile />

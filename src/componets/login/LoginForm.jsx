@@ -1,14 +1,32 @@
 import React, { useState } from 'react';
 import { useSendOtp } from '../../hooks/services/auth/useSendOtp';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin as useApiGoogleLogin } from '../../hooks/services/auth/useGoogleLogin';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ onLoginSubmit }) => {
   const [mobileNumber, setMobileNumber] = useState('');
 
   const { mutate, isPending, isSuccess, isError, data, error } = useSendOtp();
+  const { mutate: apiGoogleLogin, isPending: isGoogleLoginPending } = useApiGoogleLogin();
 
+  const navigate = useNavigate();
 
-
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      apiGoogleLogin(codeResponse.access_token, {
+        onSuccess: (response) => {
+          toast.success(response?.message || 'Login successful!');
+          navigate('/');
+        },
+        onError: (err) => {
+          toast.error(err?.response?.data?.message || 'Google Login failed');
+        }
+      });
+    },
+    onError: () => toast.error('Google Login Failed')
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
     if (mobileNumber.length === 10) {
@@ -16,6 +34,7 @@ const LoginForm = ({ onLoginSubmit }) => {
         onSuccess: (response) => {
           toast.success(response?.message || 'OTP sent successfully!');
           onLoginSubmit(mobileNumber);
+          
         },
         onError: (err) => {
           toast.error(err?.response?.data?.message || 'Failed to send OTP. Please try again.');
@@ -86,15 +105,21 @@ const LoginForm = ({ onLoginSubmit }) => {
         {/* Google Sign In */}
         <button
           type="button"
-          className="w-full border border-gray-300 text-gray-900 font-semibold py-4 rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-3"
+          onClick={() => handleGoogleLogin()}
+          disabled={isGoogleLoginPending}
+          className="w-full border border-gray-300 text-gray-900 font-semibold py-4 rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-3 disabled:opacity-60"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.8055 10.2292C19.8055 9.55058 19.7502 8.86716 19.6306 8.19824H10.2002V12.0492H15.6014C15.3773 13.2911 14.6571 14.3898 13.6025 15.0879V17.5866H16.8251C18.712 15.8449 19.8055 13.2728 19.8055 10.2292Z" fill="#4285F4"/>
-            <path d="M10.2002 20.0006C12.9516 20.0006 15.2727 19.1151 16.8297 17.5865L13.6071 15.0879C12.7073 15.6979 11.5498 16.043 10.2048 16.043C7.54234 16.043 5.28639 14.2833 4.48327 11.9169H1.16406V14.4927C2.76302 17.6787 6.34098 20.0006 10.2002 20.0006Z" fill="#34A853"/>
-            <path d="M4.47883 11.9169C4.06102 10.675 4.06102 9.33009 4.47883 8.08817V5.51233H1.16428C-0.378517 8.57989 -0.378517 12.4252 1.16428 15.4927L4.47883 11.9169Z" fill="#FBBC04"/>
-            <path d="M10.2002 3.95805C11.6235 3.936 13.0006 4.47247 14.0366 5.45722L16.8941 2.60218C15.1858 0.990848 12.9378 0.0983505 10.2002 0.125301C6.34098 0.125301 2.76302 2.44721 1.16406 5.51234L4.47861 8.08818C5.27708 5.71712 7.53768 3.95805 10.2002 3.95805Z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
+          {isGoogleLoginPending ? 'Logging in...' : (
+            <>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.8055 10.2292C19.8055 9.55058 19.7502 8.86716 19.6306 8.19824H10.2002V12.0492H15.6014C15.3773 13.2911 14.6571 14.3898 13.6025 15.0879V17.5866H16.8251C18.712 15.8449 19.8055 13.2728 19.8055 10.2292Z" fill="#4285F4"/>
+                <path d="M10.2002 20.0006C12.9516 20.0006 15.2727 19.1151 16.8297 17.5865L13.6071 15.0879C12.7073 15.6979 11.5498 16.043 10.2048 16.043C7.54234 16.043 5.28639 14.2833 4.48327 11.9169H1.16406V14.4927C2.76302 17.6787 6.34098 20.0006 10.2002 20.0006Z" fill="#34A853"/>
+                <path d="M4.47883 11.9169C4.06102 10.675 4.06102 9.33009 4.47883 8.08817V5.51233H1.16428C-0.378517 8.57989 -0.378517 12.4252 1.16428 15.4927L4.47883 11.9169Z" fill="#FBBC04"/>
+                <path d="M10.2002 3.95805C11.6235 3.936 13.0006 4.47247 14.0366 5.45722L16.8941 2.60218C15.1858 0.990848 12.9378 0.0983505 10.2002 0.125301C6.34098 0.125301 2.76302 2.44721 1.16406 5.51234L4.47861 8.08818C5.27708 5.71712 7.53768 3.95805 10.2002 3.95805Z" fill="#EA4335"/>
+              </svg>
+              Continue with Google
+            </>
+          )}
         </button>
       </form>
     </div>

@@ -15,6 +15,7 @@ import DeskPaymentCard from './DeskPaymentCard';
 import OfferBanner from '../BookSlot/OfferBanner';
 import PaymentFailedModal from '../shared/ui/PaymentFailedModal';
 import PaymentSuccessModal from '../shared/ui/PaymentSuccessModal';
+import { useUserStore } from '../../store/userStore';
 import { useBookingStore } from '../../store/bookingStore';
 import { useCreateOrder } from '../../hooks/services/useCreateOrder';
 import { usePaymentSuccess } from '../../hooks/services/usePaymentSuccess';
@@ -60,20 +61,23 @@ const ReviewConfirmPage = () => {
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
 
   // ─── Billing ────────────────────────────────────────────────────────────────
-  const platformFee = 7;
-  const isPlatformFree = true;
-  const walletBalance = 70;
+
+  // const isPlatformFree = true;
+  const walletBalance = 0;
 
   const billingProps = calculateBilling({
     allServices,
     appliedCoupon,
     useWallet,
     walletBalance,
-    platformFee,
-    isPlatformFree,
   });
 
   const { finalAmount, walletUsed, gstAmount } = billingProps;
+
+  // ─── Profile Check ──────────────────────────────────────────────────────────
+  const { user } = useUserStore();
+  const bookingForState = useBookingStore((s) => s.bookingFor);
+  const isProfileMissing = bookingForState.type === 'self' && (!user?.firstname || !user?.lastname);
 
   // ─── API Mutations & Hooks ──────────────────────────────────────────────────
   const createOrderMutation = useCreateOrder();
@@ -97,7 +101,14 @@ const ReviewConfirmPage = () => {
   const navigate = useNavigate();
 
   const handlePay = () => {
-    const { bookingFor, slot: storeSlot } = useBookingStore.getState();
+    const { bookingFor, slot: storeSlot, setIsProfileModalOpen } = useBookingStore.getState();
+
+    if (bookingFor.type === 'self') {
+        if (!user?.firstname || !user?.lastname) {
+            setIsProfileModalOpen(true);
+            return;
+        }
+    }
 
     const payload = buildBookingPayload({
       salon,
@@ -109,15 +120,13 @@ const ReviewConfirmPage = () => {
       walletUsed,
       appliedCoupon,
       gstAmount,
-      isPlatformFree,
-      platformFee,
+
     });
 
-    console.log('📦 Create Order Payload:', payload);
+    // console.log('📦 Create Order Payload:', payload);
 
     createOrderMutation.mutate(payload, {
       onSuccess: (data) => {
-        console.log('✅ Order Created:', data);
         openRazorpay(data.data, {
           onSuccess: (response) => {
             paymentSuccessMutation.mutate(
@@ -129,12 +138,12 @@ const ReviewConfirmPage = () => {
               {
                 onSuccess: (responseData) => {
                   resetBooking();
-                  toast.success('Booking confirmed! 🎉');
+                  toast.success('Booking confirmed');
                   setPaymentSuccessMessage(responseData?.message || 'Your booking has been confirmed.');
                   setIsSuccessModalOpen(true);
                 },
                 onError: (err) => {
-                  console.error('❌ paymentSuccess API failed:', err);
+                  // console.error('❌ paymentSuccess API failed:', err);
                   setPaymentErrorMessage(
                     err?.response?.data?.message ?? 'Payment verification failed.'
                   );
@@ -154,7 +163,7 @@ const ReviewConfirmPage = () => {
         });
       },
       onError: (error) => {
-        console.error('❌ Order Creation Failed:', error);
+        // console.error('Order Creation Failed:', error);
         toast.error(
           error?.response?.data?.message ?? 'Failed to create order. Please try again.'
         );
@@ -169,7 +178,7 @@ const ReviewConfirmPage = () => {
     <div className="bg-gray-100 min-h-screen pb-40 lg:pb-8">
 
       {/* Mobile: sticky offer banner at top — same as book-slot page */}
-      <div className="lg:hidden sticky top-[80px] z-40">
+      <div className="lg:hidden sticky top-[0px] z-40">
         <OfferBanner />
       </div>
 
@@ -180,9 +189,9 @@ const ReviewConfirmPage = () => {
           <nav className="flex items-center gap-2 text-sm text-gray-400 mb-4">
             <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
             <span>/</span>
-            <Link to={`/shop-details/${salon.id}`} className="hover:text-gray-600 transition-colors">{salonName}</Link>
+            <Link to={`/salon-details/${salon.id}`} className="hover:text-gray-600 transition-colors">{salonName}</Link>
             <span>/</span>
-            <Link to="/book-slot" className="hover:text-gray-600 transition-colors">Book Slot</Link>
+            <Link to={`/${salon.id}/book-slot`} className="hover:text-gray-600 transition-colors">Book Slot</Link>
             <span>/</span>
             <span className="text-gray-900 font-semibold">Checkout</span>
           </nav>
@@ -235,6 +244,7 @@ const ReviewConfirmPage = () => {
               onPay={handlePay}
               isLoading={isPaying}
               disabled={hasNoServices}
+              isProfileMissing={isProfileMissing}
             />
           </div>
 
@@ -250,14 +260,14 @@ const ReviewConfirmPage = () => {
 
       {/* Mobile: fixed bottom wallet + pay bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30">
-        <div className="bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] pt-4 pb-2 px-6">
+        {/* <div className="bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] pt-4 pb-2 px-6">
           <WalletToggle
             balance={walletBalance}
             useWallet={useWallet}
             onToggle={() => setUseWallet(w => !w)}
           />
-        </div>
-        <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} disabled={hasNoServices} />
+        </div> */}
+        <PayButtonBar amount={finalAmount} onPay={handlePay} isLoading={isPaying} disabled={hasNoServices} isProfileMissing={isProfileMissing} />
       </div>
 
       <PaymentFailedModal 
