@@ -59,7 +59,7 @@ const Navbar = () => {
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-800">
               <Link to="/explore" className="lg:flex hidden hover:text-black transition-colors">Explore Salons</Link>
-              <Link to="#" className="lg:flex hidden items-center gap-2 hover:text-black transition-colors">
+              <Link to="/partner-with-us" className="lg:flex hidden items-center gap-2 hover:text-black transition-colors">
                 <span>Partner With Us</span>
               </Link>
               <Link to="#" className="lg:flex hidden items-center gap-2 text-black transition-colors">

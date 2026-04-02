@@ -135,10 +135,10 @@ const DeskHero = () => {
         </div>
 
         {/* Get the app */}
-        <button className="mt-6 flex items-center gap-2 bg-white border border-gray-200 text-gray-800 text-sm font-medium px-4 py-2.5 rounded-md w-fit hover:bg-gray-50 transition-colors shadow-sm">
+        {/* <button className="mt-6 flex items-center gap-2 bg-white border border-gray-200 text-gray-800 text-sm font-medium px-4 py-2.5 rounded-md w-fit hover:bg-gray-50 transition-colors shadow-sm">
           Get the app
           <QrCode className="w-4 h-4 text-gray-500" />
-        </button>
+        </button> */}
       </div>
 
       <LocationSearchModal

@@ -8,7 +8,12 @@ const OpeningHours = ({ openingHours = {} }) => {
 
   const hours = daysOfWeek.map(day => ({
     day,
-    time: openingHours[day] || 'Closed',
+    time: (() => {
+      const h = openingHours[day];
+      if (!h) return 'Closed';
+      if (typeof h === 'object' && h.open && h.close) return `${h.open} – ${h.close}`;
+      return h;
+    })(),
     isToday: day === today
   }));
 

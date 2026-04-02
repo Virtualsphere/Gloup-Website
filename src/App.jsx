@@ -9,6 +9,17 @@ import ProtectedRoute from "./componets/ProtectedRoute";
 import ScrollToTop from "./componets/shared/ScrollToTop";
 import CustomMapsProvider from "./store/CustomMapsProvider";
 
+// ── Skeleton fallbacks ────────────────────────────────────────────────────────
+import {
+  HomeSkeleton,
+  ShopDetailsSkeleton,
+  ExploreSkeleton,
+  ListPageSkeleton,
+  BookingFlowSkeleton,
+  ProfileSkeleton,
+  TextPageSkeleton,
+} from "./componets/shared/PageSkeletons";
+
 // ── Lazy-loaded pages ─────────────────────────────────────────────────────────
 const Home                    = lazy(() => import("./pages/Home"));
 const Login                   = lazy(() => import("./pages/Login"));
@@ -33,11 +44,21 @@ const PrivacyPolicy            = lazy(() => import("./pages/PrivacyPolicy"));
 const RefundCancellationPolicy = lazy(() => import("./pages/RefundCancellationPolicy"));
 const TermsAndConditions       = lazy(() => import("./pages/TermsConditions"));
 const About                    = lazy(() => import("./pages/About"));
+const PartnerWithUs            = lazy(() => import("./pages/PartnerWithUs"));
 
-// ── Suspense wrapper — components handle their own skeletons internally ───────
-const S = ({ children }) => (
-  <Suspense fallback={null}>{children}</Suspense>
+// ── Typed Suspense helpers ────────────────────────────────────────────────────
+const S = (fallback) => ({ children }) => (
+  <Suspense fallback={fallback}>{children}</Suspense>
 );
+
+const SHome    = S(<HomeSkeleton />);
+const SShop    = S(<ShopDetailsSkeleton />);
+const SExplore = S(<ExploreSkeleton />);
+const SList    = S(<ListPageSkeleton />);
+const SBooking = S(<BookingFlowSkeleton />);
+const SProfile = S(<ProfileSkeleton />);
+const SText    = S(<TextPageSkeleton />);
+const SMap     = S(<div className="w-full h-screen bg-gray-200 animate-pulse" />);
 
 function App() {
   return (
@@ -50,31 +71,32 @@ function App() {
           <Routes>
 
             {/* ── Public pages ── */}
-            <Route path="/"                        element={<S><Home /></S>} />
-            <Route path="/login"                   element={<S><Login /></S>} />
-            <Route path="/explore"                 element={<S><ExploreSalonsPage /></S>} />
-            <Route path="/explore-salons"             element={<S><MapLayout /></S>} />
-            <Route path="/salon-details/:id"       element={<S><ShopDetails /></S>} />
-            <Route path="/salons/category/:categoryId" element={<S><SaloonCategoryPage /></S>} />
-            <Route path="/about"                   element={<S><About /></S>} />
+            <Route path="/"                            element={<SHome><Home /></SHome>} />
+            <Route path="/login"                       element={<SText><Login /></SText>} />
+            <Route path="/explore"                     element={<SExplore><ExploreSalonsPage /></SExplore>} />
+            <Route path="/explore-salons"              element={<SMap><MapLayout /></SMap>} />
+            <Route path="/salon-details/:id"           element={<SShop><ShopDetails /></SShop>} />
+            <Route path="/salons/category/:categoryId" element={<SList><SaloonCategoryPage /></SList>} />
+            <Route path="/about"                       element={<SText><About /></SText>} />
+            <Route path="/partner-with-us"             element={<SText><PartnerWithUs /></SText>} />
 
             {/* ── Footer / legal ── */}
-            <Route path="/privacy-policy"          element={<S><PrivacyPolicy /></S>} />
-            <Route path="/refund-policy"           element={<S><RefundCancellationPolicy /></S>} />
-            <Route path="/terms-conditions"        element={<S><TermsAndConditions /></S>} />
+            <Route path="/privacy-policy"              element={<SText><PrivacyPolicy /></SText>} />
+            <Route path="/refund-policy"               element={<SText><RefundCancellationPolicy /></SText>} />
+            <Route path="/terms-conditions"            element={<SText><TermsAndConditions /></SText>} />
 
             {/* ── Protected pages ── */}
             <Route path="/:id/book-slot"
-              element={<ProtectedRoute><S><BookSlot /></S></ProtectedRoute>}
+              element={<ProtectedRoute><SBooking><BookSlot /></SBooking></ProtectedRoute>}
             />
             <Route path="/:id/review-order"
-              element={<ProtectedRoute><S><ReviewOrderPage /></S></ProtectedRoute>}
+              element={<ProtectedRoute><SBooking><ReviewOrderPage /></SBooking></ProtectedRoute>}
             />
             <Route path="/favourite"
-              element={<ProtectedRoute><S><FavouritesPage /></S></ProtectedRoute>}
+              element={<ProtectedRoute><SList><FavouritesPage /></SList></ProtectedRoute>}
             />
             <Route path="/my-bookings"
-              element={<ProtectedRoute><S><MyBooking /></S></ProtectedRoute>}
+              element={<ProtectedRoute><SList><MyBooking /></SList></ProtectedRoute>}
             />
 
             {/* ── Profile nested layout ── */}
@@ -82,15 +104,15 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute>
-                  <S><AccountLayout /></S>
+                  <SProfile><AccountLayout /></SProfile>
                 </ProtectedRoute>
               }
             >
-              <Route index          element={<S><ProfileDetails /></S>} />
-              <Route path="details"  element={<S><ProfileDetails /></S>} />
-              <Route path="settings" element={<S><SettingsPage /></S>} />
-              <Route path="invite"   element={<S><Invite /></S>} />
-              <Route path="support"  element={<S><Support /></S>} />
+              <Route index          element={<SProfile><ProfileDetails /></SProfile>} />
+              <Route path="details"  element={<SProfile><ProfileDetails /></SProfile>} />
+              <Route path="settings" element={<SProfile><SettingsPage /></SProfile>} />
+              <Route path="invite"   element={<SProfile><Invite /></SProfile>} />
+              <Route path="support"  element={<SProfile><Support /></SProfile>} />
             </Route>
 
           </Routes>

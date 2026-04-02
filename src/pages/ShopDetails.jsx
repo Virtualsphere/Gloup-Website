@@ -29,6 +29,7 @@ const ShopDetails = () => {
 
   const { id } = useParams()
   const { data, isLoading, isError } = useGetSalonDetails(id)
+  console.log(data);
 
   const apiData = data?.data || {}
   const apiServices = apiData?.services || []

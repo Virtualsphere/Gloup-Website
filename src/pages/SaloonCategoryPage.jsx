@@ -60,7 +60,7 @@ const SaloonCategoryPage = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const imageBaseUrl = import.meta.env.VITE_PROFILE_IMG_URL;
+  const imageBaseUrl = import.meta.env.VITE_CATEGORY_IMAGE_URL;
 
   // Fetch all categories for the tab strip
   const { data: categoryData } = useGetCategory();
