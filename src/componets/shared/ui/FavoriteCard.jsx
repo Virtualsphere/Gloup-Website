@@ -69,7 +69,8 @@ const FavoriteCard = ({ salon, onRemoved }) => {
   const name = salon?.name || "Salon Name";
   const rating = salon?.rating || "0.0";
   const reviews = salon?.reviews || 0;
-  const location = salon?.location || "Location";
+  const area = salon?.area || "Area";
+  const city = salon?.city || "City";
   const distance = salon?.distance || "0.0 KM";
   const mainService = salon?.mainService || "Service";
   const price = salon?.price || "0";
@@ -142,7 +143,9 @@ const FavoriteCard = ({ salon, onRemoved }) => {
         {/* Location Row */}
         <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-500 mt-2.5">
           <MapPin size={14} className="flex-shrink-0 text-gray-900" strokeWidth={2.5}/>
-          <span className="truncate max-w-[90px] md:max-w-[180px]">{location}</span>
+          <span className="truncate max-w-[90px] md:max-w-[180px]">{area}</span>
+          <span className="text-gray-400 px-0.5 flex-shrink-0 font-medium">•</span>
+          <span className="truncate max-w-[90px] md:max-w-[180px]">{city}</span>
           <span className="text-gray-400 px-0.5 flex-shrink-0 font-medium">•</span>
           <span className="whitespace-nowrap flex-shrink-0">{distance}</span>
         </div>
