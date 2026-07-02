@@ -4,7 +4,7 @@ import { dumBanner, galleryImage1, galleryImage2 } from '../../assets/images';
 const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL;
 
 const DeskBanner = ({ images = [], isLoading = false, salonId = null }) => {
-  const urlImages = images?.length > 0 ? images.map(img => `${SALON_IMAGE_URL}/${salonId}/images/${img}`) : [];
+  const urlImages = images?.length > 0 ? images.map(img => `${SALON_IMAGE_URL}${img}`) : [];
 
   const mainImage = urlImages[0] || dumBanner;
   const sideImage1 = urlImages[1] || galleryImage1;

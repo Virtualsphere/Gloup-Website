@@ -29,7 +29,7 @@ const normalizeAppointment = (item) => {
 
   const salonImage =
     validImages.length > 0
-      ? `${SALON_IMAGE_URL}/${storeId}/images/${validImages[0]}`
+      ? `${SALON_IMAGE_URL}${validImages[0]}`
       : 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&q=80';
 
   const locationParts = [item.addressLine1, item.city, item.district].filter(Boolean);

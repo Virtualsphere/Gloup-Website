@@ -14,9 +14,9 @@ const normalizeFav = (item) => {
   const validImages = rawImages.filter((img) => img && img.trim() !== "");
   const image =
     validImages.length > 0
-      ? `${SALON_IMAGE_URL}/${storeId}/images/${validImages[0]}`
+      ? `${SALON_IMAGE_URL}${validImages[0]}`
       : salon.salonImage
-      ? `${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`
+      ? `${SALON_IMAGE_URL}${salon.salonImage}`
       : "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80";
 
   return {

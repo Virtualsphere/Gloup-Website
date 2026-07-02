@@ -28,9 +28,9 @@ const normalizeSalon = (salon) => {
     : [];
 
   if (validImages.length > 0) {
-    images = validImages.map((img) => `${SALON_IMAGE_URL}/${storeId}/images/${img}`);
+    images = validImages.map((img) => `${SALON_IMAGE_URL}${img}`);
   } else if (salon.salonImage && typeof salon.salonImage === "string" && salon.salonImage.trim() !== "") {
-    images = [`${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`];
+    images = [`${SALON_IMAGE_URL}${salon.salonImage}`];
   } else {
     images = ["https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80"];
   }

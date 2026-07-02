@@ -55,13 +55,13 @@ const DeskHero = () => {
           <SwiperSlide key={slide.id}>
             <div className="w-full h-full relative">
               <img
-                src={`${imageBaseUrl}/${slide.imageUrl}`}
+                src={`${imageBaseUrl}${slide.imageUrl}`}
                 alt={`Slide ${slide.id}`}
                 className="w-full h-full object-cover"
                 onError={e => { e.target.style.display = 'none' }}
               />
               {/* Overlay tint for text readability */}
-              <div className="absolute inset-0 bg-white/60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent" />
             </div>
           </SwiperSlide>
         ))}

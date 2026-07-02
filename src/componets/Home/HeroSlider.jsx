@@ -56,7 +56,7 @@ const HeroSlider = () => {
                 {/* Top black shadow gradient for profile text visibility */}
                 <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/40 to-transparent z-10 pointer-events-none"></div>
                 <img 
-                  src={`${imageBaseUrl}/${slide.imageUrl}`} 
+                  src={`${imageBaseUrl}${slide.imageUrl}`} 
                   alt={`Slide ${slide.id}`}
                   className="w-full min-h-[224px] block object-cover"
                   onError={(e) => {

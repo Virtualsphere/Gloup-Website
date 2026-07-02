@@ -16,7 +16,7 @@ const normalizeService = (salon) => {
     : [];
 
   if (validImages.length > 0) {
-    images = validImages.map((img) => `${SALON_IMAGE_URL}/${storeId}/images/${img}`);
+    images = validImages.map((img) => `${SALON_IMAGE_URL}${img}`);
   } else if (salon.salonImage && typeof salon.salonImage === 'string' && salon.salonImage.trim() !== '') {
     images = [`${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`];
   }
@@ -25,8 +25,8 @@ const normalizeService = (salon) => {
     id: storeId,
     name: salon.salonName,
     image: (() => {
-      if (validImages.length > 0) return `${SALON_IMAGE_URL}/${storeId}/images/${validImages[0]}`;
-      if (salon.salonImage?.trim()) return `${SALON_IMAGE_URL}/${storeId}/images/${salon.salonImage}`;
+      if (validImages.length > 0) return `${SALON_IMAGE_URL}${validImages[0]}`;
+      if (salon.salonImage?.trim()) return `${SALON_IMAGE_URL}${salon.salonImage}`;
       return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80';
     })(),
     mainService: salon.serviceName || 'Service',
@@ -145,7 +145,7 @@ const SaloonCategoryPage = () => {
                   >
                     {cat.imageUrl ? (
                       <img
-                        src={`${imageBaseUrl}/${cat.imageUrl}`}
+                        src={`${imageBaseUrl}${cat.imageUrl}`}
                         alt={cat.label}
                         className="w-full h-full object-cover"
                         onError={(e) => {

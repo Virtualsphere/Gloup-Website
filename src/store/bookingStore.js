@@ -10,7 +10,7 @@ const SALON_IMAGE_URL = import.meta.env.VITE_SALON_IMAGE_URL ?? '';
 const resolveImageUrl = (rawPath, storeId) => {
   if (!rawPath) return '';
   if (rawPath.startsWith('http')) return rawPath;
-  return `${SALON_IMAGE_URL}/${storeId}/images/${rawPath}`.replace(/([^:])\/\/+/g, '$1/');
+  return `${SALON_IMAGE_URL}${rawPath}`.replace(/([^:])\/\/+/g, '$1/');
 };
 
 

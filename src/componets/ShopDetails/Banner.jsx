@@ -41,7 +41,7 @@ const Banner = ({ images = [], isLoading = false, salonId = null }) => {
   // Map API images or provide a fallback slide
   const slides = images?.length > 0 ? images.map((img, index) => ({
     id: index + 1,
-    image: `${SALON_IMAGE_URL}/${salonId}/images/${img}`,
+    image: `${SALON_IMAGE_URL}${img}`,
     alt: `Salon Image ${index + 1}`
   })) : [
     {

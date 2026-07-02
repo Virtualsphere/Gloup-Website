@@ -47,7 +47,7 @@ const ServiceSlider = () => {
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-48 lg:h-48 lg:aspect-square rounded-xl sm:rounded-2xl lg:rounded-2xl overflow-hidden bg-gray-200 lg:shadow-sm lg:group-hover:shadow-md transition-shadow flex items-center justify-center">
                 {service.imageUrl ? (
                   <img
-                    src={`${imageBaseUrl}/${service.imageUrl}`}
+                    src={`${imageBaseUrl}${service.imageUrl}`}
                     alt={service.label}
                     className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {

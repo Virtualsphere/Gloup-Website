@@ -19,7 +19,7 @@ const Team = ({ teamMembers = [] }) => {
             <div key={member.id} className="flex flex-col items-center flex-shrink-0 w-24">
               <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border-2 border-white shadow-sm mb-2 relative">
                  <img 
-                   src={member.imageUrl ? (member.imageUrl.startsWith('/') ? `${BASE_IMAGE_URL}${member.imageUrl}` : `${BASE_IMAGE_URL}/${member.imageUrl}`) : `https://ui-avatars.com/api/?name=${member.name}`} 
+                   src={member.imageUrl ? (member.imageUrl.startsWith('/') ? `${BASE_IMAGE_URL}${member.imageUrl}` : `${BASE_IMAGE_URL}${member.imageUrl}`) : `https://ui-avatars.com/api/?name=${member.name}`} 
                    alt={member.name}
                    className="w-full h-full object-cover"
                  />

@@ -46,7 +46,7 @@ useEffect(() => {
   const baseUrl = import.meta.env.VITE_PROFILE_IMG_URL;
 
   setImagePreview(
-    user.profilePic ? `${baseUrl}/${user.profilePic}` : null
+    user.profilePic ? `${baseUrl}${user.profilePic}` : null
   );
 
 }, [user]);
